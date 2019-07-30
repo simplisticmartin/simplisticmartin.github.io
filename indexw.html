@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Profile Picture Change GSAP Animation</title>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="./style.css">
+
+  
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1 class="logo"></h1>
+
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <br>
+  <br>
+  <br>
+
+  <div class="card down " style="width: 20rem;">
+  <div class="card-body">
+    <div class="profile-pic">
+      <img class="rounded-circle" src="https://34slpa7u66f159hfp1fhl9aur1-wpengine.netdna-ssl.com/wp-content/uploads/2016/11/generic-profile.png">
+    </div>
+    <input type="text" class="input-name " name="name" value="Your Name">
+    <input type="text" class="input-username" name="name" value="@twitterhandle">
+    <p class="card-text">Profile Picture change animation effects using GSAP (GreenSock Animation Platform)</p>
+    <p><strong>Tap profile picture above ;)<strong></p>
+  </div>
+</div>
+<input type="file" id="profile_pic_input" name="profile_pic_input" accept="image/*" />
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js'></script>
+
+<article class="container-projects" style="padding-top: 25%;">
+  <h2 class="show-on-scroll">Projects</h2>
+  <h4>Click on application picture/desciption to navigate actual application</h4>
+  <ul class="projects">
+    <li>
+      <a href=""><img src="img/workProject.png" alt="" class="inline-photo show-on-scroll box"><span class="project-label">Automation Testing Data Charts</span></a>
+      <div class="details">
+        <a href="javascript:openModal()"><img src="img/workProject.png" alt=""></a>
+        <div class="text">
+      <h3>Automation Test Charts</h3>
+<p><a href="javascript:openModal()" > Test data displayed in doughnut charts. Check the individual statistics by hovering over. Some charts have a click option where there are test case 
+or the breakdown how everything is tested. click on individual rows in manual test cases if you want test steps. Created by Thierno and Martin.</a></p>  
+      </div></div>
+    </li>
+  </ul>  
+
+</article>
+    <!---Modal---->
+    <div id="myModal" class="modal">
+     
+     
+      <!-- Modal content/Display visuals of project -->
+      
+      <div id="details" class="content-modal">
+        
+          <button class="block acenter" style=' width:100%";' value='back-up' onclick="closeModal()">Back</button>
+         
+          <span class="close">&times;</span>
+        
+        <div id="details" class="content-modal"> 
+
+        </div>
+        
+        </div>
+      
+
+    </div>
+
+    <script  src="./script.js"></script>
+    <script  src="./scrolling.js"></script>
+
+
+
+
+</body>
+
+</html>

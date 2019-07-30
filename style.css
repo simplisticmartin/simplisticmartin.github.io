@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600');
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+body {
+  margin: 0;
+	background: #222;
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 800;
+  
+}
+body:not(nav)
+{
+  padding: 0;
+  margin: 0;
+
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+
+  background-color: #263238;
+  overflow: hidden;
+}
+.container {
+  margin-top: 100px;
+	width: 150%;
+	margin: 0 auto;
+}
+
+header {
+  background: #55d6aa;
+  
+}
+
+header::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.logo {
+  float: left;
+
+
+  padding: 10px 50px;
+}
+
+nav {
+  margin-bottom: 15px;
+
+  float: right;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 23px;
+
+  position: relative;
+}
+
+nav a {
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #000;
+}
+
+nav a::before {
+  content: '';
+  display: block;
+  height: 5px;
+  background-color: #444;
+
+  position: absolute;
+  top: 0;
+  width: 0%;
+
+  transition: all ease-in-out 250ms;
+}
+
+nav a:hover::before {
+  width: 100%;
+}
+
+
+
+.card {
+  margin: 5rem auto 1rem;
+}
+.profile-pic img {
+  height: 144px;
+  width: 144px;
+  max-width: 144px;
+  background: #fff;
+  border: .3rem solid #fff;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin: -5.8rem auto .5rem auto;
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+}
+.profile-pic:hover {
+  cursor: pointer;
+}
+input {
+  border: none;
+  text-align: center;
+}
+input:focus {
+  outline: none;  
+}
+.input-name {
+  font-weight: 600;
+  font-size: 1.5rem;
+  width: 17rem;
+  margin-bottom: -.5rem;
+}
+.input-username {
+  font-size: .9rem;
+  color: rgb(134, 142, 150);
+  margin-bottom: 1rem;
+}
+.card-text {
+  line-height: 1.4;
+}
+#profile_pic_input {
+  display:none;
+}
+
+
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}
+
+.container-projects {
+  max-width: 980px;
+  margin: auto;
+  padding: 2.2449%;
+}
+
+.projects {
+  list-style: none;
+  padding: 0;
+  margin: 0 -2.2449%;
+  position: relative;
+  font-size: 0;
+  overflow: hidden;
+}
+.projects li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 45px 2.2449% 0 2.34694%;
+  width: 20.40816%;
+}
+.projects a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  font-size: 16px;
+  text-align: left;
+}
+.projects a img {
+  display: block;
+  max-width: 100%;
+  height: auto !important;
+}
+.projects .project-label {
+  display: block;
+  margin: 5px 0 10px;
+}
+.projects .current a {
+  color: #000;
+}
+.projects .current a:after {
+  content: "";
+  display: table;
+  border: 10px solid;
+  border-top: none;
+  border-color: #333 transparent;
+  margin: auto;
+}
+.projects .current a img, .projects .current a .project-label {
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.projects .current a .project-label {
+  -moz-transform: translateY(10px);
+  -ms-transform: translateY(10px);
+  -webkit-transform: translateY(10px);
+  transform: translateY(10px);
+}
+.projects h3 {
+  font-size: 16px;
+}
+.projects .details {
+  font-size: 16px;
+  display: none;
+  position: absolute;
+  background: #444;
+  box-shadow: inset 0 10px 20px 5px #333;
+  color: #ddd;
+  right: 2.2449%;
+  left: 2.2449%;
+  padding: 20px;
+  overflow: hidden;
+}
+.projects .details img {
+  float: right;
+  margin-left: 20px;
+  width: 53.19149%;
+  height: auto !important;
+}
+.projects .details .text {
+  overflow: hidden;
+}
+.box
+{
+  width: 150px;
+  border: 1px solid white;
+  padding: 10px;
+}
+.box:hover
+{
+  -moz-box-shadow: 0 0 10px #ccc;
+  -webkit-box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 0 10px #ccc;
+}
+
+
+@media only screen and (max-width: 735px) {
+  .container {
+    padding: 2.9932%;
+  }
+
+  .projects {
+    margin: 0 -2.9932%;
+  }
+  .projects li {
+    margin: 45px 2.9932% 0 3.12925%;
+    width: 27.21088%;
+  }
+}
+@media only screen and (max-width: 490px) {
+  .container-projects {
+    padding: 4.4898%;
+  }
+
+  .projects {
+    margin: 0 -4.4898%;
+  }
+  .projects li {
+    margin: 45px 4.4898% 0 4.69388%;
+    width: 40.81633%;
+  }
+  .projects .details img {
+    float: none;
+    width: 100%;
+    margin: 0;
+  }
+}
+article *{
+  color:#fff;
+}
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 100;
+ 
+
+}
+.content-modal {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  height: 100vh;
+}
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 100%; /* Could be more or less, depending on screen size */
+}
+}
+#details {
+  width: 100%;
+  height: 100%;
+
+  position:fixed;
+  bottom:0px;
+  overflow: auto;
+}
+ 
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.full-size-object {
+  width: 100%;
+height: 100%;
+
+
+}
+body {
+  background: #000;
+  /*background-image: url(https://images.pexels.com/photos/912110/pexels-photo-912110.jpeg?cs=srgb&dl=atmosphere-blue-sky-clouds-912110.jpg&fm=jpg);*/
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attach: fixed;
+  animation: animate-bg 50s infinite linear;
+}
+
+@keyframes animate-bg {
+  from { background-size: 100%; background-position: 0% 0%; }
+  50% { background-size: 120%; background-position: 0% 20% }
+  to { background-size: 100%; background-position: 0% 0%; }
+}
+
+
+.inline-photo {
+  border: 1em solid #fff;
+  border-bottom: 4em solid #fff;
+  border-radius: .25em;
+  box-shadow: 1em 1em 2em .25em rgba(0,0,0,.2);
+  margin: 2em auto;
+  opacity: 0;
+  transform: translateY(4em) rotateZ(-5deg);
+  transition: transform 4s .25s cubic-bezier(0,1,.3,1),
+              opacity .3s .25s ease-out;
+  max-width: 600px;
+  width: 90%;
+  will-change: transform, opacity;
+}
+.inline-photo.is-visible {
+  opacity: 1;
+  transform: rotateZ(-2deg);
+}
+.BeforeScroll
+{
+  height: 100px; /*Whatever you want*/
+  width: 100%; /*Whatever you want*/
+  .
+  .
+  display: none;
+}
+
+
+/*Use this class when you want your content to be shown after some scroll*/
+.AfterScroll
+{
+  height: 100px; /*Whatever you want*/
+  width: 100%; /*Whatever you want*/
+  .
+  .
+  display: block;
+}
