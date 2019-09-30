@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Martin Li Computer Science Student</title>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="../../style.css">
+
+  
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1 class="logo"></h1>
+
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#navigate-to-projects">Projects</a></li>
+          <li><a href="../../Martin-Resume.pdf">Resume</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <br>
+  <br>
+  <br>
+
+  <div class="card down " style="width: 20rem;">
+  <div class="card-body">
+    <div class="profile-pic">
+      <img class="rounded-circle" src="../../img/profile-pic.png">
+    </div>
+    <input type="text" class="input-name " name="name" value="Martin">
+    <input type="text" class="input-username" name="name" value="@- N/ATwitter justyet">
+    <p class="card-text">I am currently a computer science student. My professional pursuits include ranges in web development, web design artificial intelligence, and data science(w/interest in software Testing). I think that I don't know what is really interesting to me exactly till I have tried it many times. To be open learning things, has really allowed me to pursue new hobbies and fields that I wouldn't have otherwise. Site design in progress</p>
+    
+  </div>
+</div>
+<input type="file" id="profile_pic_input" name="profile_pic_input" accept="image/*" />
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js'></script>
+
+<article class="container-projects" style="padding-top: 25%;">
+  <h2 class="show-on-scroll" id="navigate-to-projects">Projects</h2>
+  <h4>Click on application picture/desciption to navigate actual application</h4>
+  <ul class="projects">
+    <li>
+      <a href=""><img src="../../Projects/DNSandwiches/img/GameSprites/sandwich.png" alt="" class="inline-photo show-on-scroll box"><span class="project-label">Decently Nice Sandwiches</span></a>
+      <div class="details">
+        <a href="javascript:openModal()"><img src="../../Projects/DNSandwiches/img/GameSprites/sandwich.png" alt=""></a>
+        <div class="text">
+      <h3>Decently Nice Sandwiches</h3>
+<p><a href="javascript:openModal()" >  Made to understand web Development. Developed around 2016-2017. Contains many features such as a carousel, bootstrapped enhanced website. Simple target chasing game developed with P5.JS. Contains a quote generator. This is to perhaps create a fictious sandwich website. Designed for fun. </a></p>  
+      </div></div>
+    </li>
+  </ul>  
+
+</article>
+    <!---Modal---->
+    <div id="myModal" class="modal">
+     
+     
+      <!-- Modal content/Display visuals of project -->
+      
+      <div id="details" class="content-modal">
+        
+          <button class="block acenter" style=' width:100%";' value='back-up' onclick="closeModal()">Back</button>
+         
+          <span class="close">&times;</span>
+        
+        <div id="details" class="content-modal"> 
+
+        </div>
+        
+        </div>
+      
+
+    </div>
+
+    <script  src="./script.js"></script>
+    <script  src="../../scrolling.js"></script>
+
+
+
+
+</body>
+<footer>&copy; Copyright 2019 simplisticmartin</footer>
+
+
+</html>
