@@ -4,11 +4,16 @@ gems:
   - jekyll-paginate
 
 # Site settings
-title: "Mediator"
+title: "Martin's Blog"
 description: > # this means to ignore newlines until "email:"
-   A Jekyll theme - Medium inspired
+   I am a computer science student. I will have my Bachelors degree in Computer Science in
+   December of 2019. I like Data Science, Web development and Game Development. Overall, I am lifelong learner who needs a place to log my potential.
+   Reflection is a great place to hone what I lack. I want to watch and reflect on courses so I can learn.
+   Perhaps sharing notes would be a great way for me to learn. All I know is reinforced learning and I will find a way to nail things down.
+   Other things I enjoy include- Break dancing, Boxing
+   The blog is using Jekyll Mediator theme which is a Medium Inspired theme.
 
-email: a-mail@mail.mail
+email: simplisticmartin.github.io
 #blog logo
 logo: "/assets/images/df_logo.jpg"
 float_logo: true # true, false (default)
@@ -16,16 +21,17 @@ float_logo: true # true, false (default)
 # blog cover
 cover: "/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
 
-name: 'Dirk Fabisch'
-author: 'Dirk Fabisch'
+name: 'Martin Li'
+author: 'Martin Li'
 author_image: "/assets/images/author.jpg"
 
 paginate:	5
 
-url: "http://myblog.***.***" # the base hostname & protocol for your site
+url: "http://simplisticmartin.github.io" # the base hostname & protocol for your site
 baseurl: ""
 #used to display twitter cards
-twitter_handle: '@dirkfabisch'
+twitter_handle: '@noneset'
+linkedin_handle: '@simplisticmartin'
 
 #fill in disqus shortname to use disqus
 #disqus: disqus-shortname
@@ -35,7 +41,7 @@ twitter_handle: '@dirkfabisch'
 # social icons and sharing options
 social:
   - icon:	twitter
-    url:	https://twitter.com/dirkfabisch
+    url:	https://twitter.com/nonenullnullnull
     desc: Follow me on twitter
     share_url: http://twitter.com/share
     share_title: ?text=
@@ -49,7 +55,7 @@ social:
 #    share_link: "&amp;u="
 
   - icon:	github
-    url:	https://github.com/dirkfabisch
+    url:	https://github.com/simplisticmartin
     desc:	Fork me on github
     share_url:
     share_title:
