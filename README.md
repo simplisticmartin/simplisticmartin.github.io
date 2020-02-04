@@ -1,8 +1,8 @@
 # Personal Site Portfolio
-    - Home 
-        - In Progress:
-            - Different Social Media Tags such as Linkedin
-        - Contains General Introduction of myself and current interests
+    1. Home 
+        * In Progress:
+            * Different Social Media Tags such as Linkedin
+        * Contains General Introduction of myself and current interests
     
 
 
