@@ -36,12 +36,12 @@ Theoretical and non-applicable ways to learn technology isn't ever so fun to me 
 ## Self-made tutorials
 How do I do X to achieve Y? I have always wanted to share my knowledge like I said. It takes being immersed and breaking down things several times to get through.
 
-##Hobbies and other things
+## Hobbies and other things
 I like to have fun.(who doesn't?). If I make progress in a day of dancing or boxing or something of that nature I like to share it. If I watch a sport session and it gets my heart racing, I'd like that too to be shared. 
 
-##Life issues and solutions
+## Life issues and solutions
 Of course everyday, everybody on planet earth and namek has issues. me included and your favorite president of course. We all want solutions to our personal problems with the additional addition of results. I'd like to share things that made me right from whenI was wrong.
 
-##Quotes of the day
+## Quotes of the day
 I really liked this quote and I want to remind myself of it:
 >_All we really own in life are moments in time_
