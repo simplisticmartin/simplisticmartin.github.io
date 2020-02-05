@@ -40,7 +40,7 @@ linkedin_handle: '@simplisticmartin'
 
 # social icons and sharing options
 social:
-  - icon:	twitter
+  - icon:	linkedin
     url:	https://twitter.com/nonenullnullnull
     desc: Follow me on twitter
     share_url: http://twitter.com/share
