@@ -6,14 +6,12 @@ gems:
 # Site settings
 title: "Martin's Blog"
 description: > # this means to ignore newlines until "email:"
-   I am a recent college graduate with a bachelor's degree in computer Science of CoverI will have my Bachelors degree in Computer Science in
-   December of 2019. I like Data Science, Web development and Game Development. Overall, I am lifelong learner who needs a place to log my potential.
-   Reflection is a great place to hone what I lack. I want to watch and reflect on courses so I can learn.
-   Perhaps sharing notes would be a great way for me to learn. All I know is reinforced learning and I will find a way to nail things down.
-   Other things I enjoy include- Break dancing, Boxing
+   I am a recent college graduate who graduated with a degree in computer science in December of 2019.
+   I have worked with full-stack web applications, data science(solving data problems), site security and testing software.
+   I would like to reinforce things I love analyzing or inspire from. It ranges from taking advice to reading books.
    The blog is using Jekyll Mediator theme which is a Medium Inspired theme.
 
-email: simplisticmartin.github.io
+email: simplisticmartin@gmail.com
 #blog logo
 logo: "/assets/images/favicon.png"
 float_logo: true # true, false (default)
@@ -41,9 +39,9 @@ linkedin_handle: '@simplisticmartin'
 # social icons and sharing options
 social:
   - icon:	linkedin
-    url:	https://twitter.com/nonenullnullnull
-    desc: Follow me on twitter
-    share_url: http://twitter.com/share
+    url:	https://www.linkedin.com/in/simplisticmartin
+    desc: Connect with me on linkedin
+    share_url: 
     share_title: ?text=
     share_link: "&amp;url="
 
