@@ -9,7 +9,7 @@ image2: /assets/article_images/2014-11-30-mediator_features/night-track-mobile.J
 ---
 # Beginning of my Blogging Ventures
 
-It took a long time to set up a Blogging system. Especially without a database or backend technology. I wanted to incorporate it in a single place where I can focus my attention to. I found Jekyll and this theme which reminds me of medium which is a popular blogging platform which I find myself sometimes looking towards to for advice. The reason I didn't use medium is because this blog is just about me. If I wanted to take pictures and share it here, I can without guilt and unapologetically so. I can't just make a random blog post about a cute puppy on medium so for those reasons alone, it strayed me off that platform. This blogging system is to document what I have learned and what I know so far.
+It took a long time to set up a Blogging system. Especially without a database or backend technology. I wanted to incorporate it in a single place where I can focus my attention to. I found Jekyll and this theme which reminds me of medium which is a popular blogging platform which I find myself sometimes looking towards to for advice. The reason I didn't use medium is because this blog is just about me. If I wanted to take pictures and share it here, I can without guilt and unapologetically so. I can't just make a random blog post about a cute puppy on medium so for those reasons alone, it strayed me off that platform. This blogging system is to document what I have learned and what I know so far. Thank you to Mediator
 
 
 
