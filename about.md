@@ -5,8 +5,9 @@ permalink: /about/
 ---
 
 I am a recent December of 2019 college graduate with a bachelor's degree in Computer Science.
->            ![This is a picture of me](img/personalpicture.jpg)
+![This is a picture of me](img/personalpicture.jpg)
 
+This is just a blog where I develop and reinforce ideas I have learned during day or week or span of time. 
 
 The theme I use:
 [https://github.com/dirkfabisch/mediator](https://github.com/dirkfabisch/mediator) 
