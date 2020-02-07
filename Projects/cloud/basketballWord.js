@@ -247,7 +247,7 @@ totalSumFG[i] = [d3.sum(data.map(function(d){ if(d["TEAM"] == teamNum) return pa
 
   console.log((totalSumFG));
 
-  console.log(array);
+  //console.log(array);
 
  console.log(findMaxPosition(totalSumFG));
  //console.log(Math.max(...totalSumFG));
