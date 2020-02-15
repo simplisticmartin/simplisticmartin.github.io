@@ -14,4 +14,7 @@
 
 
 ## Resume(Interactive version Incoming)
+
+## Quotes(Reminders of phrases that I strive to keep with me)(Incoming) *currently working on
+
 ## Instructions
