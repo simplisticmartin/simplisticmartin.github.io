@@ -23,7 +23,7 @@ let quotes = [
 },
 {
 
-    quote : "Work Hard, Be Kind and amazing Things will happen. ",
+    quote : "Work hard, be kind and amazing things will happen. ",
     date: "~2017",
     author: "Conan O'Brien",
     picUrl: "img/conan.jpg",
