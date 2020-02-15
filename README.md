@@ -16,6 +16,6 @@
 ## Resume(Interactive version Incoming)
 
 ## Life-Quotes Page(Reminders of phrases that I strive to keep with me)(Incoming) *currently working on
-[Check out HERE - 2/15/2020] (Projects/Quote-Generator/)
+[Check out HERE - 2/15/2020](https://simplisticmartin.github.io/Projects/Quote-Generator/)
 
 ## Instructions
