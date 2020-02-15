@@ -15,6 +15,7 @@
 
 ## Resume(Interactive version Incoming)
 
-## Quotes(Reminders of phrases that I strive to keep with me)(Incoming) *currently working on
+## Life-Quotes Page(Reminders of phrases that I strive to keep with me)(Incoming) *currently working on
+[Check out HERE - 2/15/2020] (Projects/Quote-Generator/)
 
 ## Instructions
