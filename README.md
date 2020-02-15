@@ -10,6 +10,8 @@
         * [Sandwich Game](https://simplisticmartin.github.io/Projects/DNSandwiches/gametest.html)
 
 
-## Blog in Progress
+## Blog 
 
+
+## Resume(Interactive version Incoming)
 ## Instructions
