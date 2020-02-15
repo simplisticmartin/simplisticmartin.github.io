@@ -2,7 +2,7 @@
 let quotes = [
     {
 
-        quote : "You can't control everything that happens to you but you can control how you react to things that are out of your control",
+        quote : "You can't control everything that happens to you but you can control how you react to things that are out of your control. ",
         date: "~2014",
         author: "Epictetus",
         picUrl: "img/epictetus.jpg",
@@ -13,7 +13,7 @@ let quotes = [
 
 {
 
-    quote : "The Law of Serendipity: Lady Luck favors the one who tries",
+    quote : "The Law of Serendipity: Lady Luck favors the one who tries. ",
     date: "~2017",
     author: "Barbara Oakley",
     picUrl: "img/Boakley.jpg",
@@ -23,7 +23,7 @@ let quotes = [
 },
 {
 
-    quote : "Work Hard, Be Kind and amazing Things will happen",
+    quote : "Work Hard, Be Kind and amazing Things will happen. ",
     date: "~2017",
     author: "Conan O'Brien",
     picUrl: "img/conan.jpg",
@@ -35,7 +35,7 @@ let quotes = [
 
 {
 
-    quote : "The shortest way to do many things is to do one thing at a time",
+    quote : "The shortest way to do many things is to do one thing at a time. ",
     date: "2014",
     author: "Samuel Smiles",
     picUrl: "img/smiles.webp",
@@ -45,7 +45,7 @@ let quotes = [
 },
 {
 
-    quote : "Being open with your insecurities parodoxically makes you more confident and charismatic more confident and charsimatic around others",
+    quote : "Being open with your insecurities parodoxically makes you more confident and charismatic around others.",
     date: "~2017",
     author: "Mark Manson",
     picUrl: "img/manson.jpg",
@@ -55,7 +55,7 @@ let quotes = [
 },
 {
 
-    quote : "Everything worthwhile in life is won through surmounting the associated negative experience.",
+    quote : "Everything worthwhile in life is won through surmounting the associated negative experience. ",
     date: "~2017",
     author: "Mark Manson",
     picUrl: "img/manson.jpg",
@@ -66,7 +66,7 @@ let quotes = [
 
 {
 
-    quote : "All we have are moments in time",
+    quote : "All we really own in life are moments in time. ",
     date: "November 2019",
     author: "Tyson Fury",
     picUrl: "img/TFury.jpg",
@@ -76,7 +76,7 @@ let quotes = [
 },
 
 {
-    quote : "History is written by victors",
+    quote : "History is written by victors. ",
     date: "12/30/2019",
     author: "Winston Churchill",
     picUrl: "img/churchill.jpg",
