@@ -63,6 +63,16 @@ let quotes = [
     meaningPage: ""
 
 },
+{
+
+    quote : "What determines your success isn't what do you want to enjoy. The relevant question is what pain do you want to sustain? The path to happinesss is a path full of s--theaps and shame.",
+    date: "~2017",
+    author: "Mark Manson",
+    picUrl: "img/manson.jpg",
+    wikiLink: "",
+    meaningPage: ""
+
+},
 
 {
 
