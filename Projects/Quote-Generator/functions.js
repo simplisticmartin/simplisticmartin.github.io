@@ -53,7 +53,7 @@ function selectQuote(quote){
        // let author = document.getElementById('author');
     //var newDom = '';
    // var animationDelay = 10;
-    document.getElementById("text").innerHTML = quotation + " " + ` <a id="author-style" href="${quote["wikiLink"]}" >${quote["author"]}</a>`;
+    document.getElementById("text").innerHTML = '"' + quotation + '" ' + ` <a id="author-style" href="${quote["wikiLink"]}" >${quote["author"]}</a>`;
     var newDom = '';
     var animationDelay = 10;
 
