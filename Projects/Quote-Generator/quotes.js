@@ -93,7 +93,17 @@ let quotes = [
     wikiLink: "",
     meaningPage: ""
 
+},
+{
+    quote : "At some point, you'll have to move from imitating your heroes to emulating them. Imitation is about copying. Emulation is when imitation goes one step further, breaking through into your own thing ",
+    date: "02/21/2020",
+    author: "Austin Keon",
+    picUrl: "img/keon.jpg",
+    wikiLink: "",
+    meaningPage: ""
+
 }
+
 
 ]
 let numberOfQuotes = quotes.length
