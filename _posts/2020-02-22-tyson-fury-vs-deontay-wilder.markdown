@@ -4,8 +4,8 @@ title:  "Tyson Fury versus Deontay Wilder 2"
 date:   2022-02-22 23:50:25
 categories: blogging programming boxing data science statistics analysis sports Tyson Fury Deontay Wilder Anthony Joshua
 tags: featured
-image: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder.jpg
-image2: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder.jpg
+image: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/FuryWilder.jpg
+image2: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/FuryWilder.jpg
 ---
 
 # This is Boxing
