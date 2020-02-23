@@ -32,7 +32,7 @@ baseurl: ""
 linkedin_handle: '@simplisticmartin'
 
 #fill in disqus shortname to use disqus
-#disqus: disqus-shortname
+disqus: simplisticmartin
 
 #google_analytics: UA-XXXXX-X
 
