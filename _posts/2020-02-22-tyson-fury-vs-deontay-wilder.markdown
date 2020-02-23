@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Tyson Fury versus Deontay Wilder 2"
+title:  "Tyson Fury vs. Deontay Wilder 2"
 date:   2022-02-22 23:50:25
 categories: blogging programming boxing data science statistics analysis sports Tyson Fury Deontay Wilder Anthony Joshua
 tags: featured
@@ -29,3 +29,6 @@ The American Boxer with a strong sense of character and self belief to succeed. 
 ### Data and Statistics
 
 
+[Last Fight Data](/assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/LastFightData)
+
+Here is a quick Breakdown of the last fight statistics

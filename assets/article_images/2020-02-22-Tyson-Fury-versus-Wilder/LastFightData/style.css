@@ -1,0 +1,22 @@
+#area-chart,
+#line-chart,
+#line-chart2,
+#bar-chart,
+#stacked,
+#pie-chart, #Wilder,#fury{
+  min-height: 200px;
+  background-color: white;
+}
+
+html {
+  background-image: url("https://img.bleacherreport.net/img/images/photos/003/844/546/hi-res-982e1421644221adab77b31a3eeb6808_crop_north.jpg?h=533&w=800&q=70&crop_x=center&crop_y=top");
+
+  /* Set a specific height */
+  height: 1000px; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
