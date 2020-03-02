@@ -39,7 +39,7 @@
         .char{
             font-family: Georgia, Calibri, sans-serif;
             color: white;
-            font-size: 50px;
+            font-size: 2rem;
             height: 50px;
             animation: an 1s ease-out 1 both;
             display: inline-block;
