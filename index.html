@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Martin Li personal website</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
 
       <link rel="stylesheet" href="./style.css">
+      <link rel="stylesheet" href="./mobile.css">
 
   
 </head>
@@ -18,9 +20,14 @@
   <header>
     <div class="container">
       <h1 class="logo"></h1>
-
-      <nav>
-        <ul>
+      
+      <nav role="navigation">
+        <div id="menuToggle">
+        <input id="menuCheck" type="checkbox" />
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu">
           <li><a href="#">Home</a></li>
           <li><a href="#navigate-to-projects">Projects</a></li>
           <li><a href="Martin-Resume.pdf">Resume</a></li>
@@ -29,6 +36,7 @@
           <li><a href="/Projects/Quote-Generator/">Life Quotes</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
+      </div>
       </nav>
     </div>
   </header>

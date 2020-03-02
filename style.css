@@ -402,3 +402,6 @@ body {
   .
   display: block;
 }
+#menuCheck {
+  display:none;
+}
