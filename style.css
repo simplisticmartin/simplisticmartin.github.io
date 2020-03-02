@@ -20,8 +20,9 @@ body:not(nav)
 }
 .container {
   margin-top: 100px;
-	width: 150%;
-	margin: 0 auto;
+  /*width: 150%;*/
+  max-width:490px;
+  margin: 0 auto;
 }
 
 header {
