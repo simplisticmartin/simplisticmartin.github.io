@@ -1,3 +1,11 @@
+.inline{
+  border: 1em solid #fff !important;
+    border-bottom: 4em solid #fff !important;
+    border-radius: .25em !important;
+    box-shadow: 1em 1em 2em .25em rgba(0,0,0,.2);
+}
+
+
 .inline-photo {
     border: 1em solid #fff;
     border-bottom: 4em solid #fff;
