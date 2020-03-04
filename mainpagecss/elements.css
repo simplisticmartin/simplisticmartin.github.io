@@ -50,3 +50,8 @@
   .open-description{
     color: white !important;
   }
+
+  .boldness-title{
+    font-weight: 900;
+    font-size: 2rem !important;
+  }
