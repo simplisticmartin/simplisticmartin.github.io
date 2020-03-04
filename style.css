@@ -191,7 +191,7 @@ html {
   display: table;
   border: 10px solid;
   border-top: none;
-  border-color: #333 transparent;
+  border-color: #263238/*#333*/ transparent;
   margin: auto;
 }
 .projects .current a img, .projects .current a .project-label {
