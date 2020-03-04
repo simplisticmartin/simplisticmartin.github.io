@@ -44,3 +44,9 @@
   #menuCheck {
     display:none;
   }
+  .inphoto-descrip{
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace !important;
+  }
+  .open-description{
+    color: white !important;
+  }
