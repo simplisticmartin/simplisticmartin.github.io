@@ -20,7 +20,7 @@
 //let projectL = "projectLink"
 for(let i = 0; i < numberOfProjects; i++) {
     console.log("hi");
-    document.getElementById("projectz").innerHTML += `<li class="inline"> <a href=""> <img src="${projectsList[i]["icon"]}" alt="" class="inline-photo show-on-scroll box"> ` + `<span class="project-label inphoto-descrip">${projectsList[i]["projectName"]}` + ` <h6 >Project Date: ${projectsList[i]["date"]}</h6> </span></a>  <div class="details">` + `<a href='javascript:openModalMod(projectsList[${i}])'>` + `<img src="${projectsList[i]["screenShot"]}" alt=""></a><div class="text"> <a href='javascript:openModalMod(projectsList[${i}])'><h3 class="boldness-title">${projectsList[i]["projectName"]}</h3></a> <p class="open-description"><a class="open-description" href="javascript:openModal()" > ${projectsList[i]["description"]} </a></p>      </div></div>  </li>`;
+    document.getElementById("projectz").innerHTML += `<li class="inline"> <a href=""> <img src="${projectsList[i]["icon"]}" alt="" class="inline-photo show-on-scroll box"> ` + `<span class="project-label inphoto-descrip">${projectsList[i]["projectName"]}` + ` <h6 >Project Date: ${projectsList[i]["date"]}</h6> </span></a>  <div class="details">` + `<a href='javascript:openModalMod(projectsList[${i}])'>` + `<img class="screenShots" src="${projectsList[i]["screenShot"]}" alt=""></a><div class="text"> <a href='javascript:openModalMod(projectsList[${i}])'><h3 class="boldness-title">${projectsList[i]["projectName"]}</h3></a> <p class="open-description"><a class="open-description" href="javascript:openModal()" > ${projectsList[i]["description"]} </a></p>      </div></div>  </li>`;
 }
 
 function openModalMod(fullProject) {
