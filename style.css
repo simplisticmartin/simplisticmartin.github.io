@@ -214,7 +214,7 @@ html {
   display: none;
   position: absolute;
   background: #263238;/*#444;*/
-  box-shadow: inset 0 10px 20px 5px #333;
+ /* box-shadow: 1rem 1rem 1rem 1rem inset0 10px 20px 5px /*#333; white;*/
   color: #ddd;
   right: 2.2449%;
   left: 2.2449%;
