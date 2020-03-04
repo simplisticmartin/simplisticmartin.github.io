@@ -25,6 +25,7 @@ for(let i = 0; i < numberOfProjects; i++) {
 
 function openModalMod(fullProject) {
     let link = fullProject["projectLink"]
+    
     $("#details").html(`${returnPageMod(link)}` + `<button class="block acenter" style=' width:100%";' value="back-up" onclick="closeModal()">Back</button>`);
     
     modal.style.display = "block";

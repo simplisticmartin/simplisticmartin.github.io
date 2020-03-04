@@ -58,8 +58,13 @@
   
   .screenShots{
   
-    height: 300px;
+    max-width: 300px !important;
+    max-height: 300px !important;
+    border-radius: 15px;
+    height: 300px !important;
     width: 300px;
-    margin-left: 30%;
+    display: block;
+    margin: auto;
+
     
   }
