@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Tyson Fury vs. Deontay Wilder (With Statistics Breakdown)"
-date:   2022-02-22 23:50:25
+date:   2020-02-22 23:50:25
 categories: blogging programming boxing data science statistics analysis sports Tyson Fury Deontay Wilder Anthony Joshua
 tags: featured
 image: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/FuryWilder.jpg
