@@ -111,6 +111,9 @@ function returnPage()
 	return('<object type="text/html" class="full-size-object" data="Projects/DNSandwiches/index.html" ></object>');
 }
 
+
+
+
 // Get the modal
 var modal = document.getElementById("myModal");
 
@@ -123,6 +126,7 @@ function openModal() {
   
   modal.style.display = "block";
 }
+
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {

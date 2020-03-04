@@ -19,7 +19,7 @@
           </div>
         </div>*/
 
-let timeline = document.getElementsByClassName("timeline");
+//let timeline = document.getElementsByClassName("timeline");
 for(let i = 0; i < numberOfQuotes; i++){
     if(i==0 || i%2 == 0){
     document.getElementById("timeline").innerHTML += '<div class="timeline-item"> <div class="timeline-icon"> ' +'<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"     width="21px" height="20px" viewBox="0 0 21 20" enable-background="new 0 0 21 20" xml:space="preserve"></svg></div>' + '<div class="timeline-content"><h2>' + quotes[i]["author"] + " --- When I found quote: " + quotes[i]["date"] +' </h2>' +  '<p>' + quotes[i]["quote"] + '</p>' +'<a href="#"' +`onclick='selectQuote(quotes[${i}])'` + '"' +' class="btn">view quote</a></div></div>' ;
