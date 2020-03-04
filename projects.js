@@ -10,7 +10,20 @@ var projectsList = [
         screenShot:"img/screenshots/quote-page.png",
         awardStatus:"",
         reason:""
+    },
+    {
+        projectName:"Clearsyn.com",
+        icon: "img/project-icons/clearsyn.png",
+        date:"Feb 2020",
+        techStack: "HTML, CSS3, JavaScript, NodeJS",
+        gitRepo:"",
+        description: `This project was designed as a place for web service Technology used: HTML,CSS,JavaScript, NodeJS`,
+        projectLink:"http://clearsyn.com/",
+        screenShot:"img/screenshots/clearsyn.png",
+        awardStatus:"",
+        reason:""
     }
+    
 ]
 
 //Projects/DNSandwiches/img/GameSprites/sandwich.png
