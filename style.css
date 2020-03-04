@@ -191,7 +191,7 @@ html {
   display: table;
   border: 10px solid;
   border-top: none;
-  border-color: #263238/*#333*/ transparent;
+  border-color: #8a2727 /*#263238/*#333*/ transparent;
   margin: auto;
 }
 .projects .current a img, .projects .current a .project-label {
@@ -213,13 +213,16 @@ html {
   font-size: 16px;
   display: none;
   position: absolute;
-  background: #263238;/*#444;*/
+  background: #8a2727; /*#263238*/;/*#444;*/
+  box-shadow: 0 0 20px rgba(0,0,0,1) inset;
  /* box-shadow: 1rem 1rem 1rem 1rem inset0 10px 20px 5px /*#333; white;*/
   color: #ddd;
   right: 2.2449%;
   left: 2.2449%;
   padding: 20px;
+  padding-bottom:0px;
   overflow: hidden;
+  border-radius: 15px;
 }
 .projects .details img {
   float: right;
