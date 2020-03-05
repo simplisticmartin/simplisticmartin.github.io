@@ -50,6 +50,18 @@ var projectsList = [
         reason:""
     },
     {
+        projectName:"AIRU-AirBNB/Uber/Transportation Recommender",
+        icon: "img/project-icons/Default.png",
+        date:"2016",
+        techStack: "",
+        gitRepo:"",
+        description: `This project was created during the cornell hackathon in 2016 where I learned about Django for the first time and I have had to learn it quickly. A few months before I took a introduction to python class so Django was a pick up along the journey. This application utilized the Google Maps API, the now(deprecated) Uber API and some Airbnb Data which had to be cleaned. Our goal was to have points generated of some Airbnbs locations on the google map close to the destination of the consumer or user. We had created a toggle menu for options where the user could lower the distance to a specific destination and cost of what he/she was willing to spend. (what was worth it? Price vs cost or middle of the road in both categories). I had helped deploying and plotting points on the map. I had learned technologies that I wasn’t so familiar before and as a result our team had won the first place hackathon prize.`,
+        projectLink:"https://github.com/simplisticmartin/AirU-Data-Science-Econ-Friendly",
+        screenShot:"img/screenshots/Default.png",
+        awardStatus:"1st Place Product",
+        reason:""
+    },
+    {
         projectName:"Decently Nice Sandwiches",
         icon: "/Projects/DNSandwiches/img/GameSprites/sandwich.png",
         date:"2016",
