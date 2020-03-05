@@ -45,7 +45,7 @@ var projectsList = [
         gitRepo:"",
         description: `Promo page in progress. Video Incoming. Technology Used: Unreal Engine, Blueprints, C++, Blender`,
         projectLink:"Projects/game-promo",
-        screenShot:"img/project-icons/Default.png",
+        screenShot:"img/screenshots/Default.png",
         awardStatus:"",
         reason:""
     },
