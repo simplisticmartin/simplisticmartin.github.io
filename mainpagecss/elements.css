@@ -73,4 +73,12 @@
     color: white;
     background-color: #263238;
     font-weight: 900;
+    border: none;
+  }
+  #pluginButton{
+    color: white;
+    background-color: #263238;
+    font-weight: 900;
+    border: none;
+
   }
