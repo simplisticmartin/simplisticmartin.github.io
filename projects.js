@@ -50,6 +50,18 @@ var projectsList = [
         reason:""
     },
     {
+        projectName:"Deprecated iOS Application Swift Projects",
+        icon: "img/project-icons/Default.png",
+        date:"2016",
+        techStack: "",
+        gitRepo:"",
+        description: `Twitter clone, Yelp Clone, IMDB movie iOS clone, Tipping calculator Technology used: Git Swift XCode StoryBoard (Google Maps, Yelp, Twitter, imdb)APIs oAuth CocoaPods and Carthage   `,
+        projectLink:"https://github.com/simplisticmartin/old-swift-projects-2016",
+        screenShot:"img/screenshots/Default.png",
+        awardStatus:"",
+        reason:""
+    },
+    {
         projectName:"AIRU-AirBNB/Uber Transportation Recommender",
         icon: "img/project-icons/Default2.png",
         date:"2016",
