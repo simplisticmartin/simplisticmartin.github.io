@@ -18,7 +18,7 @@ var projectsList = [
         techStack: "HTML, CSS3, JavaScript, NodeJS",
         gitRepo:"",
         description: `This project was designed as a place for web designing services. This was done as an original design. This website was designed with SEO in mind and keeping track of constant attraction to the website. Techniques in SEO and social media were used to attract users. Still Work in Progress. Technology used: HTML,CSS,JavaScript, NodeJS, Photoshop, Illustrator`,
-        projectLink:"http://clearsyn.com/index.html",
+        projectLink:"http://clearsyn.com/",
         screenShot:"img/screenshots/clearsyn.png",
         awardStatus:"",
         reason:""

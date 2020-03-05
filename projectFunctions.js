@@ -25,14 +25,14 @@ for(let i = 0; i < numberOfProjects; i++) {
 
 function openModalMod(fullProject) {
     let link = fullProject["projectLink"]
-    
+
     $("#details").html(`${returnPageMod(link)}` + `<button class="block acenter" style=' width:100%";' value="back-up" onclick="closeModal()">Back</button>`);
     
     modal.style.display = "block";
   }
   function returnPageMod(link)
 {
-	return(`<object type="text/html" class="full-size-object" data=${link}></object>`);
+	return(` <button class="block acenter" id="" style=' width:100%";' value='back-up' onclick="window.location.href='${link}'">Plugin not working?Click Here</button><object type="text/html" class="full-size-object" data=${link}></object>`);
 }
 $(".projects>li>a").on("click", function(e){
   e.preventDefault();
