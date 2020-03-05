@@ -30,7 +30,7 @@ var projectsList = [
         techStack: "HTML, CSS3, JavaScript, P5JS, Bootstrap",
         gitRepo:"",
         description: `Made to understand web Development. Developed around 2016-2017. Contains many features such as a carousel, bootstrapped enhanced website. Simple target chasing game developed with P5.JS. Contains a quote generator. This is to perhaps create a fictious sandwich website. Designed for fun. Technology used: HTML, CSS3, JavaScript, P5JS, Bootstrap`,
-        projectLink:"Projects/DNSandwiches",
+        projectLink:"Projects/DNSandwiches/",
         screenShot:"/Projects/DNSandwiches/img/GameSprites/sandwich.png",
         awardStatus:"",
         reason:""
