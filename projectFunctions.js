@@ -32,7 +32,7 @@ function openModalMod(fullProject) {
   }
   function returnPageMod(link)
 {
-	return(` <button class="block acenter" id="" style=' width:100%";' value='back-up' onclick="window.location.href='${link}'">Plugin not working?Click Here</button><object type="text/html" class="full-size-object" data=${link}></object>`);
+	return(` <button class="block acenter" id="" style=' width:100%";' value='back-up' onclick="window.location.href='${link}'">Plugin not working? Click Here</button><object type="text/html" class="full-size-object" data=${link}></object>`);
 }
 $(".projects>li>a").on("click", function(e){
   e.preventDefault();
