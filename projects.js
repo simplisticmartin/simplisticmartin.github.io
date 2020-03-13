@@ -50,6 +50,18 @@ var projectsList = [
         reason:""
     },
     {
+        projectName:"old-Api-Pages",
+        icon: "img/project-icons/Default.png",
+        date:"2017",
+        techStack: "",
+        gitRepo:"",
+        description: ` Studio Ghlibi Api application and pokemon api, Pokemon type application. Technology Used: HTML, CSS, Javascript, 3rd Party Apis`,
+        projectLink:"Projects/game-promo",
+        screenShot:"img/screenshots/Default.png",
+        awardStatus:"",
+        reason:""
+    },
+    {
         projectName:"Deprecated iOS Application Swift Projects",
         icon: "img/project-icons/Default.png",
         date:"2016",
