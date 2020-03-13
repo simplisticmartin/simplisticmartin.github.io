@@ -56,7 +56,7 @@ var projectsList = [
         techStack: "",
         gitRepo:"",
         description: ` Studio Ghlibi Api application and pokemon api, Pokemon type application. Technology Used: HTML, CSS, Javascript, 3rd Party Apis`,
-        projectLink:"Projects/game-promo",
+        projectLink:"Projects/oldwebAPI/",
         screenShot:"img/screenshots/Default.png",
         awardStatus:"",
         reason:""
