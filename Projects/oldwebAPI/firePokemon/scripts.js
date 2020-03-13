@@ -141,7 +141,10 @@ for(let i = 0; i < pokeTypes.length; i++)
 
  function functionChanges(){
    var x = document.getElementById("pokemonTypes");
+   root.innerHTML = "";
+   pokemonData=[];
   sendReqAndRetr(`https://pokeapi.co/api/v2/type/${x.value}`,retrieveEachPokemon);
+  idk()
 
  }
 
@@ -149,7 +152,7 @@ for(let i = 0; i < pokeTypes.length; i++)
 //setTimeout(idk, 500);
 
 
-//sendReqAndRetr('https://pokeapi.co/api/v2/type/fire',retrieveEachPokemon);
+sendReqAndRetr('https://pokeapi.co/api/v2/type/fire',retrieveEachPokemon);
 
 
 //arrayTest = sendReqAndRetr('https://pokeapi.co/api/v2/type/',retrieveEachPokemon)
