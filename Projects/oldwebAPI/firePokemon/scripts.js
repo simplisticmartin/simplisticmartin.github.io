@@ -121,10 +121,39 @@ for(var i = 0; i < pokemonData.length; i++){
   root.appendChild(cardLink);
 }
 }
+//var selectType = document.getElementById("pokeTypes");
+//var option = document.createElement("SELECT");
 
+var pokeTypes = [ "fire", "water", "poison", "dragon", "ground", "rock", "grass", "dark"];
+console.log(pokeTypes);
+for(let i = 0; i < pokeTypes.length; i++)
+{
+  document.getElementById("pokemonTypes").innerHTML += `<option value ="${pokeTypes[i]}">${pokeTypes[i]}</h1>`;
+  
+ // option.text = pokeTypes[i];
+
+ // console.log(option.name);
+
+
+  //document.getElementById("pokeTypes").add(option);
+ }
+
+
+ function functionChanges(){
+   var x = document.getElementById("pokemonTypes");
+  sendReqAndRetr(`https://pokeapi.co/api/v2/type/${x.value}`,retrieveEachPokemon);
+
+ }
+
+  
 //setTimeout(idk, 500);
 
-sendReqAndRetr('https://pokeapi.co/api/v2/type/fire',retrieveEachPokemon);
+
+//sendReqAndRetr('https://pokeapi.co/api/v2/type/fire',retrieveEachPokemon);
+
+
+//arrayTest = sendReqAndRetr('https://pokeapi.co/api/v2/type/',retrieveEachPokemon)
+//console.log(arrayTest[name]);
 
 
 
