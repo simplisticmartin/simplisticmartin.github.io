@@ -66,10 +66,11 @@
     border-top: 5px solid #fff;
     position:absolute;
     bottom:-5px;
-    left:40px;
+    left:50%;
+    margin-left: -5px;
   }
   .socialIcons:hover span {
-    bottom:50px;
+    bottom:53px;
     visibility:visible;
     opacity:1;
   }
