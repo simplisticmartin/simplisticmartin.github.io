@@ -229,7 +229,7 @@
       },
       "move": {
         "enable": true,
-        "speed": 3,
+        "speed": 5,
         "direction": "none",
         "random": false,
         "straight": false,
