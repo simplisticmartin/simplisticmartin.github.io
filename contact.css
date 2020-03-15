@@ -14,7 +14,9 @@
     color:white !important;
 }
 .socialIcons{
-    color:#fff;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    color: #263238;/*#fff;*/
     background: #55d6aa;
     border-radius:4px;
     text-align:center;
@@ -22,7 +24,7 @@
     font-family:fontawesome;
     position: relative;
     display: inline-block;
-    width:40px;
+    width:10%;
     height:3rem;
     padding-top:12px;
     margin:0 2px;
