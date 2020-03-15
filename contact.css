@@ -15,7 +15,7 @@
 }
 .socialIcons{
     color:#fff;
-    background: #DB6E82;
+    background: #55d6aa;
     border-radius:4px;
     text-align:center;
     text-decoration:none;
@@ -34,7 +34,7 @@
 
 }
 .socialIcons:hover{
-    background: #ef92a3;
+    background: #263238; /*#ef92a3;*/
 }
 .socialIcons span {
     color:#666;
