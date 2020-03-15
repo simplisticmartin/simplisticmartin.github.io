@@ -223,7 +223,7 @@
       "line_linked": {
         "enable": true,
         "distance": 150,
-        "color": "#ffffff",
+        "color": "#55d6aa",
         "opacity": 0.4,
         "width": 1
       },
