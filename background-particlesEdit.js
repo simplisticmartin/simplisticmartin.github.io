@@ -183,7 +183,7 @@
         }
       },
       "color": {
-        "value": "#ffffff"
+        "value": "#55d6aa"
       },
       "shape": {
         "type": "circle",
