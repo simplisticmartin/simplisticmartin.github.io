@@ -75,7 +75,7 @@ var projectsList = [
     },
     {
         projectName:"AIRU-AirBNB/Uber Transportation Recommender",
-        icon: "img/project-icons/Default2.png",
+        icon: "img/project-icons/Default.png",
         date:"2016",
         techStack: "",
         gitRepo:"",
