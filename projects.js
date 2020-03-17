@@ -1,4 +1,16 @@
 var projectsList = [
+    {
+        projectName:"Multiplayer web RPG ",
+        icon: "img/screenshots/Default.png",
+        date:"2020",
+        techStack: "HTML, CSS3, JavaScript, NodeJS, Express, MongoDB, Heroku",
+        gitRepo:"",
+        description: `This is a mmo rpg with a login, registration page and a full featured game with chat system. Work in progress with other features to come along the way! Click on top of modal to try technologies: HTML, CSS3, JavaScript, NodeJS, Express, MongoDB, Heroku, PhaserJS`,
+        projectLink:"http://multiplayer-phaser.herokuapp.com/",
+        screenShot:"img/screenshots/Default.png",
+        awardStatus:"",
+        reason:""
+    },
     
     {
         projectName:"Life Quote Page",
