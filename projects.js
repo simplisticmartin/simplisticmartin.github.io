@@ -1,7 +1,7 @@
 var projectsList = [
     {
         projectName:"Multiplayer web RPG ",
-        icon: "img/screenshots/Default.png",
+        icon: "img/project-icons/Default.png",
         date:"2020",
         techStack: "HTML, CSS3, JavaScript, NodeJS, Express, MongoDB, Heroku",
         gitRepo:"",
