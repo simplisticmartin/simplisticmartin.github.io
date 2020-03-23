@@ -11,6 +11,7 @@
 
 
 ## Blog 
+It is avaliable.
 
 
 ## Resume(Interactive version Incoming)
