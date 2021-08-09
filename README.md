@@ -2,6 +2,7 @@
 
 click [here](https://simplisticmartin.github.io/) to visit my personal site.
 
+![site gif](img/gifs/simplisticmartinportfolio.gif)
 This is my website containing an overall display of my projects along with other features which contain information about my life.
 
 1. [Home](https://simplisticmartin.github.io/)
