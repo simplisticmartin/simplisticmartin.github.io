@@ -7,7 +7,7 @@ This is my website containing an overall display of my projects along with other
 1. [Home](https://simplisticmartin.github.io/)
 2. [Projects](https://simplisticmartin.github.io/#navigate-to-projects)
 3. [Blog](https://simplisticmartin.github.io/Blog.html) Powered by [Jekyll](https://jekyllrb.com/)
-4. [Resume](https://simplisticmartin.github.io/resume.pdf)
+4. [Resume](https://simplisticmartin.github.io/resume-1.pdf)
 5. [Life Quotes](https://simplisticmartin.github.io/Projects/Quote-Generator/)
 
 ## Projects hosted elsewhere
