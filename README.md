@@ -1,24 +1,33 @@
 # [Personal Site Portfolio](https://simplisticmartin.github.io/)
-1. Home 
-    * In Progress:
-        * Different Social Media Tags such as Linkedin
-    * Contains General Introduction of myself and current interests
+
+click [here](https://simplisticmartin.github.io/) to visit my personal site.
+
+This is my website containing an overall display of my projects along with other features which contain information about my life.
+
+1. Home
 2. Projects
-    * [Decently Nutty Sandwiches](https://simplisticmartin.github.io/Projects/DNSandwiches/)
-        * [Main Page (Carousels)](https://simplisticmartin.github.io/Projects/DNSandwiches/)
-        * [Quote Generator](https://simplisticmartin.github.io/Projects/DNSandwiches/about.html)
-        * [Sandwich Game](https://simplisticmartin.github.io/Projects/DNSandwiches/gametest.html)
+3. Blog
+4. Resume
+5. [Life Quotes](https://simplisticmartin.github.io/Projects/Quote-Generator/)
 
+## Projects hosted elsewhere
 
-## Blog 
-It is avaliable.
-updating react apps
-converting quote
+Here contains projects which are not hosted on github
 
+1. [Massive Multiplayer Game]
+2. [Clearsyn]
 
-## Resume(Interactive version Incoming)
+## Future Improvements
 
-## Life-Quotes Page(Reminders of phrases that I strive to keep with me)(Incoming) *currently working on
-[Check out HERE - 2/15/2020](https://simplisticmartin.github.io/Projects/Quote-Generator/)
+1. The website could be designed more neatly. Things could be more centered and aligned more properly with proper padding and margins.
+2. Responsive design could also be more linear in design.
+
+## Deprecated Projects
+
+### First Website Project
+
+- [Main Page (Carousels)](https://simplisticmartin.github.io/Projects/DNSandwiches/)
+- [Quote Generator](https://simplisticmartin.github.io/Projects/DNSandwiches/about.html)
+- [Sandwich Game](https://simplisticmartin.github.io/Projects/DNSandwiches/gametest.html)
 
 ## Instructions
