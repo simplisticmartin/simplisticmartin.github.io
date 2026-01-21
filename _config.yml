@@ -19,7 +19,6 @@ social:
 
 # Build settings
 markdown: kramdown
-permalink: /blog/:year/:month/:day/:title/
 
 # Jekyll plugins
 plugins:
@@ -33,6 +32,9 @@ plugins:
 # Pagination
 paginate: 6
 paginate_path: "/blog/page:num/"
+
+# Permalink for blog
+permalink: /blog/:year/:month/:day/:title/
 
 # Keep these files in _site even though they're not processed
 keep_files:

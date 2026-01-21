@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Martin Li</title>
-    <description>Software Engineer specializing in full-stack development, data science, and creating impactful applications. Passionate about building modern web experiences and solving complex problems.
+    <description>Software Engineer at JPMorgan Chase specializing in full-stack development, artificial intelligence, and data science. Currently completing Master&apos;s in Computer Science (AI Specialization) at Georgia Tech. Passionate about building scalable systems and leveraging AI to solve complex problems.
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 21 Jan 2026 02:14:28 -0600</pubDate>
-    <lastBuildDate>Wed, 21 Jan 2026 02:14:28 -0600</lastBuildDate>
+    <pubDate>Wed, 21 Jan 2026 02:20:49 -0600</pubDate>
+    <lastBuildDate>Wed, 21 Jan 2026 02:20:49 -0600</lastBuildDate>
     <generator>Jekyll v3.10.0</generator>
     
       <item>
