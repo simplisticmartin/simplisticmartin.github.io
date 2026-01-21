@@ -1,51 +1,225 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Wilder vs Fury</title>
-  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-<link rel='stylesheet' href='https://cdn.oesmith.co.uk/morris-0.5.1.css'><link rel="stylesheet" href="./style.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fury vs Wilder - Statistical Analysis</title>
+  <meta name="description" content="Interactive statistical breakdown of the Fury vs Wilder heavyweight championship fight">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js - Modern charting library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-<head>
-<meta charset=utf-8 />
-<title>Fury vs Wilder</title>
-</head>
-<body>
-  <h3 class="text-primary text-center">
-    Fury vs Wilder (Labels in line chart Still needs Fixing.)
-  </h3>
-  <div class"row">
-    <div class="col-sm-6 text-center">
-      <label class="label label-success">Punches Landed</label>
-      <div id="area-chart" ></div>
+  
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="title">
+          <span class="fighter fury-color">Tyson Fury</span>
+          <span class="vs">VS</span>
+          <span class="fighter wilder-color">Deontay Wilder</span>
+        </h1>
+        <p class="subtitle">Statistical Breakdown - Round by Round Analysis</p>
+        <div class="fight-info">
+          <span class="info-badge"><i class="fas fa-calendar"></i> February 22, 2020</span>
+          <span class="info-badge"><i class="fas fa-map-marker-alt"></i> MGM Grand, Las Vegas</span>
+          <span class="info-badge"><i class="fas fa-trophy"></i> WBC Heavyweight Title</span>
+        </div>
+      </div>
     </div>
-    <div class="col-sm-6 text-center">
-       <label class="label label-success">Jabs Landed</label>
-      <div id="line-chart"></div>
+  </header>
+  
+  <!-- Key Stats Overview -->
+  <section class="stats-overview">
+    <div class="container">
+      <div class="stats-grid">
+        
+        <div class="stat-card fury-theme">
+          <div class="stat-icon"><i class="fas fa-fist-raised"></i></div>
+          <div class="stat-number" id="fury-total-punches">84</div>
+          <div class="stat-label">Total Punches</div>
+          <div class="stat-fighter">Tyson Fury</div>
+        </div>
+        
+        <div class="stat-card wilder-theme">
+          <div class="stat-icon"><i class="fas fa-fist-raised"></i></div>
+          <div class="stat-number" id="wilder-total-punches">71</div>
+          <div class="stat-label">Total Punches</div>
+          <div class="stat-fighter">Deontay Wilder</div>
+        </div>
+        
+        <div class="stat-card fury-theme">
+          <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+          <div class="stat-number">55%</div>
+          <div class="stat-label">Accuracy</div>
+          <div class="stat-fighter">Tyson Fury</div>
+        </div>
+        
+        <div class="stat-card wilder-theme">
+          <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+          <div class="stat-number">35%</div>
+          <div class="stat-label">Accuracy</div>
+          <div class="stat-fighter">Deontay Wilder</div>
+        </div>
+        
+      </div>
     </div>
-    <div  class="col-sm-6 text-center">
-       <label class="label label-success">Power Punches</label>
-      <div id="line-chart2" ></div>
+  </section>
+  
+  <!-- Charts Section -->
+  <section class="charts-section">
+    <div class="container">
+      
+      <!-- Round by Round Comparison -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fas fa-chart-line"></i>
+            Total Punches Landed Per Round
+          </h2>
+          <p class="chart-description">Round-by-round comparison of total punches landed</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="punchesChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Jabs Comparison -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fas fa-hand-rock"></i>
+            Jabs Landed Per Round
+          </h2>
+          <p class="chart-description">Tracking jab efficiency across all 12 rounds</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="jabsChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Power Punches -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fas fa-bolt"></i>
+            Power Punches Per Round
+          </h2>
+          <p class="chart-description">Heavy shots that count - power punch comparison</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="powerPunchesChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Punch Distribution -->
+      <div class="punch-distribution">
+        <div class="distribution-card">
+          <h3 class="distribution-title">
+            <span class="wilder-color">Deontay Wilder</span>
+            <span class="subtitle-text">Punch Distribution</span>
+          </h3>
+          <div class="chart-wrapper-small">
+            <canvas id="wilderDonut"></canvas>
+          </div>
+          <div class="punch-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Total Jabs</span>
+              <span class="breakdown-value wilder-color">40</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Power Punches</span>
+              <span class="breakdown-value wilder-color">31</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Total Thrown</span>
+              <span class="breakdown-value">71</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="distribution-card">
+          <h3 class="distribution-title">
+            <span class="fury-color">Tyson Fury</span>
+            <span class="subtitle-text">Punch Distribution</span>
+          </h3>
+          <div class="chart-wrapper-small">
+            <canvas id="furyDonut"></canvas>
+          </div>
+          <div class="punch-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Total Jabs</span>
+              <span class="breakdown-value fury-color">46</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Power Punches</span>
+              <span class="breakdown-value fury-color">38</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Total Thrown</span>
+              <span class="breakdown-value">84</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Analysis Summary -->
+      <div class="analysis-section">
+        <div class="analysis-card">
+          <h3 class="analysis-title"><i class="fas fa-chart-bar"></i> Statistical Analysis</h3>
+          <div class="analysis-grid">
+            <div class="analysis-item">
+              <div class="analysis-stat fury-bg">+13</div>
+              <div class="analysis-label">Fury's Punch Advantage</div>
+            </div>
+            <div class="analysis-item">
+              <div class="analysis-stat fury-bg">+6</div>
+              <div class="analysis-label">More Jabs Landed</div>
+            </div>
+            <div class="analysis-item">
+              <div class="analysis-stat fury-bg">+7</div>
+              <div class="analysis-label">More Power Punches</div>
+            </div>
+            <div class="analysis-item">
+              <div class="analysis-stat wilder-bg">Round 9</div>
+              <div class="analysis-label">Wilder's Best Round</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Back to Blog -->
+      <div class="back-link">
+        <a href="/blog/2020/02/22/tyson-fury-vs-deontay-wilder/" class="btn-back">
+          <i class="fas fa-arrow-left"></i> Back to Full Article
+        </a>
+      </div>
+      
     </div>
-    
-    <div class="col-sm-6 col-sm-offset-3 text-center">
-       <label class="label label-success">Deontay Wilder</label>
-      <div id="Wilder" ></div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="data-footer">
+    <div class="container">
+      <p>Statistical Data Visualization | Fury vs Wilder II</p>
+      <p class="data-source">Data Source: Official Fight Statistics</p>
     </div>
-    <div class="col-sm-6 col-sm-offset-3 text-center">
-      <label class="label label-success">Tyson Fury</label>
-     <div id="fury" ></div>
-   </div>
-    
-  </div>
-</body>
-<!-- partial -->
-  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.min.js'></script><script  src="./script.js"></script>
-
+  </footer>
+  
+  <!-- Custom JavaScript -->
+  <script src="./script.js"></script>
+  
 </body>
 </html>

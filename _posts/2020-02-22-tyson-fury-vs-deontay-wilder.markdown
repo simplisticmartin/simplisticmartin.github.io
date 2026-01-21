@@ -30,7 +30,21 @@ The American Boxer with a strong sense of character and self belief to succeed. 
 
 ### Data and Statistics
 
+The numbers tell a compelling story. Below is an interactive statistical breakdown of the fight.
 
-[Last Fight Data](/assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/LastFightData)
+**[📊 View Interactive Fight Statistics](/assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/LastFightData/)**
 
-Here is a quick Breakdown of the last fight statistics
+#### Quick Summary
+
+**Total Punches Landed:**
+- Tyson Fury: **84 punches** (46 jabs, 38 power punches)
+- Deontay Wilder: **71 punches** (40 jabs, 31 power punches)
+- **Fury's advantage: +13 punches**
+
+**Key Insights:**
+- Fury dominated with superior punch output in most rounds
+- Wilder's best round was Round 9 with 13 punches landed
+- Fury's most active round was Round 3 with 11 punches
+- Fury landed more jabs (+6) and more power punches (+7)
+
+> Click the link above to explore the interactive round-by-round charts and detailed breakdown!
