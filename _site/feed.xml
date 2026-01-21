@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Martin Li</title>
-    <description>Software Engineer specializing in full-stack development, data science, and creating impactful applications. Passionate about building modern web experiences and solving complex problems.
+    <description>Software Engineer at JPMorgan Chase specializing in full-stack development, artificial intelligence, and data science. Currently completing Master&apos;s in Computer Science (AI Specialization) at Georgia Tech. Passionate about building scalable systems and leveraging AI to solve complex problems.
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 21 Jan 2026 01:52:18 -0600</pubDate>
-    <lastBuildDate>Wed, 21 Jan 2026 01:52:18 -0600</lastBuildDate>
+    <pubDate>Wed, 21 Jan 2026 02:08:11 -0600</pubDate>
+    <lastBuildDate>Wed, 21 Jan 2026 02:08:11 -0600</lastBuildDate>
     <generator>Jekyll v3.10.0</generator>
     
       <item>
@@ -109,12 +109,12 @@
         
         <category>analysis</category>
         
+        <category>statistics</category>
         
-        <category>boxing</category>
         
-        <category>sports</category>
+        <category>nonsense</category>
         
-        <category>data-science</category>
+        <category>learning</category>
         
       </item>
     
@@ -237,10 +237,12 @@ Its boring and tedious. Theres no fast way to really do this. I just find that i
         
         <category>personal-growth</category>
         
+        <category>learning-journey</category>
         
-        <category>blogging</category>
         
-        <category>personal-development</category>
+        <category>learning</category>
+        
+        <category>career</category>
         
       </item>
     

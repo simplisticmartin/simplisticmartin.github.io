@@ -1,9 +1,12 @@
+---
+layout: none
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Martin Li's Blog - Thoughts on technology, development, and life.">
+  <meta name="description" content="Martin Li's Blog - Insights on AI, software engineering at scale, and lessons from JPMorgan Chase & Georgia Tech.">
   <title>Blog | Martin Li</title>
   
   <!-- Fonts -->
@@ -15,30 +18,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="/assets/css/modern.css">
-  <link rel="stylesheet" href="/assets/css/blog.css">
+  <link rel="stylesheet" href="{{ '/assets/css/modern.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/blog-categories.css' | relative_url }}">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
 </head>
 <body>
   
   <!-- Navigation -->
   <nav class="site-nav" id="navbar">
     <div class="nav-container">
-      <a href="/" class="nav-logo">Martin Li</a>
+      <a href="{{ '/' | relative_url }}" class="nav-logo">Martin Li</a>
       
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
         <i class="fas fa-bars"></i>
       </button>
       
       <ul class="nav-links" id="navLinks">
-        <li><a href="/">Home</a></li>
-        <li><a href="/#projects">Projects</a></li>
-        <li><a href="/Blog.html" style="color: var(--primary-color); font-weight: 600;">Blog</a></li>
-        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <li><a href="/old-version/Blog.html" class="btn-old-version">🕰️ Old Blog</a></li>
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/#projects' | relative_url }}">Projects</a></li>
+        <li><a href="{{ '/blog/' | relative_url }}" style="color: var(--primary-color); font-weight: 600;">Blog</a></li>
+        <li><a href="{{ '/about' | relative_url }}">About</a></li>
+        <li><a href="{{ '/Resume.pdf' | relative_url }}" target="_blank">Resume</a></li>
+        <li><a href="{{ '/old-version/Blog.html' | relative_url }}" class="btn-old-version">🕰️ Old Blog</a></li>
         <li>
           <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
             <i class="fas fa-moon"></i>
@@ -57,52 +61,113 @@
     </div>
   </section>
   
-  <!-- Blog Posts -->
+  <!-- Blog Categories -->
   <section class="section">
     <div class="container">
-      <div class="blog-grid">
+      <div class="category-grid">
         
-        <!-- Blog Post 1 -->
-        <article class="blog-card">
+        <a href="#career" class="category-card" data-category="career">
+          <div class="category-icon">💼</div>
+          <h3 class="category-title">Career</h3>
+          <p class="category-description">Software engineering career insights from JPMorgan Chase</p>
+          <span class="category-count" id="count-career">0 posts</span>
+        </a>
+        
+        <a href="#ai" class="category-card" data-category="ai">
+          <div class="category-icon">🤖</div>
+          <h3 class="category-title">AI & Machine Learning</h3>
+          <p class="category-description">AI research and lessons from Georgia Tech</p>
+          <span class="category-count" id="count-ai">0 posts</span>
+        </a>
+        
+        <a href="#quant-finance" class="category-card" data-category="quant-finance">
+          <div class="category-icon">📈</div>
+          <h3 class="category-title">Quant Finance</h3>
+          <p class="category-description">Quantitative finance and algorithmic trading</p>
+          <span class="category-count" id="count-quant-finance">0 posts</span>
+        </a>
+        
+        <a href="#learning" class="category-card" data-category="learning">
+          <div class="category-icon">📚</div>
+          <h3 class="category-title">Learning</h3>
+          <p class="category-description">Study tips, course reviews, and learning journey</p>
+          <span class="category-count" id="count-learning">0 posts</span>
+        </a>
+        
+        <a href="#public-speaking" class="category-card" data-category="public-speaking">
+          <div class="category-icon">🎤</div>
+          <h3 class="category-title">Public Speaking</h3>
+          <p class="category-description">Presentations and professional communication</p>
+          <span class="category-count" id="count-public-speaking">0 posts</span>
+        </a>
+        
+        <a href="#youtube" class="category-card" data-category="youtube">
+          <div class="category-icon">🎥</div>
+          <h3 class="category-title">YouTube</h3>
+          <p class="category-description">Video content and tech tutorials</p>
+          <span class="category-count" id="count-youtube">0 posts</span>
+        </a>
+        
+        <a href="#nonsense" class="category-card" data-category="nonsense">
+          <div class="category-icon">🎲</div>
+          <h3 class="category-title">Nonsense</h3>
+          <p class="category-description">Random thoughts and fun stuff</p>
+          <span class="category-count" id="count-nonsense">0 posts</span>
+        </a>
+        
+      </div>
+    </div>
+  </section>
+  
+  <!-- All Posts Section -->
+  <section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">All Posts</h2>
+        <div class="blog-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="career">💼 Career</button>
+          <button class="filter-btn" data-filter="ai">🤖 AI</button>
+          <button class="filter-btn" data-filter="quant-finance">📈 Quant Finance</button>
+          <button class="filter-btn" data-filter="learning">📚 Learning</button>
+          <button class="filter-btn" data-filter="public-speaking">🎤 Speaking</button>
+          <button class="filter-btn" data-filter="youtube">🎥 YouTube</button>
+          <button class="filter-btn" data-filter="nonsense">🎲 Nonsense</button>
+        </div>
+      </div>
+      
+      <div class="blog-grid" id="blogGrid">
+        {% for post in site.posts %}
+        <article class="blog-card" data-categories="{{ post.categories | join: ' ' }}">
+          {% if post.image %}
           <div class="blog-image">
-            <img src="/assets/images/blog-placeholder.jpg" alt="Blog post" 
+            <img src="{{ post.image }}" alt="{{ post.title }}" 
                  onerror="this.style.display='none'">
           </div>
+          {% endif %}
           <div class="blog-content">
-            <div class="blog-date">
-              <i class="fas fa-calendar"></i> February 22, 2020
+            <div class="blog-meta">
+              <span class="blog-date">
+                <i class="fas fa-calendar"></i> {{ post.date | date: "%B %d, %Y" }}
+              </span>
+              {% if post.categories %}
+              <span class="blog-categories">
+                {% for category in post.categories %}
+                <span class="blog-category-tag">{{ category }}</span>
+                {% endfor %}
+              </span>
+              {% endif %}
             </div>
-            <h2 class="blog-title">Tyson Fury vs Deontay Wilder</h2>
+            <h2 class="blog-title">{{ post.title }}</h2>
             <p class="blog-excerpt">
-              A reflection on the epic rematch between two heavyweight champions, 
-              exploring themes of perseverance, comeback, and determination...
+              {{ post.description | default: post.excerpt | strip_html | truncatewords: 30 }}
             </p>
-            <a href="/jekyll/update/2020/02/22/tyson-fury-vs-deontay-wilder.html" class="blog-read-more">
+            <a href="{{ post.url }}" class="blog-read-more">
               Read More <i class="fas fa-arrow-right"></i>
             </a>
           </div>
         </article>
-        
-        <!-- Blog Post 2 -->
-        <article class="blog-card">
-          <div class="blog-image">
-            <img src="/assets/images/blog-placeholder.jpg" alt="Blog post"
-                 onerror="this.style.display='none'">
-          </div>
-          <div class="blog-content">
-            <div class="blog-date">
-              <i class="fas fa-calendar"></i> October 1, 2019
-            </div>
-            <h2 class="blog-title">The Beginning of My Blogging Ventures</h2>
-            <p class="blog-excerpt">
-              Starting my journey into blogging and sharing my thoughts on technology, 
-              development, and the lessons learned along the way...
-            </p>
-            <a href="/jekyll/update/2019/10/01/the-beginning-of-my-blogging-ventures.html" class="blog-read-more">
-              Read More <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </article>
+        {% endfor %}
         
         <!-- Coming Soon Card -->
         <article class="blog-card blog-card-placeholder">
@@ -115,8 +180,7 @@
             </div>
             <h2 class="blog-title">More Posts Coming Soon!</h2>
             <p class="blog-excerpt">
-              Stay tuned for more insights, tutorials, and stories about software development, 
-              technology trends, and personal growth.
+              Stay tuned for more insights on AI, software engineering, quant finance, and more from my journey at JPMorgan Chase and Georgia Tech.
             </p>
           </div>
         </article>
@@ -125,8 +189,8 @@
     </div>
   </section>
   
-  <!-- Newsletter Section (Optional) -->
-  <section class="section" style="background: var(--bg-secondary);">
+  <!-- Newsletter Section -->
+  <section class="section">
     <div class="container" style="max-width: 600px; text-align: center;">
       <h2 class="section-title">Stay Updated</h2>
       <p class="section-description">
@@ -150,20 +214,22 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/#projects">Projects</a>
-        <a href="/Blog.html">Blog</a>
-        <a href="/Resume.pdf">Resume</a>
-        <a href="/old-version/Blog.html">Old Blog Version</a>
+        <a href="{{ '/' | relative_url }}">Home</a>
+        <a href="{{ '/#projects' | relative_url }}">Projects</a>
+        <a href="{{ '/blog/' | relative_url }}">Blog</a>
+        <a href="{{ '/about' | relative_url }}">About</a>
+        <a href="{{ '/Resume.pdf' | relative_url }}">Resume</a>
+        <a href="{{ '/old-version/Blog.html' | relative_url }}">Old Blog Version</a>
       </div>
       <p class="footer-copyright">
-        &copy; 2026 Martin Li. Built with modern web technologies.
+        &copy; {{ 'now' | date: "%Y" }} Martin Li. Built with Jekyll & GitHub Pages.
       </p>
     </div>
   </footer>
   
   <!-- Scripts -->
-  <script src="/assets/js/modern.js"></script>
-  <script src="/assets/js/performance.js" defer></script>
+  <script src="{{ '/assets/js/modern.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/blog-categories.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/performance.js' | relative_url }}" defer></script>
 </body>
 </html>

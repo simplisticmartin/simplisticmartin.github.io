@@ -2,8 +2,8 @@
 layout: post
 title:  "The Beginning of My Blogging Ventures"
 date:   2019-10-01 23:50:25
-categories: blogging personal-development
-tags: [blogging, web-development, personal-growth]
+categories: [learning, career]
+tags: [blogging, web-development, personal-growth, learning-journey]
 author: Martin Li
 read_time: 4
 description: "Starting my journey into blogging - documenting my learning process, sharing knowledge, and creating a personal space for growth and reflection."

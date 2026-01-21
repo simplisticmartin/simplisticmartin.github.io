@@ -54,6 +54,37 @@ collections:
     output: true
     permalink: /projects/:name/
 
+# Blog Categories
+blog_categories:
+  - name: "Career"
+    slug: "career"
+    description: "Insights from working at JPMorgan Chase and software engineering career advice"
+    icon: "💼"
+  - name: "AI & Machine Learning"
+    slug: "ai"
+    description: "AI research, machine learning projects, and lessons from Georgia Tech"
+    icon: "🤖"
+  - name: "Quant Finance"
+    slug: "quant-finance"
+    description: "Quantitative finance, algorithmic trading, and financial engineering"
+    icon: "📈"
+  - name: "Learning"
+    slug: "learning"
+    description: "Study tips, course reviews, and continuous learning journey"
+    icon: "📚"
+  - name: "Public Speaking"
+    slug: "public-speaking"
+    description: "Presentations, technical talks, and professional communication"
+    icon: "🎤"
+  - name: "YouTube"
+    slug: "youtube"
+    description: "Video content, tutorials, and tech explanations"
+    icon: "🎥"
+  - name: "Nonsense"
+    slug: "nonsense"
+    description: "Random thoughts, fun stuff, and everything else"
+    icon: "🎲"
+
 # Defaults
 defaults:
   - scope:

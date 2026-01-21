@@ -2,8 +2,8 @@
 layout: post
 title:  "Tyson Fury vs. Deontay Wilder (With Statistics Breakdown)"
 date:   2020-02-22 23:50:25
-categories: boxing sports data-science
-tags: [boxing, sports, data-science, analysis]
+categories: [nonsense, learning]
+tags: [boxing, sports, data-science, analysis, statistics]
 author: Martin Li
 read_time: 5
 description: "An in-depth analysis of the epic heavyweight boxing rematch between Tyson Fury and Deontay Wilder, complete with statistical breakdown and insights."
