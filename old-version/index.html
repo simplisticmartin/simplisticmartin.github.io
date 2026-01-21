@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Martin Li personal website</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="./style.css">
+      <link rel="stylesheet" href="mainpagecss/elements.css">
+      
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+      <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js" integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="./contact.css">
+      <link rel="stylesheet" href="./mobile.css">
+
+
+  
+</head>
+
+<body>
+  
+  <header>
+    <div class="container">
+      <h1 class="logo"></h1>
+      
+      <nav role="navigation">
+        <div id="menuToggle">
+        <input id="menuCheck" type="checkbox" />
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu">
+          <li><a href="#">Home</a></li>
+          <li><a href="#navigate-to-projects">Projects</a></li>
+          <li><a href="Resume.pdf">Resume</a></li>
+          <li><a href="/Blog.html">Blog</a></li>
+          
+          <li><a href="/Projects/Quote-Generator/">Life Quotes</a></li>
+          <li><a href="#ConnectingText">Contact</a></li>
+        </ul>
+      </div>
+      </nav>
+    </div>
+  </header>
+  <div id="particles-js"></div>
+  <br>
+  <br>
+  <br>
+
+  <div class="card down " style="width: 20rem;">
+  <div class="card-body">
+    <div class="profile-pic">
+      <img class="rounded-circle" src="img/profile-pic.jpg">
+    </div>
+    <input type="text" class="input-name " name="name" value="Martin">
+    <input type="text" class="input-username" name="name" value='simplisticmartin@gmail.com'>
+    <p class="card-text"> Hello world! My name is Martin. I build, engineer and create applications. A recent university graduate looking to grow and create impact in technology and in life.
+    <!---  Revamp soon(Again)
+
+      Incoming: Mobile Responsive Redesign
+      Please Note: If you can't see the hamburger menu, its because I haven't revamped it for your
+      screensize yet. Making Modifications. Please View Desktop Site till this notice has gone away.
+    ---->
+
+    </p>
+    
+  </div>
+</div>
+<input type="file" id="profile_pic_input" name="profile_pic_input" accept="image/*" />
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js'></script>
+<!--Social Media Icons-->
+<p id="ConnectingText">
+  Connect with me!
+</p>
+
+<div id="contactMe">
+  <a class="socialIcons" href="https://github.com/simplisticmartin/"><span>Github</span></a>
+  <a class="socialIcons" href="https://www.linkedin.com/in/simplisticmartin/"><span>Linkedin</span></a>
+  <a class="socialIcons" href="mailto:simplisticmartin@gmail.com?Subject=Hey%20Martin"><span>Email</span></a>
+
+</div>
+<!--Social Media Ends-->
+<article class="container-projects" style="padding-top: 25%;">
+  <h2 class="show-on-scroll" id="navigate-to-projects">Projects</h2>
+  <h4>Click on application picture/desciption to navigate actual application</h4>
+  
+  <ul class="projects" id="projectz">
+  <!---   <li class="inline">
+      <a class="current" href="">--->
+       <!-- <div class="in-line-photo show-on-scroll"></div>--->
+  <!---      <img src="Projects/DNSandwiches/img/GameSprites/sandwich.png" alt="" class="inline-photo show-on-scroll box"> <span class="project-label inphoto-descrip">Decently Nice Sandwiches
+
+        <h6 >Project Date: Jan 2016</h6>
+      </span></a>
+      
+      <div class="details">
+        <a href="javascript:openModal()"><img class="screenShots" src="Projects/DNSandwiches/img/GameSprites/sandwich.png" alt=""></a>
+        <div class="text">
+          <a href="javascript:openModal()"><h3 class="boldness-title">Decently Nice(or Nutty) Sandwiches</h3></a>
+<p class="open-description"><a class="open-description" href="javascript:openModal()" >  Made to understand web Development. Developed around 2016-2017. Contains many features such as a carousel, bootstrapped enhanced website. Simple target chasing game developed with P5.JS. Contains a quote generator. This is to perhaps create a fictious sandwich website. Designed for fun. </a></p>  
+      </div></div>
+    </li>
+     <!-- <div class="in-line-photo show-on-scroll"></div>--->
+<!---
+    <li class="inline">
+      <a class="current" href="">
+      
+        <img src="Projects/DNSandwiches/img/GameSprites/sandwich.png" alt="" class="inline-photo show-on-scroll box"> <span class="project-label inphoto-descrip">Decently Nice(Nutty) Sandwiches
+
+        <h6 >Project Date: Jan 2016</h6>
+      </span></a>
+      
+      <div class="details">
+        <a href="javascript:openModal()"><img class="screenShots" src="Projects/DNSandwiches/img/GameSprites/sandwich.png" alt=""></a>
+        <div class="text">
+          <a href="javascript:openModal()"><h3 class="boldness-title">Decently Nice(or Nutty) Sandwiches</h3></a>
+<p class="open-description"><a class="open-description" href="javascript:openModal()" >  Made to understand web Development. Developed around 2016-2017. Contains many features such as a carousel, bootstrapped enhanced website. Simple target chasing game developed with P5.JS. Contains a quote generator. This is to perhaps create a fictious sandwich website. Designed for fun. </a></p>  
+      </div></div>
+    </li> --->
+  </ul>  
+
+</article>
+    <!---Modal---->
+    <div id="myModal" class="modal">
+     <!-- <button class="block acenter" id="" style=' width:100%";' value='back-up' onclick="window.location.href='Projects/DNSandwiches'">Plugin not working?Click Here</button>---->
+      
+     
+      <!-- Modal content/Display visuals of project -->
+      
+      <div id="details" class="content-modal">
+        
+          <button class="block acenter" style=' width:100%";' value='back-up' onclick="closeModal()">Back</button>
+         
+          <span class="close">&times;</span>
+        
+        <div id="details" class="content-modal"> 
+
+        </div>
+        
+        </div>
+      
+
+    </div>
+
+    <script  src="./script.js"></script>
+    <script src='https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'></script>
+    <script src="./background-particlesEdit.js"></script>
+   <script  src="./projects.js"></script>
+    <script  src="./projectFunctions.js"></script>
+    
+    <script  src="./scrolling.js"></script>
+    <script src="./scrollingPage.js"></script>
+
+
+
+</body>
+<footer class="open-description">&copy; Copyright 2019 simplisticmartin</footer>
+
+
+</html>

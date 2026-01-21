@@ -1,11 +1,13 @@
 ---
 layout: post
-title:  "The beginning of my blogging ventures"
-date:   2019-11-30 23:50:25
-categories: blogging programming machine learning AI web development productivity courses
-tags: featured
+title:  "The Beginning of My Blogging Ventures"
+date:   2019-10-01 23:50:25
+categories: blogging personal-development
+tags: [blogging, web-development, personal-growth]
+author: Martin Li
+read_time: 4
+description: "Starting my journey into blogging - documenting my learning process, sharing knowledge, and creating a personal space for growth and reflection."
 image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
-image2: /assets/article_images/2014-11-30-mediator_features/night-track-mobile.JPG
 ---
 # Beginning of my Blogging Ventures
 

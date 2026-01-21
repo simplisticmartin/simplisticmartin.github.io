@@ -1,0 +1,35 @@
+---
+layout: default
+permalink: /404.html
+---
+
+<section class="blog-hero" style="min-height: 70vh; display: flex; align-items: center;">
+  <div class="blog-hero-content" style="max-width: 600px; margin: 0 auto; padding: var(--spacing-2xl);">
+    <h1 style="font-size: 8rem; margin-bottom: 0; line-height: 1;">404</h1>
+    <h2 style="margin-bottom: var(--spacing-lg);">Page Not Found</h2>
+    <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: var(--spacing-xl);">
+      Oops! The page you're looking for doesn't exist. It might have been moved or deleted.
+    </p>
+    <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+      <a href="{{ '/' | relative_url }}" class="btn btn-primary">
+        <i class="fas fa-home"></i> Go Home
+      </a>
+      <a href="{{ '/Blog.html' | relative_url }}" class="btn btn-outline">
+        <i class="fas fa-blog"></i> Visit Blog
+      </a>
+    </div>
+    
+    <div style="margin-top: var(--spacing-3xl); padding-top: var(--spacing-2xl); border-top: 2px solid var(--bg-tertiary);">
+      <p style="color: var(--text-tertiary); margin-bottom: var(--spacing-md);">
+        Looking for something specific? Try these popular pages:
+      </p>
+      <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+        <a href="{{ '/#projects' | relative_url }}" style="color: var(--primary-color);">Projects</a>
+        <span style="color: var(--text-tertiary);">•</span>
+        <a href="{{ '/about' | relative_url }}" style="color: var(--primary-color);">About</a>
+        <span style="color: var(--text-tertiary);">•</span>
+        <a href="{{ '/Resume.pdf' | relative_url }}" style="color: var(--primary-color);">Resume</a>
+      </div>
+    </div>
+  </div>
+</section>

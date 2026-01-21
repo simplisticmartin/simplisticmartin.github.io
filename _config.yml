@@ -1,67 +1,90 @@
-# Build settings
-gems:
-  - jemoji
-  - jekyll-paginate
-
 # Site settings
-title: "Martin's Blog"
-description: > # this means to ignore newlines until "email:"
-   I am a recent college graduate who graduated with a degree in computer science in December of 2019.
-   I have worked with full-stack web applications, data science(solving data problems), site security and testing software.
-   I would like to reinforce things I love analyzing or inspire from. It ranges from taking advice to reading books.
-   The blog is using Jekyll Mediator theme which is a Medium Inspired theme.
+title: "Martin Li"
+tagline: "Software Engineer & Developer"
+description: >
+  Software Engineer specializing in full-stack development, data science, and creating impactful applications.
+  Passionate about building modern web experiences and solving complex problems.
 
 email: simplisticmartin@gmail.com
-#blog logo
-logo: "/assets/images/favicon.png"
-float_logo: true # true, false (default)
-
-# blog cover
-cover: "/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
-
-name: 'Martin Li'
-author: 'Martin Li'
-author_image: "/assets/images/author.jpg"
-
-paginate:	5
-
-url: "http://simplisticmartin.github.io" # the base hostname & protocol for your site
+author: Martin Li
+url: "https://simplisticmartin.github.io"
 baseurl: ""
-#used to display twitter cards
-#twitter_handle: '@noneset'
-linkedin_handle: '@simplisticmartin'
 
-#fill in disqus shortname to use disqus
-disqus: simplisticmartin
-
-#google_analytics: UA-XXXXX-X
-
-# social icons and sharing options
+# Social links
 social:
-  - icon:	linkedin
-    url:	https://www.linkedin.com/in/simplisticmartin
-    desc: Connect with me on linkedin
-    share_url: 
-    share_title: ?text=
-    share_link: "&amp;url="
+  github: simplisticmartin
+  linkedin: simplisticmartin
+  email: simplisticmartin@gmail.com
 
-#  - icon:	facebook
-#    url:	https://facebook.com/???
-#    desc: Connect with me facebook
-#    share_url: https://www.facebook.com/sharer.php
-#    share_title: ?t=
-#    share_link: "&amp;u="
+# Build settings
+markdown: kramdown
+permalink: /blog/:year/:month/:day/:title/
 
-  - icon:	github
-    url:	https://github.com/simplisticmartin
-    desc:	Fork me on github
-    share_url:
-    share_title:
-    share_link:
+# Jekyll plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-gist
+  - jemoji
 
-#  - icon:	google-plus
-#    url:	https://google.com/???
-#    desc:	Add me on google+
-#    share_url:
-#    share_title:
-#    share_link:
+# Pagination
+paginate: 6
+paginate_path: "/blog/page:num/"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - old-version/
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+
+# Site logo and images
+logo: "/assets/images/favicon.png"
+cover: "/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
+author_image: "/img/profile-pic.jpg"
+
+# Comments (using giscus - modern alternative to disqus)
+comments:
+  provider: "giscus"
+  giscus:
+    repo: "simplisticmartin/simplisticmartin.github.io"
+    repo_id: ""
+    category: "Comments"
+    category_id: ""
+
+# Analytics (update with your GA4 ID)
+google_analytics: ""
+
+# SEO
+twitter:
+  username: 
+  card: summary_large_image
+
+# Theme
+theme: null

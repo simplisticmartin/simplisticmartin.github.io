@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - A Series Chart as a Range Chart</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./dependency/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./dependency/web/css/dc.css"/>
+</head>
+<body>
+<h1><a href="../centralIndex.html" style="color:orange">HOME</a></h1>
+  <script type="text/javascript" src="header.js"></script>
+
+
+<div id="piechart" style = "position:absolute; 
+							margin-left: auto;
+							margin-right: auto;
+							height:50px;
+							top:15px;
+							left:250px;"></div>
+
+<div id="test" style = "position: absolute;
+						width: 30%;
+						top:500px;
+						left:15px;"></div>
+
+<div id="test-overview" style = "position:absolute;
+								top:1000px;
+								left:15px;"></div>
+<div id="legend" style = "position: absolute;
+						 top: 475px;
+						 left:750px;"></div>
+
+<div id="stats-pie" style = "position: absolute;
+							top:15px;
+							left: 825px;
+							top:675px;">
+								
+								<a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a><br>
+							</div>
+
+
+
+
+<script type="text/javascript" src="./dependency/web/js/promise-polyfill.js"></script>
+<script type="text/javascript" src="./dependency/web/js/fetch.umd.js"></script>
+<script type="text/javascript" src="./dependency/web/js/d3.js"></script>
+<script type="text/javascript" src="./dependency/web/js/crossfilter.js"></script>
+<script type="text/javascript" src="./dependency/web/js/dc.js"></script>
+<script type="text/javascript", src = "main.js"></script>
+
+
+
+</body>
+</html>

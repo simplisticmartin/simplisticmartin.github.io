@@ -1,0 +1,25 @@
+{
+  "name": "Martin Li - Portfolio & Blog",
+  "short_name": "Martin Li",
+  "description": "Software Engineer specializing in full-stack development, data science, and creating impactful applications.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/assets/images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "blog", "technology"],
+  "lang": "en-US"
+}

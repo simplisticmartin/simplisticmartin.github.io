@@ -1,0 +1,23 @@
+.cardo{
+    display: inline-block;
+    background-color: lightgray;
+    border-radius:15px;
+    margin:5px;
+    padding:2rem;
+}
+
+.img{
+    height:150px;
+    width:150px;
+}
+
+.cardLink{
+    text-decoration:none;    
+}
+
+.pokemonNames{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color:black;
+    color: white;
+    text-align: center;
+}

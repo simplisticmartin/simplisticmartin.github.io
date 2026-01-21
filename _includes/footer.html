@@ -1,11 +1,18 @@
-<!-- footer start -->
-
 <footer class="site-footer">
-  <a class="subscribe" href="{{ "/feed.xml" | prepend: site.baseurl }}"> <span class="tooltip"> <i class="fa fa-rss"></i> Subscribe!</span></a>
-    <div class="inner">
-         <section class="copyright">All content copyright <a href="mailto:{{ site.email}}">{{ site.name }}</a> &copy; {{ site.time | date: '%Y' }} &bull; All rights reserved.</section>
-         <section class="poweredby">Made with <a href="http://jekyllrb.com"> Jekyll</a></section>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="{{ '/#projects' | relative_url }}">Projects</a>
+      <a href="{{ '/Blog.html' | relative_url }}">Blog</a>
+      <a href="{{ '/about' | relative_url }}">About</a>
+      <a href="{{ '/Resume.pdf' | relative_url }}">Resume</a>
+      <a href="{{ '/old-version/index.html' | relative_url }}">Old Version</a>
     </div>
+    <p class="footer-copyright">
+      &copy; {{ 'now' | date: "%Y" }} {{ site.author }}. Built with 
+      <a href="https://jekyllrb.com/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Jekyll</a> 
+      & hosted on 
+      <a href="https://pages.github.com/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">GitHub Pages</a>.
+    </p>
+  </div>
 </footer>
-
-<!-- footer end -->

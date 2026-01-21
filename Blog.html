@@ -1,95 +1,162 @@
----
-layout: default
----
-
-<div class="teaserimage">
-    <div class="teaserimage-image" {% if site.cover %}style="background-image: url({{ site.cover | prepend: site.baseurl }})"{% endif %}>
-        Teaser Image
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Martin Li's Blog - Thoughts on technology, development, and life.">
+  <title>Blog | Martin Li</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/modern.css">
+  <link rel="stylesheet" href="/assets/css/blog.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="site-nav" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">Martin Li</a>
+      
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#projects">Projects</a></li>
+        <li><a href="/Blog.html" style="color: var(--primary-color); font-weight: 600;">Blog</a></li>
+        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li><a href="/old-version/Blog.html" class="btn-old-version">🕰️ Old Blog</a></li>
+      </ul>
     </div>
-</div>
-
-<header class="blog-header">
-    {% if site.logo %}
-      <a class="blog-logo" href="{{site.url}}{{site.baseurl}}" style="background-image: url('{{ site.logo | prepend: site.baseurl }}')">{{ site.title }}</a>
-    {% endif %}
-    <h1 class="blog-title">{{ site.title }}</h1>
-    <h2 class="blog-description">{{ site.description }}</h2>
-    <div class="custom-links">
-      {% for social in site.social %}
-        {% if social.url %}
-            <a class="icon-{{ social.icon }}" href="{{ social.url }}" {% if social.desc %} title="{{ social.desc }}"{% endif %}">
-              <i class="fa fa-{{ social.icon }}"></i>
+  </nav>
+  
+  <!-- Blog Hero -->
+  <section class="blog-hero">
+    <div class="blog-hero-content">
+      <h1>📝 Blog</h1>
+      <p>Thoughts, insights, and stories about technology, development, and life.</p>
+    </div>
+  </section>
+  
+  <!-- Blog Posts -->
+  <section class="section">
+    <div class="container">
+      <div class="blog-grid">
+        
+        <!-- Blog Post 1 -->
+        <article class="blog-card">
+          <div class="blog-image">
+            <img src="/assets/images/blog-placeholder.jpg" alt="Blog post" 
+                 onerror="this.style.display='none'">
+          </div>
+          <div class="blog-content">
+            <div class="blog-date">
+              <i class="fas fa-calendar"></i> February 22, 2020
+            </div>
+            <h2 class="blog-title">Tyson Fury vs Deontay Wilder</h2>
+            <p class="blog-excerpt">
+              A reflection on the epic rematch between two heavyweight champions, 
+              exploring themes of perseverance, comeback, and determination...
+            </p>
+            <a href="/jekyll/update/2020/02/22/tyson-fury-vs-deontay-wilder.html" class="blog-read-more">
+              Read More <i class="fas fa-arrow-right"></i>
             </a>
-            &nbsp;&nbsp;·&nbsp;&nbsp;
-        {% endif %}
-      {% endfor %}
-      <a href={{ "/about/" | prepend: site.baseurl }}>About</a>
-    </div>
-</header>
-
-
-<main class="content" role="main">
-
-    {% if site.tags.featured %}
-    <h5 class="index-headline featured"><span>Featured</span></h5>
-
-    <div class="container featured">
-      {% for post in site.tags.featured %}
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting" role="article">
-          <div class="article-item">
-            <header class="post-header">
-              <h2 class="post-title" itemprop="name"><a href="{{ post.url | prepend: site.baseurl }}" itemprop="url">{{ post.title }}</a></h2>
-            </header>
-            <section class="post-excerpt" itemprop="description">
-              <p>{{ post.content | strip_html | truncatewords: 50 }}</p>
-            </section>
-            <div class="post-meta">
-              <time datetime="{{ post.date | date_to_long_string }}">{{ post.date | date_to_long_string }}</time>
-  <!--            <span class="post-tags-set">on {{#foreach tags}}<span class="post-tag-{{slug}}">{{#if @first}}{{else}}, {{/if}}<a href="/tag/{{slug}}">{{name}}</a></span>{{/foreach}}</span>-->
-            </div>
           </div>
         </article>
-      {% endfor %}
-    </div>
-
-    <h5 class="index-headline normal"><span>Regular</span></h5>
-    {% endif %}
-
-    <div class="cf frame">
-      {% for post in paginator.posts %}
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting" role="article">
-          <div class="article-item">
-            <header class="post-header">
-              <h2 class="post-title" itemprop="name"><a href="{{ post.url | prepend: site.baseurl }}" itemprop="url">{{ post.title }}</a></h2>
-            </header>
-            <section class="post-excerpt" itemprop="description">
-              <p>{{ post.excerpt | strip_html | truncatewords: 50 }}</p>
-            </section>
-            <div class="post-meta">
-              <time datetime="{{ post.date | date_to_long_string }}">{{ post.date | date_to_long_string }}</time>
-<!--            <span class="post-tags-set">on {{#foreach tags}}<span class="post-tag-{{slug}}">{{#if @first}}{{else}}, {{/if}}<a href="/tag/{{slug}}">{{name}}</a></span>{{/foreach}}</span>-->
+        
+        <!-- Blog Post 2 -->
+        <article class="blog-card">
+          <div class="blog-image">
+            <img src="/assets/images/blog-placeholder.jpg" alt="Blog post"
+                 onerror="this.style.display='none'">
+          </div>
+          <div class="blog-content">
+            <div class="blog-date">
+              <i class="fas fa-calendar"></i> October 1, 2019
             </div>
+            <h2 class="blog-title">The Beginning of My Blogging Ventures</h2>
+            <p class="blog-excerpt">
+              Starting my journey into blogging and sharing my thoughts on technology, 
+              development, and the lessons learned along the way...
+            </p>
+            <a href="/jekyll/update/2019/10/01/the-beginning-of-my-blogging-ventures.html" class="blog-read-more">
+              Read More <i class="fas fa-arrow-right"></i>
+            </a>
           </div>
         </article>
-      {% endfor %}
+        
+        <!-- Coming Soon Card -->
+        <article class="blog-card blog-card-placeholder">
+          <div class="blog-image" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-pen-fancy" style="font-size: 3rem; color: white; opacity: 0.5;"></i>
+          </div>
+          <div class="blog-content">
+            <div class="blog-date">
+              <i class="fas fa-clock"></i> Coming Soon
+            </div>
+            <h2 class="blog-title">More Posts Coming Soon!</h2>
+            <p class="blog-excerpt">
+              Stay tuned for more insights, tutorials, and stories about software development, 
+              technology trends, and personal growth.
+            </p>
+          </div>
+        </article>
+        
+      </div>
     </div>
-
-    <nav class="pagination" role="navigation">
-      {% if paginator.next_page %}
-        <a class="newer-posts" href={{ "/page" | prepend: site.baseurl | append: paginator.next_page }}>&larr; Older posts</a>
-      {% endif %}
-      <span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
-      {% if paginator.previous_page %}
-        {% if paginator.page == 2 %}
-          <a class="older-posts" href={{ "/" | prepend: site.baseurl }}>Newer posts &rarr;</a>
-        {% else %}
-          <a class="older-posts" href={{ "/page" | prepend: site.baseurl | append: paginator.previous_page }}>Newer posts &rarr;</a>
-        {% endif %}
-      {% endif %}
-    </nav>
-
-
-    <!-- {{!! After all the posts, we have the previous/next pagination links }}
-    {{pagination}} -->
-
-</main>
+  </section>
+  
+  <!-- Newsletter Section (Optional) -->
+  <section class="section" style="background: var(--bg-secondary);">
+    <div class="container" style="max-width: 600px; text-align: center;">
+      <h2 class="section-title">Stay Updated</h2>
+      <p class="section-description">
+        Want to be notified when I publish new posts? Follow me on social media!
+      </p>
+      <div class="social-links" style="margin-top: var(--spacing-xl);">
+        <a href="https://github.com/simplisticmartin" class="social-link" style="background: var(--text-primary); color: white;">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/simplisticmartin" class="social-link" style="background: #0077b5; color: white;">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="mailto:simplisticmartin@gmail.com" class="social-link" style="background: #ea4335; color: white;">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/#projects">Projects</a>
+        <a href="/Blog.html">Blog</a>
+        <a href="/Resume.pdf">Resume</a>
+        <a href="/old-version/Blog.html">Old Blog Version</a>
+      </div>
+      <p class="footer-copyright">
+        &copy; 2026 Martin Li. Built with modern web technologies.
+      </p>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <script src="/assets/js/modern.js"></script>
+</body>
+</html>
