@@ -33,6 +33,10 @@ plugins:
 paginate: 6
 paginate_path: "/blog/page:num/"
 
+# Keep these files in _site even though they're not processed
+keep_files:
+  - old-version
+
 # Exclude from processing
 exclude:
   - Gemfile
@@ -42,7 +46,6 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
-  - old-version/
 
 # Collections
 collections:

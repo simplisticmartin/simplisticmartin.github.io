@@ -63,14 +63,14 @@ class ParticleSystem {
   drawParticle(particle) {
     this.ctx.beginPath();
     this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = 'rgba(99, 102, 241, 0.6)';
+    this.ctx.fillStyle = 'rgba(85, 214, 170, 0.6)';
     this.ctx.fill();
   }
   
   drawConnection(p1, p2, distance) {
     const opacity = 1 - (distance / this.connectionDistance);
     this.ctx.beginPath();
-    this.ctx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.2})`;
+    this.ctx.strokeStyle = `rgba(85, 214, 170, ${opacity * 0.2})`;
     this.ctx.lineWidth = 1;
     this.ctx.moveTo(p1.x, p1.y);
     this.ctx.lineTo(p2.x, p2.y);

@@ -13,6 +13,12 @@
       <li><a href="{{ '/about' | relative_url }}" {% if page.url == "/about/" %}style="color: var(--primary-color); font-weight: 600;"{% endif %}>About</a></li>
       <li><a href="{{ '/Resume.pdf' | relative_url }}" target="_blank">Resume</a></li>
       <li><a href="{{ '/old-version/index.html' | relative_url }}" class="btn-old-version">🕰️ Old Version</a></li>
+      <li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </li>
     </ul>
   </div>
 </nav>

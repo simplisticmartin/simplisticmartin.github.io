@@ -137,7 +137,7 @@ if (prefersReducedMotion.matches) {
 }
 
 // ==================== CONSOLE PERFORMANCE TIP ====================
-console.log('%c⚡ Performance Tips', 'color: #6366f1; font-size: 16px; font-weight: bold;');
+console.log('%c⚡ Performance Tips', 'color: #55d6aa; font-size: 16px; font-weight: bold;');
 console.log('Site optimized with:');
 console.log('✓ Lazy loading images');
 console.log('✓ Link prefetching');

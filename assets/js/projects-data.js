@@ -7,7 +7,7 @@ const projects = [
   {
     title: "Massive Multiplayer Game",
     description: "A real-time multiplayer game built with modern web technologies. Features include real-time synchronization, player interactions, and dynamic game mechanics.",
-    image: "/img/project-icons/game-icon.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2355d6aa' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🎮%3C/text%3E%3C/svg%3E",
     tags: ["JavaScript", "WebSocket", "Node.js", "Real-time"],
     github: null,
     demo: null,
@@ -16,7 +16,7 @@ const projects = [
   {
     title: "Clearsyn",
     description: "An innovative application designed to streamline communication and collaboration. Built with a focus on user experience and performance.",
-    image: "/img/project-icons/clearsyn-icon.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2357ad68' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E💬%3C/text%3E%3C/svg%3E",
     tags: ["Web Development", "UI/UX", "Full-Stack"],
     github: null,
     demo: null,
@@ -25,7 +25,7 @@ const projects = [
   {
     title: "Portfolio Website",
     description: "A modern, responsive portfolio and blog built with Jekyll and GitHub Pages. Features include smooth animations, dark mode support, and optimized performance.",
-    image: "/img/screenshots/portfolio-screenshot.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2355d6aa;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2357ad68;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad)' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🌐%3C/text%3E%3C/svg%3E",
     tags: ["Jekyll", "HTML", "CSS", "JavaScript"],
     github: "https://github.com/simplisticmartin/simplisticmartin.github.io",
     demo: "https://simplisticmartin.github.io",
@@ -34,7 +34,7 @@ const projects = [
   {
     title: "Data Science Projects",
     description: "Collection of data analysis and machine learning projects. Includes data visualization, predictive modeling, and statistical analysis.",
-    image: "/img/project-icons/data-icon.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2314b8a6' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E📊%3C/text%3E%3C/svg%3E",
     tags: ["Python", "Data Science", "Machine Learning", "Analytics"],
     github: "https://github.com/simplisticmartin",
     demo: null,
@@ -43,7 +43,7 @@ const projects = [
   {
     title: "Sandwich Game",
     description: "An interactive web game with engaging gameplay and smooth animations. Built as a fun project to explore game development on the web.",
-    image: "/img/project-icons/game-icon.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2355d6aa' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🥪%3C/text%3E%3C/svg%3E",
     tags: ["JavaScript", "HTML5", "Game Development"],
     github: null,
     demo: "/Projects/Sandwich-Game/",
@@ -52,7 +52,7 @@ const projects = [
   {
     title: "Quote Generator",
     description: "A beautiful quote generator with daily inspirational quotes. Features smooth transitions and social sharing capabilities.",
-    image: "/img/project-icons/quote-icon.png",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2357ad68' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E💭%3C/text%3E%3C/svg%3E",
     tags: ["JavaScript", "API", "Responsive Design"],
     github: null,
     demo: "/Projects/QuoteGenerator/",

@@ -163,21 +163,58 @@ if ('loading' in HTMLImageElement.prototype) {
   document.body.appendChild(script);
 }
 
-// ==================== THEME TOGGLE (Optional) ====================
+// ==================== THEME TOGGLE ====================
 function initThemeToggle() {
-  const theme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', theme);
+  // Check for saved theme preference or default to system preference
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else {
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = prefersDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  }
 }
 
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
   document.documentElement.setAttribute('data-theme', newTheme);
   localStorage.setItem('theme', newTheme);
+  
+  // Add a subtle animation effect
+  document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+  
+  // Track theme change
+  trackEvent('Theme', 'Toggle', newTheme);
+  
+  // Show feedback
+  showNotification(`${newTheme === 'dark' ? '🌙' : '☀️'} ${newTheme === 'dark' ? 'Dark' : 'Light'} mode activated`);
 }
 
 // Initialize theme on page load
 initThemeToggle();
+
+// Set up theme toggle button
+document.addEventListener('DOMContentLoaded', () => {
+  const themeToggle = document.getElementById('themeToggle');
+  
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+  
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const theme = e.matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  });
+});
 
 // ==================== UTILITY FUNCTIONS ====================
 function debounce(func, wait) {

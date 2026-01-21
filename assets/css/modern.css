@@ -5,30 +5,30 @@
 
 /* ==================== CSS VARIABLES ==================== */
 :root {
-  /* Colors - Modern Professional Palette */
-  --primary-color: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #818cf8;
-  --secondary-color: #ec4899;
+  /* Colors - Teal & Blue Palette (Matching Old Blog) */
+  --primary-color: #55d6aa;
+  --primary-dark: #3db896;
+  --primary-light: #6ee0b8;
+  --secondary-color: #57ad68;
   --accent-color: #14b8a6;
   
   /* Backgrounds */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-dark: #0f172a;
+  --bg-tertiary: #e8f5f1;
+  --bg-dark: #263238;
   --bg-card: #ffffff;
   
   /* Text Colors */
-  --text-primary: #0f172a;
+  --text-primary: #263238;
   --text-secondary: #475569;
   --text-tertiary: #94a3b8;
   --text-light: #ffffff;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-  --gradient-secondary: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  --gradient-primary: linear-gradient(135deg, #55d6aa 0%, #57ad68 100%);
+  --gradient-secondary: linear-gradient(135deg, #14b8a6 0%, #55d6aa 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(85, 214, 170, 0.1) 0%, rgba(87, 173, 104, 0.1) 100%);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -64,15 +64,33 @@
 }
 
 /* Dark Mode Variables */
+[data-theme="dark"] {
+  --bg-primary: #1a1f2e;
+  --bg-secondary: #263238;
+  --bg-tertiary: #2d3e47;
+  --bg-card: #263238;
+  --bg-dark: #0f1419;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  
+  /* Teal colors stay vibrant in dark mode */
+  --primary-color: #55d6aa;
+  --primary-dark: #3db896;
+  --primary-light: #6ee0b8;
+}
+
+/* Auto dark mode (respects system preference if no manual selection) */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-card: #1e293b;
+  :root:not([data-theme="light"]) {
+    --bg-primary: #1a1f2e;
+    --bg-secondary: #263238;
+    --bg-tertiary: #2d3e47;
+    --bg-card: #263238;
+    --bg-dark: #0f1419;
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
-    --text-tertiary: #64748b;
+    --text-tertiary: #94a3b8;
   }
 }
 
@@ -96,6 +114,7 @@ body {
   line-height: 1.6;
   font-size: 16px;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -143,9 +162,17 @@ img {
   transition: all var(--transition-base);
 }
 
+[data-theme="dark"] .site-nav {
+  background: rgba(26, 31, 46, 0.95);
+}
+
 .site-nav.scrolled {
   box-shadow: var(--shadow-md);
   background: rgba(255, 255, 255, 0.98);
+}
+
+[data-theme="dark"] .site-nav.scrolled {
+  background: rgba(26, 31, 46, 0.98);
 }
 
 .nav-container {
@@ -218,6 +245,58 @@ img {
 
 .btn-old-version::after {
   display: none;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-left: var(--spacing-md);
+}
+
+.theme-toggle:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle i {
+  transition: transform var(--transition-base);
+}
+
+.theme-toggle:hover i {
+  transform: rotate(180deg);
+}
+
+/* Hide/show theme icons based on current theme */
+[data-theme="light"] .theme-toggle .fa-sun,
+[data-theme="dark"] .theme-toggle .fa-moon {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle .fa-moon,
+[data-theme="dark"] .theme-toggle .fa-sun {
+  display: block;
+}
+
+/* Default state (no theme set) - show moon icon */
+:root:not([data-theme]) .theme-toggle .fa-sun {
+  display: none;
+}
+
+:root:not([data-theme]) .theme-toggle .fa-moon {
+  display: block;
 }
 
 .mobile-menu-toggle {
@@ -563,8 +642,17 @@ img {
     transition: transform var(--transition-base);
   }
   
+  [data-theme="dark"] .nav-links {
+    background: var(--bg-card);
+  }
+  
   .nav-links.active {
     transform: translateX(0);
+  }
+  
+  .theme-toggle {
+    margin-left: 0;
+    margin-top: var(--spacing-sm);
   }
   
   .mobile-menu-toggle {
