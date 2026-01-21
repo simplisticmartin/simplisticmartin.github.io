@@ -9,7 +9,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="{{ '/' | relative_url }}" {% if page.url == "/" %}style="color: var(--primary-color); font-weight: 600;"{% endif %}>Home</a></li>
       <li><a href="{{ '/#projects' | relative_url }}">Projects</a></li>
-      <li><a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' or page.layout == 'post' %}style="color: var(--primary-color); font-weight: 600;"{% endif %}>Blog</a></li>
+      <li><a href="{{ '/blog' | relative_url }}" {% if page.url contains '/blog' or page.layout == 'post' %}style="color: var(--primary-color); font-weight: 600;"{% endif %}>Blog</a></li>
       <li><a href="{{ '/about' | relative_url }}" {% if page.url == "/about/" %}style="color: var(--primary-color); font-weight: 600;"{% endif %}>About</a></li>
       <li><a href="{{ '/Resume.pdf' | relative_url }}" target="_blank">Resume</a></li>
       <li><a href="{{ '/old-version/index.html' | relative_url }}" class="btn-old-version">🕰️ Old Version</a></li>
