@@ -327,23 +327,6 @@ img {
   width: 100%;
   height: 100%;
   z-index: 0;
-  background: var(--gradient-hero);
-}
-
-/* Mobile: Use static background instead of particles */
-@media (max-width: 768px) {
-  .hero {
-    background: linear-gradient(135deg, 
-      rgba(85, 214, 170, 0.15) 0%, 
-      rgba(87, 173, 104, 0.15) 50%,
-      rgba(85, 214, 170, 0.15) 100%
-    );
-    background-attachment: fixed;
-  }
-  
-  .hero-background {
-    display: none; /* Hide particle canvas on mobile */
-  }
 }
 
 .hero-content {
@@ -678,9 +661,6 @@ img {
   
   .hero {
     padding-top: 100px;
-    /* Fix background attachment on mobile */
-    background-attachment: scroll;
-    -webkit-overflow-scrolling: touch;
   }
   
   .hero-cta {
@@ -690,11 +670,6 @@ img {
   .btn {
     width: 100%;
     justify-content: center;
-  }
-  
-  /* Optimize mobile performance */
-  * {
-    -webkit-tap-highlight-color: transparent;
   }
   
   .projects-grid {

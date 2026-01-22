@@ -1,7 +1,6 @@
 /**
  * MODERN PARTICLE ANIMATION
  * Lightweight particle system for hero background
- * Optimized for mobile devices
  */
 
 class ParticleSystem {
@@ -9,21 +8,11 @@ class ParticleSystem {
     this.canvas = document.getElementById(canvasId);
     if (!this.canvas) return;
     
-    // Detect mobile device
-    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-    
-    // Disable particles on mobile for performance
-    if (this.isMobile) {
-      this.canvas.style.display = 'none';
-      return;
-    }
-    
     this.ctx = this.canvas.getContext('2d');
     this.particles = [];
     this.particleCount = 50;
     this.connectionDistance = 150;
     this.mouse = { x: null, y: null, radius: 150 };
-    this.isAnimating = true;
     
     this.init();
     this.animate();
@@ -36,22 +25,13 @@ class ParticleSystem {
   }
   
   resize() {
-    const width = this.canvas.offsetWidth;
-    const height = this.canvas.offsetHeight;
-    
-    // Only resize if dimensions actually changed
-    if (this.canvas.width !== width || this.canvas.height !== height) {
-      this.canvas.width = width;
-      this.canvas.height = height;
-      this.createParticles();
-    }
+    this.canvas.width = this.canvas.offsetWidth;
+    this.canvas.height = this.canvas.offsetHeight;
   }
   
   createParticles() {
     this.particles = [];
-    const count = this.isMobile ? 25 : this.particleCount; // Fewer particles on mobile
-    
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < this.particleCount; i++) {
       this.particles.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
@@ -63,13 +43,9 @@ class ParticleSystem {
   }
   
   setupEventListeners() {
-    // Debounced resize handler to prevent constant recreation
-    let resizeTimeout;
     window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        this.resize();
-      }, 250);
+      this.resize();
+      this.createParticles();
     });
     
     this.canvas.addEventListener('mousemove', (e) => {
@@ -164,30 +140,18 @@ class ParticleSystem {
 // Initialize particle system
 document.addEventListener('DOMContentLoaded', () => {
   const background = document.getElementById('particlesBackground');
-  if (!background) return;
-  
-  // Check if device is mobile
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-  
-  // Skip particle animation on mobile devices for better performance
-  if (isMobile) {
-    background.style.background = 'linear-gradient(135deg, rgba(85, 214, 170, 0.15) 0%, rgba(87, 173, 104, 0.15) 50%, rgba(85, 214, 170, 0.15) 100%)';
-    console.log('📱 Mobile detected - Using static gradient background');
-    return;
+  if (background) {
+    // Create canvas element
+    const canvas = document.createElement('canvas');
+    canvas.id = 'particlesCanvas';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    background.appendChild(canvas);
+    
+    // Initialize particle system
+    new ParticleSystem('particlesCanvas');
   }
-  
-  // Create canvas element for desktop
-  const canvas = document.createElement('canvas');
-  canvas.id = 'particlesCanvas';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.position = 'absolute';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.pointerEvents = 'none'; // Prevent canvas from blocking clicks
-  background.appendChild(canvas);
-  
-  // Initialize particle system
-  new ParticleSystem('particlesCanvas');
-  console.log('💻 Desktop detected - Particle animation enabled');
 });
