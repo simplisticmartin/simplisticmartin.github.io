@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import webbrowser
 import tempfile
+import threading
 
 try:
     import markdown
@@ -80,6 +81,19 @@ class BlogPostCreator:
         self.current_file = None  # Track currently loaded file for editing
         self.recent_files = []  # Track recent files
         self.font_size = tk.IntVar(value=11)
+        self.autosave_timer = None
+        self.last_autosave_path = None
+        
+        # Markdown snippets for quick insertion
+        self.snippets = {
+            "table": "| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |",
+            "checklist": "- [ ] Task 1\n- [ ] Task 2\n- [ ] Task 3",
+            "hr": "---",
+            "details": "<details>\n<summary>Click to expand</summary>\n\nContent goes here\n\n</details>",
+            "callout": "> **Note:** Important information here",
+            "math": "$$E = mc^2$$",
+            "tabs": "<tabs>\n  <tab label=\"Tab 1\">Content 1</tab>\n  <tab label=\"Tab 2\">Content 2</tab>\n</tabs>"
+        }
         
         # Post templates
         self.templates = {
@@ -227,6 +241,7 @@ What to learn next?"""
         
         self.setup_ui()
         self.load_config()
+        self.start_autosave_timer()
         
         # Auto-update preview
         self.root.after(500, self.auto_update_preview)
@@ -376,15 +391,27 @@ What to learn next?"""
         font_up.pack(side="left", padx=2)
         font_up.bind("<Button-1>", lambda e: self.change_font_size(1))
         
-        # Word count indicator
+        # Word count indicator with stats
+        self.stats_frame = tk.Frame(right_header, bg=self.colors["bg_secondary"])
+        self.stats_frame.pack(pady=(0, 4))
+        
         self.word_count_label = tk.Label(
-            right_header,
-            text="0 words",
+            self.stats_frame,
+            text="0 words • 0 min",
             font=("Segoe UI", 11, "bold"),
             bg=self.colors["bg_secondary"],
             fg=self.colors["accent_light"]
         )
-        self.word_count_label.pack(pady=(0, 4))
+        self.word_count_label.pack(side="left", padx=(0, 15))
+        
+        self.char_count_label = tk.Label(
+            self.stats_frame,
+            text="0 chars",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        )
+        self.char_count_label.pack(side="left")
         
         status_label = tk.Label(
             right_header,
@@ -1013,12 +1040,15 @@ Summarize your key points and call to action."""
             ("|", "—", None),  # Separator
             ("• List", "Bullet List", lambda: self.insert_prefix("- ")),
             ("1. List", "Numbered List", lambda: self.insert_prefix("1. ")),
+            ("☑️", "Checklist", lambda: self.insert_snippet("checklist")),
             ("|", "—", None),  # Separator
             ("[ ] Code", "Code Block", lambda: self.insert_code_block()),
             ("[Link]", "Link", lambda: self.insert_link()),
             ("[Img]", "Image", lambda: self.insert_image()),
             ("|", "—", None),  # Separator
             ("Quote", "Blockquote", lambda: self.insert_prefix("> ")),
+            ("📋", "Table", lambda: self.insert_snippet("table")),
+            ("---", "Divider", lambda: self.insert_snippet("hr")),
             ("|", "—", None),  # Separator
             ("🔍", "Find & Replace", lambda: self.show_find_replace()),
             ("📊", "Statistics", lambda: self.show_stats()),
@@ -1278,17 +1308,23 @@ image: {image}
             messagebox.showerror("Error", f"Failed to commit/push: {str(e)}")
     
     def update_word_count(self):
-        """Update word count and auto-calculate reading time"""
+        """Update word count, character count, and auto-calculate reading time"""
         try:
             content = self.content_var.get("1.0", "end-1c")
             words = len(content.split())
+            chars = len(content)
             self.word_count.set(words)
-            self.word_count_label.config(text=f"{words} words")
             
             # Auto-calculate reading time (avg 200 words per minute)
             if words > 0:
                 read_time = max(1, round(words / 200))
                 self.read_time_var.set(str(read_time))
+            else:
+                read_time = 0
+            
+            # Update display with inline stats
+            self.word_count_label.config(text=f"{words:,} words • {read_time} min")
+            self.char_count_label.config(text=f"{chars:,} chars")
         except:
             pass
     
@@ -1961,6 +1997,94 @@ image: {image}
             
         except Exception as e:
             messagebox.showerror("Error", f"Failed to generate preview: {str(e)}")
+    
+    def insert_snippet(self, snippet_name):
+        """Insert a markdown snippet at cursor position"""
+        if snippet_name not in self.snippets:
+            return
+        
+        try:
+            snippet = self.snippets[snippet_name]
+            pos = self.content_var.index("insert")
+            self.content_var.insert(pos, snippet + "\n")
+            self.update_preview()
+            self.update_word_count()
+            self.autosave_status.set(f"📋 Inserted: {snippet_name}")
+            self.root.after(1500, lambda: self.autosave_status.set(""))
+        except:
+            pass
+    
+    def start_autosave_timer(self):
+        """Start periodic auto-save of drafts"""
+        def autosave():
+            try:
+                if self.title_var.get():
+                    # Auto-save draft periodically
+                    if self.autosave_timer:
+                        self.root.after_cancel(self.autosave_timer)
+                    self.autosave_timer = self.root.after(60000, autosave)  # Every 60 seconds
+                    
+                    # Quick auto-save without showing message
+                    drafts_path = os.path.join(self.repo_path, "_drafts") if self.repo_path else os.path.expanduser("~/blog-drafts")
+                    os.makedirs(drafts_path, exist_ok=True)
+                    
+                    slug = self.slug_var.get()
+                    filename = f"{slug}.markdown"
+                    filepath = os.path.join(drafts_path, filename)
+                    
+                    # Build content
+                    date = self.date_var.get()
+                    time = self.time_var.get()
+                    categories = [key for key, var in self.category_vars.items() if var.get()]
+                    description = self.description_var.get()
+                    image = self.image_var.get()
+                    read_time = self.read_time_var.get()
+                    content = self.content_var.get("1.0", "end-1c")
+                    
+                    # Build frontmatter
+                    fm_lines = [
+                        "---",
+                        "layout: post",
+                        f'title: "{self.title_var.get()}"',
+                        f"date: {date} {time}",
+                        f"categories: [{', '.join(categories)}]",
+                        f"tags: [{', '.join(self.tags_list)}]",
+                        "author: Martin Li",
+                        f"read_time: {read_time}",
+                        f'description: "{description}"',
+                        f"image: {image}",
+                        "---",
+                        "",
+                        content
+                    ]
+                    draft_content = "\n".join(fm_lines)
+                    
+                    with open(filepath, "w", encoding="utf-8") as f:
+                        f.write(draft_content)
+                    
+                    self.last_autosave_path = filepath
+            except:
+                pass
+        
+        autosave()
+    
+    def insert_inline_code(self):
+        """Insert inline code formatting"""
+        try:
+            if self.content_var.tag_ranges("sel"):
+                self.wrap_selection("`", "`")
+            else:
+                pos = self.content_var.index("insert")
+                self.content_var.insert(pos, "`code`")
+                self.content_var.mark_set("insert", f"{pos}+1c")
+            self.update_preview()
+        except:
+            pass
+    
+    def add_syntax_highlight_tags(self):
+        """Configure syntax highlighting tags for editor preview"""
+        # These would be applied in update_preview for live syntax highlighting
+        pass
 
 if __name__ == "__main__":
     root = tk.Tk()
