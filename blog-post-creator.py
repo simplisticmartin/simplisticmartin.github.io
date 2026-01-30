@@ -36,7 +36,7 @@ class BlogPostCreator:
             "text_primary": "#f1f5f9",    # Light text
             "text_secondary": "#cbd5e1",
             "accent": "#3b82f6",          # Blue
-            "accent_hover": "#2563eb",
+            "accent_hover": "#2563eb",    # Darker blue
             "success": "#10b981",
             "border": "#475569"
         }
@@ -384,7 +384,7 @@ class BlogPostCreator:
         """Create the right side with editor and preview"""
         # Notebook style tabs using frames
         tab_container = tk.Frame(parent, bg=self.colors["bg_secondary"])
-        tab_container.pack(fill="x", padx=15, pady=(15, 10))
+        tab_container.pack(fill="x", padx=15, pady=(15, 0))
         
         # Tab buttons
         self.tab_editor_btn = tk.Label(
@@ -416,6 +416,9 @@ class BlogPostCreator:
         # Content area
         self.editor_frame = tk.Frame(parent, bg=self.colors["bg_primary"])
         self.editor_frame.pack(fill="both", expand=True)
+        
+        # Markdown toolbar
+        self.create_markdown_toolbar(self.editor_frame)
         
         self.preview_frame = tk.Frame(parent, bg=self.colors["bg_primary"])
         
@@ -467,15 +470,14 @@ Summarize your key points and call to action."""
             self.preview_frame,
             font=("Courier New", 9),
             bg=self.colors["bg_primary"],
-            fg=self.colors["text_primary"],
-            insertbackground=self.colors["accent"],
+            fg=self.colors["text_secondary"],
             relief="flat",
             bd=0,
             padx=12,
-            pady=12,
-            state="disabled"
+            pady=12
         )
         self.preview_text.pack(fill="both", expand=True)
+        self.preview_text.config(state="disabled")
         
         # Bottom action bar
         action_bar = tk.Frame(parent, bg=self.colors["bg_secondary"])
@@ -509,6 +511,111 @@ Summarize your key points and call to action."""
         self.publish_btn.bind("<Button-1>", lambda e: self.create_post())
         
         self.current_tab = "editor"
+    
+    def create_markdown_toolbar(self, parent):
+        """Create a markdown formatting toolbar"""
+        toolbar = tk.Frame(parent, bg=self.colors["bg_secondary"], height=45)
+        toolbar.pack(fill="x", padx=0, pady=(0, 8))
+        toolbar.pack_propagate(False)
+        
+        # Buttons with markdown formatting
+        buttons = [
+            ("**B**", "Bold", lambda: self.wrap_selection("**", "**")),
+            ("*I*", "Italic", lambda: self.wrap_selection("*", "*")),
+            ("~~S~~", "Strikethrough", lambda: self.wrap_selection("~~", "~~")),
+            ("|", "—", None),  # Separator
+            ("H1", "Heading 1", lambda: self.insert_prefix("# ")),
+            ("H2", "Heading 2", lambda: self.insert_prefix("## ")),
+            ("H3", "Heading 3", lambda: self.insert_prefix("### ")),
+            ("|", "—", None),  # Separator
+            ("• List", "Bullet List", lambda: self.insert_prefix("- ")),
+            ("1. List", "Numbered List", lambda: self.insert_prefix("1. ")),
+            ("|", "—", None),  # Separator
+            ("[ ] Code", "Code Block", lambda: self.insert_code_block()),
+            ("[Link]", "Link", lambda: self.insert_link()),
+            ("[Img]", "Image", lambda: self.insert_image()),
+            ("|", "—", None),  # Separator
+            ("Quote", "Blockquote", lambda: self.insert_prefix("> ")),
+        ]
+        
+        for label, tooltip, command in buttons:
+            if command is None:
+                # Separator
+                sep = tk.Label(toolbar, text=label, bg=self.colors["bg_secondary"], fg=self.colors["border"], padx=2)
+                sep.pack(side="left", padx=2)
+            else:
+                btn = tk.Label(
+                    toolbar,
+                    text=label,
+                    font=("Segoe UI", 9, "bold"),
+                    bg=self.colors["accent"],
+                    fg="white",
+                    padx=10,
+                    pady=6,
+                    cursor="hand2",
+                    relief="flat"
+                )
+                btn.pack(side="left", padx=3, pady=6)
+                btn.bind("<Button-1>", lambda e, cmd=command: cmd())
+                # Add hover effect
+                btn.bind("<Enter>", lambda e, b=btn: b.config(bg=self.colors["accent_hover"]))
+                btn.bind("<Leave>", lambda e, b=btn: b.config(bg=self.colors["accent"]))
+    
+    def wrap_selection(self, prefix, suffix):
+        """Wrap selected text with prefix and suffix"""
+        try:
+            if self.content_var.tag_ranges("sel"):
+                start = self.content_var.index("sel.first")
+                end = self.content_var.index("sel.last")
+                selected = self.content_var.get(start, end)
+                self.content_var.delete(start, end)
+                self.content_var.insert(start, f"{prefix}{selected}{suffix}")
+                self.update_preview()
+        except:
+            pass
+    
+    def insert_prefix(self, prefix):
+        """Insert prefix at the beginning of current line"""
+        try:
+            current_line = self.content_var.index("insert linestart")
+            self.content_var.insert(current_line, prefix)
+            self.update_preview()
+        except:
+            pass
+    
+    def insert_code_block(self):
+        """Insert a code block"""
+        try:
+            pos = self.content_var.index("insert")
+            self.content_var.insert(pos, "\n```\n\n```\n")
+            self.update_preview()
+        except:
+            pass
+    
+    def insert_link(self):
+        """Insert a link template"""
+        try:
+            if self.content_var.tag_ranges("sel"):
+                start = self.content_var.index("sel.first")
+                end = self.content_var.index("sel.last")
+                selected = self.content_var.get(start, end)
+                self.content_var.delete(start, end)
+                self.content_var.insert(start, f"[{selected}](url)")
+            else:
+                pos = self.content_var.index("insert")
+                self.content_var.insert(pos, "[link text](url)")
+            self.update_preview()
+        except:
+            pass
+    
+    def insert_image(self):
+        """Insert an image template"""
+        try:
+            pos = self.content_var.index("insert")
+            self.content_var.insert(pos, "![alt text](image-url)")
+            self.update_preview()
+        except:
+            pass
     
     def switch_tab(self, tab):
         """Switch between editor and preview tabs"""
