@@ -114,7 +114,7 @@ class BlogPostCreator:
     def setup_details_tab(self):
         """Setup the post details tab"""
         canvas = tk.Canvas(self.details_frame, bg=self.bg_color, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(self.details_frame, orient="vertical", command=canvas.scroll)
+        scrollbar = ttk.Scrollbar(self.details_frame, orient="vertical", command=canvas.yview)
         scrollable_frame = ttk.Frame(canvas)
         
         scrollable_frame.bind(
