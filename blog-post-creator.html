@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post Creator | Martin Li</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #5b5bff;
+            --secondary-color: #ff6b9d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --border-color: #e0e0e0;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(91, 91, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Monaco', monospace;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .tag-input-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            min-height: 44px;
+        }
+
+        .tag-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(91, 91, 255, 0.1);
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .tag-input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            min-width: 100px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .tag-input:focus {
+            outline: none;
+        }
+
+        .preview-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .preview-content {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4a4aff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(91, 91, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #0c4a6e;
+            border: 1px solid #93c5fd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 16px;
+            color: var(--success);
+        }
+
+        .modal-content p {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .code-preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .info-box {
+            background: #e0e7ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #3730a3;
+            font-size: 0.9rem;
+        }
+
+        .category-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .category-legend-item {
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✍️ Blog Post Creator</h1>
+            <p>Create and format your blog posts with ease</p>
+        </div>
+
+        <div class="card">
+            <div id="successAlert" class="alert alert-success">
+                <strong>Success!</strong> Your blog post markdown has been generated. Copy the code below and save it as a new file in the <code>_posts/</code> folder.
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Tip:</strong> After creating your post, save the markdown preview to <code>_posts/YYYY-MM-DD-slug-title.markdown</code>
+            </div>
+
+            <form id="postForm">
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="title">Post Title *</label>
+                    <input type="text" id="title" name="title" placeholder="e.g., My Journey in AI and Machine Learning" required>
+                </div>
+
+                <!-- Slug (auto-generated) -->
+                <div class="form-group">
+                    <label for="slug">Post Slug (URL) *</label>
+                    <input type="text" id="slug" name="slug" placeholder="auto-generated from title" readonly>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="form-group">
+                    <label>Categories * (Select at least one)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-career" name="category" value="career">
+                            <label for="cat-career"><span class="emoji">💼</span> Career</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-ai" name="category" value="ai">
+                            <label for="cat-ai"><span class="emoji">🤖</span> AI</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-quant" name="category" value="quant-finance">
+                            <label for="cat-quant"><span class="emoji">📈</span> Quant Finance</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-learning" name="category" value="learning">
+                            <label for="cat-learning"><span class="emoji">📚</span> Learning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-speaking" name="category" value="public-speaking">
+                            <label for="cat-speaking"><span class="emoji">🎤</span> Speaking</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-youtube" name="category" value="youtube">
+                            <label for="cat-youtube"><span class="emoji">🎥</span> YouTube</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-nonsense" name="category" value="nonsense">
+                            <label for="cat-nonsense"><span class="emoji">🎲</span> Nonsense</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated, press Enter to add)</label>
+                    <div class="tag-input-wrapper" id="tagWrapper">
+                        <input type="text" id="tags" class="tag-input" placeholder="Add tags... (e.g., software-engineering, tutorial)">
+                    </div>
+                </div>
+
+                <!-- Date and Read Time -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Publication Date *</label>
+                        <input type="datetime-local" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="readTime">Estimated Read Time (minutes) *</label>
+                        <input type="number" id="readTime" name="readTime" min="1" max="60" value="5" required>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">Meta Description *</label>
+                    <textarea id="description" name="description" placeholder="Keep under 160 characters for SEO. This appears in search results and previews." required></textarea>
+                    <small style="color: var(--text-secondary); display: block; margin-top: 6px;">
+                        <span id="descCount">0</span>/160 characters
+                    </small>
+                </div>
+
+                <!-- Image URL -->
+                <div class="form-group">
+                    <label for="image">Featured Image URL</label>
+                    <input type="text" id="image" name="image" placeholder="e.g., /assets/images/my-post-image.jpg">
+                </div>
+
+                <!-- Content -->
+                <div class="form-group">
+                    <label for="content">Post Content (Markdown) *</label>
+                    <textarea id="content" name="content" placeholder="Write your post content here using Markdown syntax..." required></textarea>
+                </div>
+
+                <!-- Preview -->
+                <div class="preview-section">
+                    <div class="preview-title">📋 Markdown Preview</div>
+                    <div class="code-preview" id="preview"></div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="reset" class="btn-secondary">Clear Form</button>
+                    <button type="button" class="btn-primary" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-check-circle"></i> Copied to Clipboard!</h2>
+            <p>The markdown code has been copied.</p>
+            <p>Now save it as: <strong><span id="fileName"></span></strong></p>
+            <button class="btn-primary" onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('postForm');
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+        const tagsInput = document.getElementById('tags');
+        const tagWrapper = document.getElementById('tagWrapper');
+        const dateInput = document.getElementById('date');
+        const descriptionInput = document.getElementById('description');
+        const contentInput = document.getElementById('content');
+        const previewDiv = document.getElementById('preview');
+        const descCount = document.getElementById('descCount');
+        const successAlert = document.getElementById('successAlert');
+
+        let tags = [];
+
+        // Initialize date input with current date/time
+        function initializeDate() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            dateInput.value = now.toISOString().slice(0, 16);
+        }
+
+        // Generate slug from title
+        function generateSlug(text) {
+            return text
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+
+        // Update slug when title changes
+        titleInput.addEventListener('input', () => {
+            slugInput.value = generateSlug(titleInput.value);
+            updatePreview();
+        });
+
+        // Handle tag input
+        tagsInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const tag = tagsInput.value.trim().replace(/,/g, '');
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
+                    tagsInput.value = '';
+                    updatePreview();
+                }
+            }
+        });
+
+        function renderTags() {
+            const tagElements = tags.map(tag => `
+                <div class="tag">
+                    ${tag}
+                    <button type="button" onclick="removeTag('${tag}')">×</button>
+                </div>
+            `).join('');
+            
+            tagWrapper.innerHTML = tagElements + '<input type="text" id="tags" class="tag-input" placeholder="Add more tags...">';
+            
+            const newTagInput = document.getElementById('tags');
+            newTagInput.addEventListener('keydown', tagsInput.onkeydown);
+            newTagInput.addEventListener('input', tagsInput.oninput);
+        }
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            renderTags();
+            updatePreview();
+        }
+
+        // Count description characters
+        descriptionInput.addEventListener('input', () => {
+            descCount.textContent = descriptionInput.value.length;
+            updatePreview();
+        });
+
+        // Update preview on input
+        form.addEventListener('input', updatePreview);
+        form.addEventListener('change', updatePreview);
+
+        function getCategories() {
+            const checkboxes = document.querySelectorAll('input[name="category"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function updatePreview() {
+            const title = titleInput.value || 'Your Post Title';
+            const date = dateInput.value || new Date().toISOString().slice(0, 19);
+            const categories = getCategories();
+            const description = descriptionInput.value || 'Post description';
+            const image = document.getElementById('image').value || '/assets/images/placeholder.jpg';
+            const content = contentInput.value || '# Content goes here';
+
+            const yaml = `---
+layout: post
+title: "${title}"
+date: ${date.replace('T', ' ')}
+categories: [${categories.join(', ')}]
+tags: [${tags.join(', ')}]
+author: Martin Li
+read_time: ${document.getElementById('readTime').value}
+description: "${description}"
+image: ${image}
+---
+
+${content}`;
+
+            previewDiv.textContent = yaml;
+        }
+
+        function copyToClipboard() {
+            const preview = previewDiv.textContent;
+            navigator.clipboard.writeText(preview).then(() => {
+                const slug = slugInput.value || 'slug';
+                const date = dateInput.value.split('T')[0];
+                const fileName = `${date}-${slug}.markdown`;
+                document.getElementById('fileName').textContent = fileName;
+                document.getElementById('successModal').classList.add('show');
+                successAlert.classList.add('show');
+                setTimeout(() => successAlert.classList.remove('show'), 5000);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+        }
+
+        // Initialize
+        initializeDate();
+        updatePreview();
+    </script>
+</body>
+</html>
