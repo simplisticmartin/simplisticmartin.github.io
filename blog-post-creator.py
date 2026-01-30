@@ -92,9 +92,10 @@ class BlogPostCreator:
         content_frame = tk.Frame(main_container, bg=self.colors["bg_primary"])
         content_frame.pack(fill="both", expand=True, padx=12, pady=12)
         
-        # Left panel - Form
-        left_panel = tk.Frame(content_frame, bg=self.colors["bg_secondary"], relief="flat")
-        left_panel.pack(side="left", fill="both", expand=False, padx=(0, 12), width=450)
+        # Left panel - Form (fixed width of 400px)
+        left_panel = tk.Frame(content_frame, bg=self.colors["bg_secondary"], relief="flat", width=400)
+        left_panel.pack(side="left", fill="y", padx=(0, 12))
+        left_panel.pack_propagate(False)
         
         # Right panel - Editor and Preview
         right_panel = tk.Frame(content_frame, bg=self.colors["bg_secondary"], relief="flat")
