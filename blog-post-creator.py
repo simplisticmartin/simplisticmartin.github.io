@@ -83,8 +83,48 @@ class BlogPostCreator:
         self.font_size = tk.IntVar(value=11)
         self.autosave_timer = None
         self.last_autosave_path = None
+        self.outline_items = []  # Track heading structure
+        self.show_outline = tk.BooleanVar(value=True)  # Toggle outline visibility
         
-        # Markdown snippets for quick insertion
+        # YAML Editor state
+        self.yaml_editor_mode = tk.BooleanVar(value=False)  # Toggle between visual and raw YAML
+        self.yaml_fields = {
+            "title": tk.StringVar(),
+            "description": tk.StringVar(),
+            "date": tk.StringVar(value=datetime.now().strftime("%Y-%m-%d")),
+            "categories": tk.StringVar(),  # Comma-separated
+            "tags": tk.StringVar(),  # Comma-separated
+            "canonical_url": tk.StringVar(),
+            "featured_image": tk.StringVar(),
+            "draft": tk.BooleanVar(value=False),
+            "read_time": tk.StringVar(value="5")
+        }
+        
+        # Post status (Tier 2)
+        self.post_status = tk.StringVar(value="Draft")  # Draft, In Review, Ready, Published
+        
+        # Content blocks/callouts (Tier 2)
+        self.content_blocks = {
+            "warning": "⚠️ **Warning:** ",
+            "insight": "💡 **Insight:** ",
+            "info": "ℹ️ **Info:** ",
+            "success": "✅ **Success:** ",
+            "error": "❌ **Error:** ",
+            "tip": "🎯 **Tip:** ",
+            "note": "📌 **Note:** "
+        }
+        
+        # Image manager (Tier 2)
+        self.uploaded_images = []  # Track uploaded images
+        
+        # Cross-post templates (Tier 3)
+        self.cross_post_templates = {
+            "twitter": "Tweet this!\n{title}\n{excerpt}\n{url}\n\n#writing #blog",
+            "linkedin": "LinkedIn Post:\n{title}\n\n{excerpt}\n\nRead more: {url}",
+            "newsletter": "Newsletter:\n{title}\n\n{excerpt}\n\n[Read Full Article]({url})",
+            "youtube": "Video Description:\n{title}\n\nTopics covered:\n- {excerpt}\n\nBlog: {url}"
+        }
+        
         self.snippets = {
             "table": "| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |",
             "checklist": "- [ ] Task 1\n- [ ] Task 2\n- [ ] Task 3",
@@ -276,6 +316,12 @@ What to learn next?"""
         content_frame = tk.Frame(main_container, bg=self.colors["bg_primary"])
         content_frame.pack(fill="both", expand=True, padx=12, pady=12)
         
+        # Outline sidebar (collapsible)
+        self.outline_panel = tk.Frame(content_frame, bg=self.colors["bg_secondary"], relief="flat", width=250)
+        self.outline_panel.pack(side="left", fill="y", padx=(0, 8))
+        self.outline_panel.pack_propagate(False)
+        self.create_outline_navigator(self.outline_panel)
+        
         # Left panel - Form (fixed width of 400px)
         left_panel = tk.Frame(content_frame, bg=self.colors["bg_secondary"], relief="flat", width=400)
         left_panel.pack(side="left", fill="y", padx=(0, 12))
@@ -287,6 +333,150 @@ What to learn next?"""
         
         self.create_form_panel(left_panel)
         self.create_editor_preview_panel(right_panel)
+    
+    def create_outline_navigator(self, parent):
+        """Create a collapsible outline/heading navigator sidebar"""
+        # Header
+        header = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=12, pady=(12, 8))
+        
+        tk.Label(
+            header,
+            text="📋 Outline",
+            font=("Segoe UI", 11, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Auto-extracted headings",
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(2, 0))
+        
+        # Scrollable outline list
+        canvas = tk.Canvas(
+            parent,
+            bg=self.colors["bg_primary"],
+            highlightthickness=0,
+            bd=0
+        )
+        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
+        self.outline_frame = tk.Frame(canvas, bg=self.colors["bg_primary"])
+        
+        self.outline_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=self.outline_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        canvas.pack(side="left", fill="both", expand=True, padx=0, pady=0)
+        scrollbar.pack(side="right", fill="y")
+        
+        self.outline_canvas = canvas
+    
+    def update_outline(self):
+        """Extract headings from editor and update outline"""
+        try:
+            content = self.content_var.get("1.0", "end-1c")
+            lines = content.split("\n")
+            
+            # Extract headings with their line numbers
+            headings = []
+            for i, line in enumerate(lines):
+                match = re.match(r'^(#{1,3})\s+(.+)$', line)
+                if match:
+                    level = len(match.group(1))  # 1, 2, or 3
+                    text = match.group(2)
+                    headings.append({
+                        'level': level,
+                        'text': text,
+                        'line': i + 1,
+                        'index': f"{i + 1}.0"
+                    })
+            
+            self.outline_items = headings
+            self._refresh_outline_display()
+        except:
+            pass
+    
+    def _refresh_outline_display(self):
+        """Refresh the outline display with current headings"""
+        # Clear existing items
+        for widget in self.outline_frame.winfo_children():
+            widget.destroy()
+        
+        if not self.outline_items:
+            tk.Label(
+                self.outline_frame,
+                text="No headings found",
+                font=("Segoe UI", 9),
+                bg=self.colors["bg_primary"],
+                fg=self.colors["text_hint"],
+                padx=12,
+                pady=20
+            ).pack(anchor="w")
+            return
+        
+        # Display outline items
+        for item in self.outline_items:
+            indent = "  " * (item['level'] - 1)
+            emoji = ["#️⃣", "##️⃣", "###️⃣"][item['level'] - 1]
+            
+            # Calculate word count for this section
+            section_start = item['line'] - 1
+            section_end = len(self.content_var.get("1.0", "end-1c").split("\n"))
+            
+            # Find next heading
+            for next_item in self.outline_items:
+                if next_item['line'] > item['line']:
+                    section_end = next_item['line'] - 1
+                    break
+            
+            # Count words in section
+            section_lines = self.content_var.get(f"{section_start + 1}.0", f"{section_end}.0").split("\n")
+            word_count = sum(len(line.split()) for line in section_lines)
+            
+            btn_frame = tk.Frame(self.outline_frame, bg=self.colors["bg_primary"])
+            btn_frame.pack(fill="x", padx=8, pady=2)
+            
+            # Outline button
+            btn = tk.Label(
+                btn_frame,
+                text=f"{emoji} {item['text'][:25]}{'...' if len(item['text']) > 25 else ''}",
+                font=("Segoe UI", 9),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["accent_light"],
+                padx=10,
+                pady=6,
+                cursor="hand2",
+                relief="flat",
+                anchor="w"
+            )
+            btn.pack(fill="x", side="left", expand=True)
+            btn.bind("<Button-1>", lambda e, idx=item['index']: self._jump_to_heading(idx))
+            btn.bind("<Enter>", lambda e, b=btn: b.config(bg=self.colors["border_light"]))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg=self.colors["bg_secondary"]))
+            
+            # Word count label
+            tk.Label(
+                btn_frame,
+                text=f"{word_count}w",
+                font=("Segoe UI", 8),
+                bg=self.colors["bg_primary"],
+                fg=self.colors["text_hint"],
+                padx=4
+            ).pack(side="right")
+    
+    def _jump_to_heading(self, line_index):
+        """Jump editor to specific heading"""
+        self.content_var.mark_set("insert", line_index)
+        self.content_var.see(line_index)
+        self.content_var.focus()
     
     def create_header(self, parent):
         """Create the header with improved visual hierarchy"""
@@ -428,8 +618,11 @@ What to learn next?"""
         header = tk.Frame(parent, bg=self.colors["bg_secondary"])
         header.pack(fill="x", padx=18, pady=(18, 12))
         
+        header_left = tk.Frame(header, bg=self.colors["bg_secondary"])
+        header_left.pack(anchor="w", side="left")
+        
         tk.Label(
-            header,
+            header_left,
             text="Post Details",
             font=("Segoe UI", 14, "bold"),
             bg=self.colors["bg_secondary"],
@@ -437,61 +630,50 @@ What to learn next?"""
         ).pack(anchor="w")
         
         tk.Label(
-            header,
+            header_left,
             text="Fill in the essential information",
             font=("Segoe UI", 9),
             bg=self.colors["bg_secondary"],
             fg=self.colors["text_hint"]
         ).pack(anchor="w", pady=(4, 0))
         
-        # Scrollable container
-        canvas = tk.Canvas(parent, bg=self.colors["bg_secondary"], highlightthickness=0, bd=0)
-        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_secondary"])
+        # YAML Editor toggle
+        yaml_toggle = tk.Frame(header, bg=self.colors["bg_secondary"])
+        yaml_toggle.pack(anchor="e", side="right")
         
-        scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        yaml_btn = tk.Button(
+            yaml_toggle,
+            text="⚙️ YAML" if not self.yaml_editor_mode.get() else "📋 Form",
+            font=("Segoe UI", 9, "bold"),
+            bg=self.colors["accent"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            padx=10,
+            pady=5,
+            command=self.toggle_yaml_editor
         )
+        yaml_btn.pack()
+        self.yaml_toggle_btn = yaml_btn
         
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
+        # Main container that switches between form and YAML editor
+        self.form_container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        self.form_container.pack(fill="both", expand=True)
         
-        # Enable mouse wheel scrolling
-        def _on_mousewheel(event):
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        # Create both views
+        self.create_form_view(self.form_container)
+        self.create_yaml_editor_view(self.form_container)
         
-        # Title with auto-slug
-        self.create_text_field(scrollable_frame, "Post Title", "title", required=True, placeholder="Your engaging post title")
-        
-        # Slug (auto-generated)
-        self.slug_var = tk.StringVar()
-        self.create_text_field(scrollable_frame, "URL Slug", "slug", readonly=True, hint="Auto-generated from title", default_var=self.slug_var)
-        
-        # Date
-        self.create_form_field(scrollable_frame, "Publication Date", "date", default=datetime.now().strftime("%Y-%m-%d"))
-        
-        # Time
-        self.create_form_field(scrollable_frame, "Time", "time", default=datetime.now().strftime("%H:%M:%S"))
-        
-        # Categories
-        self.create_categories_selector(scrollable_frame)
-        
-        # Tags
-        self.create_tags_selector(scrollable_frame)
-        
-        # Read Time
-        self.create_text_field(scrollable_frame, "Read Time", "read_time", default="5", hint="Estimated minutes", width=8)
-        
-        # Image URL
-        self.create_text_field(scrollable_frame, "Featured Image URL", "image", placeholder="/assets/images/post-image.jpg")
-        
-        # Description with character counter
-        self.create_description_field(scrollable_frame)
-        
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+        # Show form by default
+        self.show_form_view()
+    
+    def show_form_view(self):
+        """Display the form view and hide YAML editor"""
+        if not hasattr(self, 'form_view_container'):
+            return
+        self.form_view_container.pack(fill="both", expand=True)
+        if hasattr(self, 'yaml_view_container'):
+            self.yaml_view_container.pack_forget()
+        self.yaml_editor_mode.set(False)
     
     def create_text_field(self, parent, label, var_name, required=False, readonly=False, placeholder="", hint="", default="", default_var=None, width=None):
         """Create an improved text input field with better UX"""
@@ -624,6 +806,225 @@ What to learn next?"""
         self.update_preview()
         self.root.after(1000, lambda: self.autosave_status.set(""))
     
+    def create_form_view(self, parent):
+        """Create the visual form editor view"""
+        # Create wrapper container
+        self.form_view_container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        
+        # Scrollable container
+        canvas = tk.Canvas(self.form_view_container, bg=self.colors["bg_secondary"], highlightthickness=0, bd=0, name="form_canvas")
+        scrollbar = ttk.Scrollbar(self.form_view_container, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_secondary"])
+        
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Enable mouse wheel scrolling
+        def _on_mousewheel(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        
+        # Title with auto-slug
+        self.create_text_field(scrollable_frame, "Post Title", "title", required=True, placeholder="Your engaging post title")
+        
+        # Slug (auto-generated)
+        self.slug_var = tk.StringVar()
+        self.create_text_field(scrollable_frame, "URL Slug", "slug", readonly=True, hint="Auto-generated from title", default_var=self.slug_var)
+        
+        # Date
+        self.create_form_field(scrollable_frame, "Publication Date", "date", default=datetime.now().strftime("%Y-%m-%d"))
+        
+        # Time
+        self.create_form_field(scrollable_frame, "Time", "time", default=datetime.now().strftime("%H:%M:%S"))
+        
+        # Categories
+        self.create_categories_selector(scrollable_frame)
+        
+        # Tags
+        self.create_tags_selector(scrollable_frame)
+        
+        # Read Time
+        self.create_text_field(scrollable_frame, "Read Time", "read_time", default="5", hint="Estimated minutes", width=8)
+        
+        # Post Status (Tier 2)
+        self.create_status_selector(scrollable_frame)
+        
+        # Image URL
+        self.create_text_field(scrollable_frame, "Featured Image URL", "image", placeholder="/assets/images/post-image.jpg")
+        
+        # Description with character counter
+        self.create_description_field(scrollable_frame)
+        
+        # Pack the canvas and scrollbar in the form_view_container
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+    
+    def create_yaml_editor_view(self, parent):
+        """Create the raw YAML editor view"""
+        # Container for YAML editor
+        self.yaml_view_container = tk.Frame(parent, bg=self.colors["bg_secondary"], name="yaml_view")
+        
+        # Header
+        header = tk.Frame(self.yaml_view_container, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=18, pady=(12, 8))
+        
+        tk.Label(
+            header,
+            text="Raw YAML Frontmatter",
+            font=("Segoe UI", 11, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Edit the YAML metadata directly (advanced)",
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(2, 0))
+        
+        # YAML text editor
+        editor_frame = tk.Frame(self.yaml_view_container, bg=self.colors["bg_primary"])
+        editor_frame.pack(fill="both", expand=True, padx=18, pady=12)
+        
+        self.yaml_text_editor = tk.Text(
+            editor_frame,
+            font=("Consolas", 10),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"],
+            insertbackground=self.colors["focus"],
+            relief="flat",
+            bd=0,
+            wrap="none",
+            height=20
+        )
+        self.yaml_text_editor.pack(fill="both", expand=True)
+        
+        # Scrollbar for YAML editor
+        yaml_scrollbar = ttk.Scrollbar(editor_frame, orient="vertical", command=self.yaml_text_editor.yview)
+        yaml_scrollbar.pack(side="right", fill="y")
+        self.yaml_text_editor.config(yscrollcommand=yaml_scrollbar.set)
+        
+        # Sync button
+        sync_frame = tk.Frame(self.yaml_view_container, bg=self.colors["bg_secondary"])
+        sync_frame.pack(fill="x", padx=18, pady=(0, 12))
+        
+        tk.Button(
+            sync_frame,
+            text="💾 Sync to Form",
+            font=("Segoe UI", 9, "bold"),
+            bg=self.colors["success"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            padx=12,
+            pady=5,
+            command=self.sync_yaml_to_form
+        ).pack(anchor="w")
+        
+        # Initially hide YAML view (form view shown by default)
+        self.yaml_view_container.pack_forget()
+    
+    def toggle_yaml_editor(self):
+        """Toggle between form view and YAML editor view"""
+        current_mode = self.yaml_editor_mode.get()
+        
+        # Update YAML from form before switching
+        if not current_mode:
+            self.sync_form_to_yaml()
+        
+        # Toggle mode
+        self.yaml_editor_mode.set(not current_mode)
+        
+        # Update button text
+        new_text = "📋 Form" if self.yaml_editor_mode.get() else "⚙️ YAML"
+        self.yaml_toggle_btn.config(text=new_text)
+        
+        # Show/hide views
+        if self.yaml_editor_mode.get():
+            self.form_view_container.pack_forget()
+            self.yaml_view_container.pack(fill="both", expand=True)
+        else:
+            self.yaml_view_container.pack_forget()
+            self.form_view_container.pack(fill="both", expand=True)
+    
+    def sync_form_to_yaml(self):
+        """Sync form fields to YAML text editor"""
+        title = getattr(self, "title_var", tk.StringVar()).get()
+        description = self.description_var.get()
+        date = getattr(self, "date_var", tk.StringVar()).get()
+        categories = getattr(self, "categories_var", tk.StringVar()).get()
+        tags = getattr(self, "tags_var", tk.StringVar()).get()
+        read_time = getattr(self, "read_time_var", tk.StringVar()).get()
+        image = getattr(self, "image_var", tk.StringVar()).get()
+        
+        # Build YAML frontmatter
+        yaml_text = f"""---
+title: "{title}"
+date: {date}
+categories: {categories}
+tags: {tags}
+description: "{description}"
+read_time: "{read_time}"
+featured_image: "{image}"
+draft: false
+---"""
+        
+        self.yaml_text_editor.delete("1.0", "end")
+        self.yaml_text_editor.insert("1.0", yaml_text)
+    
+    def sync_yaml_to_form(self):
+        """Parse YAML and update form fields"""
+        yaml_content = self.yaml_text_editor.get("1.0", "end")
+        
+        try:
+            # Simple YAML parser (handles basic cases)
+            import re
+            
+            # Extract YAML block
+            yaml_match = re.search(r'^---\n(.*?)\n---', yaml_content, re.DOTALL)
+            if not yaml_match:
+                messagebox.showerror("YAML Parse Error", "Invalid YAML format. Must be wrapped in --- ---")
+                return
+            
+            yaml_lines = yaml_match.group(1).strip().split('\n')
+            
+            for line in yaml_lines:
+                if ':' not in line:
+                    continue
+                    
+                key, value = line.split(':', 1)
+                key = key.strip()
+                value = value.strip().strip('"\'')
+                
+                if key == "title":
+                    self.title_var.set(value)
+                elif key == "date":
+                    self.date_var.set(value)
+                elif key == "categories":
+                    self.categories_var.set(value)
+                elif key == "tags":
+                    self.tags_var.set(value)
+                elif key == "description":
+                    self.description_var.set(value)
+                elif key == "read_time":
+                    self.read_time_var.set(value)
+                elif key == "featured_image":
+                    self.image_var.set(value)
+            
+            messagebox.showinfo("Success", "YAML synced to form!")
+            
+            # Switch back to form view
+            self.toggle_yaml_editor()
+            
+        except Exception as e:
+            messagebox.showerror("Parse Error", f"Failed to parse YAML:\n{str(e)}")
+    
     def create_form_field(self, parent, label, var_name, required=False, readonly=False, multiline=False, default="", default_var=None, height=1):
         """Create a form field with modern styling"""
         container = tk.Frame(parent, bg=self.colors["bg_secondary"])
@@ -695,6 +1096,65 @@ What to learn next?"""
     def update_desc_count(self, event=None):
         """Update character count for description"""
         self.update_preview()
+    
+    def create_status_selector(self, parent):
+        """Create post status selector (Tier 2)"""
+        container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        container.pack(fill="x", padx=18, pady=(0, 16))
+        
+        label_frame = tk.Frame(container, bg=self.colors["bg_secondary"])
+        label_frame.pack(fill="x", pady=(0, 6))
+        
+        tk.Label(
+            label_frame,
+            text="Post Status",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            label_frame,
+            text="Workflow: Draft → In Review → Ready → Published",
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(2, 0))
+        
+        # Status buttons
+        status_frame = tk.Frame(container, bg=self.colors["bg_secondary"])
+        status_frame.pack(fill="x")
+        
+        status_options = ["Draft", "In Review", "Ready", "Published"]
+        status_colors = {
+            "Draft": self.colors["text_hint"],
+            "In Review": self.colors["warning"],
+            "Ready": self.colors["accent_light"],
+            "Published": self.colors["success"]
+        }
+        
+        for status in status_options:
+            btn = tk.Button(
+                status_frame,
+                text=status,
+                font=("Segoe UI", 9),
+                bg=self.colors["bg_tertiary"],
+                fg=self.colors["text_primary"],
+                relief="flat",
+                padx=12,
+                pady=6,
+                command=lambda s=status: self.post_status.set(s)
+            )
+            btn.pack(side="left", padx=(0, 8))
+            
+            # Highlight selected status
+            def update_btn_style(btn=btn, s=status):
+                if self.post_status.get() == s:
+                    btn.config(bg=status_colors[s], fg="#ffffff")
+                else:
+                    btn.config(bg=self.colors["bg_tertiary"], fg=self.colors["text_primary"])
+            
+            self.post_status.trace("w", lambda *args, btn=btn, s=status: update_btn_style())
     
     def create_categories_selector(self, parent):
         """Create category checkboxes"""
@@ -824,7 +1284,7 @@ What to learn next?"""
             remove_btn.bind("<Button-1>", lambda e: remove_tag())
     
     def create_editor_preview_panel(self, parent):
-        """Create the right side with split editor and live preview"""
+        """Create the right side with split editor, live preview, and SEO panel"""
         # Header with title
         header = tk.Frame(parent, bg=self.colors["bg_secondary"])
         header.pack(fill="x", padx=15, pady=(15, 0))
@@ -853,7 +1313,23 @@ What to learn next?"""
             fg=self.colors["accent_light"]
         ).pack(side="left", padx=5, pady=8)
         
-        # Split container for editor and preview
+        tk.Label(
+            header,
+            text="•",
+            font=("Segoe UI", 11),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["border"]
+        ).pack(side="left", padx=8)
+        
+        tk.Label(
+            header,
+            text="📊 SEO & Readability",
+            font=("Segoe UI", 11, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["success"]
+        ).pack(side="left", padx=5, pady=8)
+        
+        # Split container for editor and preview (horizontal)
         split_container = tk.PanedWindow(
             parent,
             orient=tk.HORIZONTAL,
@@ -871,9 +1347,25 @@ What to learn next?"""
         # Markdown toolbar
         self.create_markdown_toolbar(self.editor_frame)
         
-        # Right side - Preview
-        self.preview_frame = tk.Frame(split_container, bg=self.colors["bg_primary"])
-        split_container.add(self.preview_frame, minsize=400)
+        # Middle-Right split (vertical) for preview and SEO panel
+        middle_container = tk.PanedWindow(
+            split_container,
+            orient=tk.VERTICAL,
+            bg=self.colors["bg_primary"],
+            sashwidth=6,
+            sashrelief=tk.FLAT,
+            bd=0
+        )
+        split_container.add(middle_container, minsize=350)
+        
+        # Preview
+        self.preview_frame = tk.Frame(middle_container, bg=self.colors["bg_primary"])
+        middle_container.add(self.preview_frame, minsize=300)
+        
+        # SEO Panel
+        self.seo_frame = tk.Frame(middle_container, bg=self.colors["bg_secondary"], relief="flat")
+        middle_container.add(self.seo_frame, minsize=200)
+        self.create_seo_panel(self.seo_frame)
         
         # Editor
         self.content_var = tk.Text(
@@ -920,6 +1412,8 @@ Summarize your key points and call to action."""
         self.content_var.insert("1.0", template)
         self.content_var.bind("<KeyRelease>", lambda e: self.auto_update_preview())
         self.content_var.bind("<KeyRelease>", lambda e: self.update_word_count(), add=True)
+        self.content_var.bind("<KeyRelease>", lambda e: self.update_outline(), add=True)
+        self.content_var.bind("<KeyRelease>", lambda e: self.update_seo_metrics(), add=True)
         
         # Add keyboard shortcuts
         self.content_var.bind("<Control-b>", lambda e: self.wrap_selection("**", "**"))
@@ -1007,6 +1501,54 @@ Summarize your key points and call to action."""
             render_btn.bind("<Enter>", lambda e: render_btn.config(bg=self.colors["accent"]))
             render_btn.bind("<Leave>", lambda e: render_btn.config(bg=self.colors["accent_light"]))
         
+        # Revision Timeline (Tier 3)
+        revision_btn = tk.Label(
+            action_bar,
+            text="⏰ Revisions",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            padx=16,
+            pady=10,
+            cursor="hand2"
+        )
+        revision_btn.pack(side="left", padx=(0, 10))
+        revision_btn.bind("<Button-1>", lambda e: self.show_revision_timeline())
+        revision_btn.bind("<Enter>", lambda e: revision_btn.config(bg=self.colors["accent_hover"]))
+        revision_btn.bind("<Leave>", lambda e: revision_btn.config(bg=self.colors["accent"]))
+        
+        # Cross-Post Generator (Tier 3)
+        crosspost_btn = tk.Label(
+            action_bar,
+            text="📤 Cross-Post",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["warning"],
+            fg="white",
+            padx=16,
+            pady=10,
+            cursor="hand2"
+        )
+        crosspost_btn.pack(side="left", padx=(0, 10))
+        crosspost_btn.bind("<Button-1>", lambda e: self.show_crosspost_generator())
+        crosspost_btn.bind("<Enter>", lambda e: crosspost_btn.config(bg="#d97706"))
+        crosspost_btn.bind("<Leave>", lambda e: crosspost_btn.config(bg=self.colors["warning"]))
+        
+        # Internal Link Recommender (Tier 3)
+        link_btn = tk.Label(
+            action_bar,
+            text="🔗 Link Ideas",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            padx=16,
+            pady=10,
+            cursor="hand2"
+        )
+        link_btn.pack(side="left", padx=(0, 10))
+        link_btn.bind("<Button-1>", lambda e: self.show_link_recommender())
+        link_btn.bind("<Enter>", lambda e: link_btn.config(bg=self.colors["accent_hover"]))
+        link_btn.bind("<Leave>", lambda e: link_btn.config(bg=self.colors["accent"]))
+        
         self.publish_btn = tk.Label(
             action_bar,
             text="✅ Create & Publish",
@@ -1021,6 +1563,267 @@ Summarize your key points and call to action."""
         self.publish_btn.bind("<Button-1>", lambda e: self.create_post())
         self.publish_btn.bind("<Enter>", lambda e: self.publish_btn.config(bg=self.colors["success_hover"]))
         self.publish_btn.bind("<Leave>", lambda e: self.publish_btn.config(bg=self.colors["success"]))
+    
+    def create_seo_panel(self, parent):
+        """Create the SEO and readability scoring panel"""
+        # Header
+        header = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=12, pady=(12, 8))
+        
+        tk.Label(
+            header,
+            text="📊 SEO & Readability",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Real-time content analysis",
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(2, 0))
+        
+        # Scrollable content
+        canvas = tk.Canvas(parent, bg=self.colors["bg_secondary"], highlightthickness=0, bd=0)
+        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
+        self.seo_content = tk.Frame(canvas, bg=self.colors["bg_secondary"])
+        
+        self.seo_content.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=self.seo_content, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # SEO metrics - will be updated in real-time
+        self.seo_metrics = {}
+        
+        # Flesch Reading Ease
+        self.seo_metrics["flesch"] = self.create_seo_metric(self.seo_content, "📖 Reading Ease", "Flesch score")
+        
+        # Average Sentence Length
+        self.seo_metrics["sentence_length"] = self.create_seo_metric(self.seo_content, "✏️ Avg Sentence", "Words per sentence")
+        
+        # Passive Voice Percentage
+        self.seo_metrics["passive_voice"] = self.create_seo_metric(self.seo_content, "🎯 Passive Voice", "Percentage of sentences")
+        
+        # Keyword Density
+        self.seo_metrics["keyword_density"] = self.create_seo_metric(self.seo_content, "🔑 Keyword Density", "From title words")
+        
+        # Long Paragraphs Warning
+        self.seo_metrics["long_paragraphs"] = self.create_seo_metric(self.seo_content, "⚠️ Long Paragraphs", "Paragraphs > 100 words")
+        
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+    
+    def create_seo_metric(self, parent, label, sublabel):
+        """Create a single SEO metric display"""
+        container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        container.pack(fill="x", padx=12, pady=(0, 10))
+        
+        # Label
+        label_frame = tk.Frame(container, bg=self.colors["bg_secondary"])
+        label_frame.pack(fill="x", pady=(0, 4))
+        
+        tk.Label(
+            label_frame,
+            text=label,
+            font=("Segoe UI", 9, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", side="left")
+        
+        # Value and status indicator (color-coded)
+        metric_value = tk.Label(
+            label_frame,
+            text="—",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_secondary"]
+        )
+        metric_value.pack(anchor="e", side="right")
+        
+        # Sublabel
+        tk.Label(
+            container,
+            text=sublabel,
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(0, 6))
+        
+        # Status bar (colored background)
+        status_bar = tk.Frame(
+            container,
+            bg=self.colors["border"],
+            height=6
+        )
+        status_bar.pack(fill="x", pady=(0, 0))
+        
+        return {
+            "value": metric_value,
+            "container": container,
+            "status_bar": status_bar
+        }
+    
+    def update_seo_metrics(self):
+        """Calculate and update all SEO metrics"""
+        try:
+            content = self.content_var.get("1.0", "end-1c")
+            title = self.title_var.get()
+            
+            if not content or not title:
+                return
+            
+            # Calculate metrics
+            flesch_score = self.calculate_flesch_kincaid(content)
+            avg_sentence_length = self.calculate_avg_sentence_length(content)
+            passive_voice_pct = self.calculate_passive_voice(content)
+            keyword_density = self.calculate_keyword_density(content, title)
+            long_paragraph_count = self.count_long_paragraphs(content)
+            
+            # Update displays
+            self.update_metric_display("flesch", f"{flesch_score:.0f}", flesch_score)
+            self.update_metric_display("sentence_length", f"{avg_sentence_length:.1f} words", avg_sentence_length, threshold=15, invert=True)
+            self.update_metric_display("passive_voice", f"{passive_voice_pct:.1f}%", passive_voice_pct, threshold=15, invert=True)
+            self.update_metric_display("keyword_density", f"{keyword_density:.1f}%", keyword_density, min_val=1, max_val=3)
+            self.update_metric_display("long_paragraphs", f"{long_paragraph_count} paragraphs", long_paragraph_count, threshold=3, invert=True)
+            
+        except Exception as e:
+            pass
+    
+    def calculate_flesch_kincaid(self, text):
+        """Calculate Flesch Reading Ease score (0-100, higher is easier)"""
+        import re
+        
+        # Count sentences
+        sentences = len(re.split(r'[.!?]+', text)) - 1
+        if sentences == 0:
+            return 0
+        
+        # Count words
+        words = len(text.split())
+        
+        # Count syllables (approximation)
+        syllables = self.count_syllables(text)
+        
+        # Flesch Reading Ease = 206.835 - 1.015(words/sentences) - 84.6(syllables/words)
+        if words > 0:
+            fre = 206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words)
+            return max(0, min(100, fre))
+        return 0
+    
+    def count_syllables(self, text):
+        """Approximate syllable count"""
+        import re
+        text = text.lower()
+        syllable_count = 0
+        vowels = "aeiouy"
+        previous_was_vowel = False
+        
+        for char in text:
+            is_vowel = char in vowels
+            if is_vowel and not previous_was_vowel:
+                syllable_count += 1
+            previous_was_vowel = is_vowel
+        
+        # Adjustments
+        if text.endswith("e"):
+            syllable_count -= 1
+        if text.endswith("le") and len(text) > 2 and text[-3] not in vowels:
+            syllable_count += 1
+        
+        return max(1, syllable_count)
+    
+    def calculate_avg_sentence_length(self, text):
+        """Calculate average words per sentence"""
+        import re
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        if not sentences:
+            return 0
+        
+        total_words = sum(len(s.split()) for s in sentences)
+        return total_words / len(sentences)
+    
+    def calculate_passive_voice(self, text):
+        """Approximate percentage of passive voice sentences"""
+        import re
+        
+        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        if not sentences:
+            return 0
+        
+        # Simple heuristic: look for "was", "were", "be", "been" patterns
+        passive_indicators = r'\b(was|were|be|been|by)\b'
+        passive_count = sum(1 for s in sentences if re.search(passive_indicators, s.lower()))
+        
+        return (passive_count / len(sentences)) * 100
+    
+    def calculate_keyword_density(self, text, title):
+        """Calculate keyword density (title keywords in content)"""
+        if not title:
+            return 0
+        
+        import re
+        title_words = [w.lower() for w in title.split() if len(w) > 3]
+        if not title_words:
+            return 0
+        
+        content_words = text.lower().split()
+        total_words = len(content_words)
+        
+        if total_words == 0:
+            return 0
+        
+        keyword_count = sum(content_words.count(kw) for kw in title_words)
+        return (keyword_count / total_words) * 100
+    
+    def count_long_paragraphs(self, text):
+        """Count paragraphs with more than 100 words"""
+        paragraphs = text.split('\n\n')
+        long_paragraphs = sum(1 for p in paragraphs if len(p.split()) > 100)
+        return long_paragraphs
+    
+    def update_metric_display(self, metric_key, value_text, score, threshold=50, min_val=0, max_val=100, invert=False):
+        """Update a metric's display with color coding"""
+        metric = self.seo_metrics.get(metric_key)
+        if not metric:
+            return
+        
+        # Determine color (green, yellow, red)
+        if invert:
+            # For metrics where lower is better (sentence length, passive voice)
+            if score <= threshold * 0.5:
+                color = self.colors["success"]  # 🟢 Good
+                emoji = "🟢"
+            elif score <= threshold:
+                color = self.colors["warning"]  # 🟡 Fair
+                emoji = "🟡"
+            else:
+                color = self.colors["error"]    # 🔴 Needs work
+                emoji = "🔴"
+        else:
+            # For metrics where higher is better or in range
+            if min_val <= score <= max_val:
+                color = self.colors["success"]
+                emoji = "🟢"
+            elif score < min_val or score > max_val * 1.5:
+                color = self.colors["error"]
+                emoji = "🔴"
+            else:
+                color = self.colors["warning"]
+                emoji = "🟡"
+        
+        metric["value"].config(text=f"{emoji} {value_text}", fg=color)
+        metric["status_bar"].config(bg=color)
     
     def create_markdown_toolbar(self, parent):
         """Create a markdown formatting toolbar"""
@@ -1049,6 +1852,7 @@ Summarize your key points and call to action."""
             ("Quote", "Blockquote", lambda: self.insert_prefix("> ")),
             ("📋", "Table", lambda: self.insert_snippet("table")),
             ("---", "Divider", lambda: self.insert_snippet("hr")),
+            ("🎨", "Blocks", lambda: self.show_content_blocks()),
             ("|", "—", None),  # Separator
             ("🔍", "Find & Replace", lambda: self.show_find_replace()),
             ("📊", "Statistics", lambda: self.show_stats()),
@@ -1125,11 +1929,164 @@ Summarize your key points and call to action."""
             pass
     
     def insert_image(self):
-        """Insert an image template"""
+        """Open Image Manager (Tier 2) - drag/drop, auto-slug, auto-insert"""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("🖼️ Image Manager")
+        dialog.geometry("500x400")
+        dialog.configure(bg=self.colors["bg_primary"])
+        
+        # Header
+        header = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=16, pady=(16, 12))
+        
+        tk.Label(
+            header,
+            text="🖼️ Image Manager",
+            font=("Segoe UI", 12, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Upload and insert images with auto-naming",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(4, 0))
+        
+        # Upload button
+        button_frame = tk.Frame(dialog, bg=self.colors["bg_primary"])
+        button_frame.pack(fill="x", padx=16, pady=12)
+        
+        tk.Button(
+            button_frame,
+            text="📁 Select Image File",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            relief="flat",
+            padx=16,
+            pady=10,
+            command=lambda: self.upload_image(dialog)
+        ).pack(anchor="w")
+        
+        # Quick URL insert
+        url_frame = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        url_frame.pack(fill="x", padx=16, pady=(0, 12))
+        
+        tk.Label(
+            url_frame,
+            text="Or paste image URL:",
+            font=("Segoe UI", 9, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", pady=(0, 6))
+        
+        self.image_url_var = tk.StringVar()
+        url_entry = tk.Entry(
+            url_frame,
+            textvariable=self.image_url_var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            bd=0
+        )
+        url_entry.pack(fill="x", ipady=10)
+        url_entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+        
+        # Alt text
+        alt_frame = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        alt_frame.pack(fill="x", padx=16, pady=(0, 12))
+        
+        tk.Label(
+            alt_frame,
+            text="Alt Text:",
+            font=("Segoe UI", 9, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", pady=(0, 6))
+        
+        self.image_alt_var = tk.StringVar()
+        alt_entry = tk.Entry(
+            alt_frame,
+            textvariable=self.image_alt_var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            bd=0
+        )
+        alt_entry.pack(fill="x", ipady=10)
+        alt_entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+        
+        # Insert button
+        insert_frame = tk.Frame(dialog, bg=self.colors["bg_primary"])
+        insert_frame.pack(fill="x", padx=16, pady=12)
+        
+        tk.Button(
+            insert_frame,
+            text="✅ Insert Image",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["success"],
+            fg="white",
+            relief="flat",
+            padx=16,
+            pady=10,
+            command=lambda: self.insert_image_markdown(dialog)
+        ).pack(anchor="e")
+    
+    def upload_image(self, dialog):
+        """File picker for images (Tier 2)"""
+        from tkinter import filedialog
+        import shutil
+        from pathlib import Path
+        
+        try:
+            file_path = filedialog.askopenfilename(
+                title="Select Image",
+                filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.webp"), ("All files", "*.*")]
+            )
+            
+            if file_path:
+                # Generate slug from filename
+                filename = Path(file_path).stem
+                slug = "-".join(filename.lower().split())
+                ext = Path(file_path).suffix
+                
+                # Destination
+                assets_path = os.path.join(self.repo_path, "assets", "images") if self.repo_path else "./assets/images"
+                os.makedirs(assets_path, exist_ok=True)
+                
+                dest_file = os.path.join(assets_path, f"{slug}{ext}")
+                shutil.copy(file_path, dest_file)
+                
+                # Set URL
+                url = f"/assets/images/{slug}{ext}"
+                self.image_url_var.set(url)
+                self.image_alt_var.set(filename.replace("-", " ").title())
+                
+                messagebox.showinfo("Success", f"Image uploaded to {url}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Upload failed: {str(e)}")
+    
+    def insert_image_markdown(self, dialog):
+        """Insert image markdown syntax"""
+        url = self.image_url_var.get()
+        alt = self.image_alt_var.get()
+        
+        if not url:
+            messagebox.showwarning("Required", "Please provide image URL")
+            return
+        
+        markdown = f"![{alt}]({url})"
+        
         try:
             pos = self.content_var.index("insert")
-            self.content_var.insert(pos, "![alt text](image-url)")
+            self.content_var.insert(pos, markdown)
             self.update_preview()
+            dialog.destroy()
         except:
             pass
     
@@ -1633,6 +2590,557 @@ image: {image}
             padx=12,
             pady=6
         ).pack(side="left", padx=5)
+    
+    def show_content_blocks(self):
+        """Display content blocks/callouts menu (Tier 2)"""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Content Blocks")
+        dialog.geometry("400x350")
+        dialog.configure(bg=self.colors["bg_primary"])
+        dialog.resizable(False, False)
+        
+        # Header
+        header = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=16, pady=(16, 12))
+        
+        tk.Label(
+            header,
+            text="🎨 Content Blocks",
+            font=("Segoe UI", 12, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Quick insert styled content blocks",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(4, 0))
+        
+        # Scrollable blocks list
+        canvas = tk.Canvas(dialog, bg=self.colors["bg_primary"], highlightthickness=0, bd=0)
+        scrollbar = ttk.Scrollbar(dialog, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_primary"])
+        
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Add block options
+        for block_name, block_prefix in self.content_blocks.items():
+            btn = tk.Button(
+                scrollable_frame,
+                text=f"{block_prefix}Your text here",
+                font=("Segoe UI", 10),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_primary"],
+                relief="flat",
+                padx=12,
+                pady=10,
+                justify="left",
+                command=lambda prefix=block_prefix: self.insert_content_block(prefix, dialog)
+            )
+            btn.pack(fill="x", padx=12, pady=6)
+            btn.bind("<Enter>", lambda e, b=btn: b.config(bg=self.colors["border_light"]))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg=self.colors["bg_secondary"]))
+        
+        canvas.pack(side="left", fill="both", expand=True, padx=12)
+        scrollbar.pack(side="right", fill="y")
+    
+    def insert_content_block(self, prefix, dialog):
+        """Insert a content block at cursor position"""
+        try:
+            pos = self.content_var.index("insert")
+            self.content_var.insert(pos, f"{prefix}Your text here\n")
+            self.update_preview()
+            dialog.destroy()
+        except:
+            pass
+    
+    def show_crosspost_generator(self):
+        """Generate cross-post content for multiple platforms (Tier 3)"""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("📤 Cross-Post Generator")
+        dialog.geometry("600x500")
+        dialog.configure(bg=self.colors["bg_primary"])
+        
+        # Header
+        header = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=16, pady=(16, 12))
+        
+        tk.Label(
+            header,
+            text="📤 Cross-Post Generator",
+            font=("Segoe UI", 12, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Generate content snippets for different platforms",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(4, 0))
+        
+        # Get current content
+        title = self.title_var.get()
+        content = self.content_var.get("1.0", "end-1c")
+        excerpt = " ".join(content.split()[:30])  # First 30 words
+        url = f"https://yoursite.com/{self.slug_var.get()}" if self.slug_var.get() else "https://yoursite.com/post"
+        
+        # Scrollable content
+        canvas = tk.Canvas(dialog, bg=self.colors["bg_primary"], highlightthickness=0, bd=0)
+        scrollbar = ttk.Scrollbar(dialog, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_primary"])
+        
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Generate snippets for each platform
+        platforms = {
+            "🐦 Twitter/X": f"{title}\n{excerpt}...\n\n{url}",
+            "💼 LinkedIn": f"📝 {title}\n\n{excerpt}...\n\nRead the full article: {url}",
+            "📧 Newsletter": f"Subject: {title}\n\n{excerpt}...\n\n[Read More]({url})",
+            "🎥 YouTube": f"Title: {title}\n\nDescription:\n{excerpt}...\n\nBlog: {url}"
+        }
+        
+        for platform, snippet in platforms.items():
+            # Platform frame
+            frame = tk.Frame(scrollable_frame, bg=self.colors["bg_secondary"], relief="flat")
+            frame.pack(fill="x", padx=12, pady=8)
+            
+            # Platform label
+            tk.Label(
+                frame,
+                text=platform,
+                font=("Segoe UI", 10, "bold"),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["accent"]
+            ).pack(anchor="w", padx=12, pady=(8, 4))
+            
+            # Snippet text
+            snippet_text = tk.Text(
+                frame,
+                font=("Consolas", 9),
+                bg=self.colors["bg_primary"],
+                fg=self.colors["text_primary"],
+                relief="flat",
+                bd=0,
+                height=4,
+                wrap="word"
+            )
+            snippet_text.pack(fill="both", padx=12, pady=(0, 8))
+            snippet_text.insert("1.0", snippet)
+            snippet_text.config(state="disabled")
+            
+            # Copy button
+            copy_btn = tk.Button(
+                frame,
+                text="📋 Copy",
+                font=("Segoe UI", 8, "bold"),
+                bg=self.colors["accent"],
+                fg="white",
+                relief="flat",
+                padx=8,
+                pady=4,
+                command=lambda s=snippet: self.copy_to_clipboard(s, dialog)
+            )
+            copy_btn.pack(anchor="e", padx=12, pady=(0, 8))
+        
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+    
+    def copy_to_clipboard(self, text, dialog=None):
+        """Copy text to clipboard"""
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(text)
+            self.root.update()
+            if dialog:
+                messagebox.showinfo("Success", "Copied to clipboard!")
+        except Exception as e:
+            messagebox.showerror("Error", f"Copy failed: {str(e)}")
+    
+    def show_revision_timeline(self):
+        """Show git revision history/timeline (Tier 3)"""
+        try:
+            # Get git log for current file
+            if not self.current_file:
+                messagebox.showinfo("Info", "No post loaded yet. Save a draft first.")
+                return
+            
+            result = subprocess.run(
+                ["git", "log", "--oneline", "--", self.current_file],
+                capture_output=True,
+                text=True,
+                cwd=self.repo_path
+            )
+            
+            if result.returncode != 0:
+                messagebox.showinfo("No History", "This post hasn't been committed yet.")
+                return
+            
+            commits = result.stdout.strip().split('\n')
+            
+            dialog = tk.Toplevel(self.root)
+            dialog.title("⏰ Revision Timeline")
+            dialog.geometry("600x450")
+            dialog.configure(bg=self.colors["bg_primary"])
+            
+            # Header
+            header = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+            header.pack(fill="x", padx=16, pady=(16, 12))
+            
+            tk.Label(
+                header,
+                text="⏰ Revision Timeline",
+                font=("Segoe UI", 12, "bold"),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_primary"]
+            ).pack(anchor="w")
+            
+            tk.Label(
+                header,
+                text=f"Git history for this post ({len(commits)} revisions)",
+                font=("Segoe UI", 9),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_hint"]
+            ).pack(anchor="w", pady=(4, 0))
+            
+            # Scrollable commits
+            canvas = tk.Canvas(dialog, bg=self.colors["bg_primary"], highlightthickness=0, bd=0)
+            scrollbar = ttk.Scrollbar(dialog, orient="vertical", command=canvas.yview)
+            scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_primary"])
+            
+            scrollable_frame.bind(
+                "<Configure>",
+                lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            )
+            
+            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+            canvas.configure(yscrollcommand=scrollbar.set)
+            
+            # Add commits
+            for i, commit in enumerate(commits[:20]):  # Show last 20
+                parts = commit.split(' ', 1)
+                commit_hash = parts[0]
+                message = parts[1] if len(parts) > 1 else "No message"
+                
+                frame = tk.Frame(scrollable_frame, bg=self.colors["bg_secondary"], relief="flat")
+                frame.pack(fill="x", padx=12, pady=4)
+                
+                # Commit info
+                info_frame = tk.Frame(frame, bg=self.colors["bg_secondary"])
+                info_frame.pack(fill="x", padx=12, pady=8)
+                
+                tk.Label(
+                    info_frame,
+                    text=f"#{i+1} {commit_hash}",
+                    font=("Segoe UI", 9, "bold"),
+                    bg=self.colors["bg_secondary"],
+                    fg=self.colors["accent"]
+                ).pack(anchor="w", side="left")
+                
+                tk.Label(
+                    info_frame,
+                    text=message,
+                    font=("Segoe UI", 9),
+                    bg=self.colors["bg_secondary"],
+                    fg=self.colors["text_primary"]
+                ).pack(anchor="w", side="left", padx=(8, 0))
+                
+                # Diff button
+                diff_btn = tk.Button(
+                    frame,
+                    text="📊 View Diff",
+                    font=("Segoe UI", 8, "bold"),
+                    bg=self.colors["accent_light"],
+                    fg="white",
+                    relief="flat",
+                    padx=8,
+                    pady=4,
+                    command=lambda ch=commit_hash, msg=message: self.show_commit_diff(ch, msg)
+                )
+                diff_btn.pack(anchor="e", padx=12, pady=(0, 8))
+            
+            canvas.pack(side="left", fill="both", expand=True)
+            scrollbar.pack(side="right", fill="y")
+        
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to get revisions: {str(e)}")
+    
+    def show_commit_diff(self, commit_hash, message):
+        """Show diff for a specific commit"""
+        try:
+            result = subprocess.run(
+                ["git", "show", commit_hash],
+                capture_output=True,
+                text=True,
+                cwd=self.repo_path
+            )
+            
+            if result.returncode != 0:
+                messagebox.showerror("Error", "Could not retrieve commit diff")
+                return
+            
+            diff_dialog = tk.Toplevel(self.root)
+            diff_dialog.title(f"Diff: {commit_hash}")
+            diff_dialog.geometry("700x500")
+            diff_dialog.configure(bg=self.colors["bg_primary"])
+            
+            # Header
+            header = tk.Frame(diff_dialog, bg=self.colors["bg_secondary"])
+            header.pack(fill="x", padx=16, pady=(16, 12))
+            
+            tk.Label(
+                header,
+                text=f"📊 Commit: {message}",
+                font=("Segoe UI", 11, "bold"),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_primary"]
+            ).pack(anchor="w")
+            
+            # Diff viewer
+            diff_text = scrolledtext.ScrolledText(
+                diff_dialog,
+                font=("Consolas", 9),
+                bg=self.colors["bg_primary"],
+                fg=self.colors["text_primary"],
+                relief="flat",
+                bd=0
+            )
+            diff_text.pack(fill="both", expand=True, padx=16, pady=12)
+            diff_text.insert("1.0", result.stdout)
+            diff_text.config(state="disabled")
+        
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to show diff: {str(e)}")
+    
+    def show_link_recommender(self):
+        """Suggest internal links based on keyword matching (Tier 3)"""
+        content = self.content_var.get("1.0", "end-1c")
+        title = self.title_var.get()
+        
+        if not content or not title:
+            messagebox.showinfo("Info", "Need both title and content to find link opportunities")
+            return
+        
+        # Extract keywords from title (words > 3 chars)
+        keywords = [w.lower() for w in title.split() if len(w) > 3]
+        
+        # Scan content for natural linking opportunities
+        lines = content.split('\n')
+        link_opportunities = []
+        
+        for i, line in enumerate(lines, 1):
+            for keyword in keywords:
+                if keyword in line.lower() and '[' not in line and ']' not in line:
+                    # Found a keyword that's not already linked
+                    if len(line) > 10:  # Meaningful context
+                        link_opportunities.append({
+                            'line': i,
+                            'keyword': keyword,
+                            'text': line.strip()[:60] + '...' if len(line) > 60 else line.strip()
+                        })
+        
+        dialog = tk.Toplevel(self.root)
+        dialog.title("🔗 Internal Link Recommender")
+        dialog.geometry("600x450")
+        dialog.configure(bg=self.colors["bg_primary"])
+        
+        # Header
+        header = tk.Frame(dialog, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=16, pady=(16, 12))
+        
+        tk.Label(
+            header,
+            text="🔗 Internal Link Opportunities",
+            font=("Segoe UI", 12, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        if not link_opportunities:
+            tk.Label(
+                header,
+                text="No keyword matches found. Keywords are auto-extracted from your title.",
+                font=("Segoe UI", 9),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_hint"]
+            ).pack(anchor="w", pady=(4, 0))
+            return
+        
+        tk.Label(
+            header,
+            text=f"Found {len(link_opportunities)} places to add links",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(4, 0))
+        
+        # Scrollable opportunities
+        canvas = tk.Canvas(dialog, bg=self.colors["bg_primary"], highlightthickness=0, bd=0)
+        scrollbar = ttk.Scrollbar(dialog, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas, bg=self.colors["bg_primary"])
+        
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Add opportunities
+        for opp in link_opportunities[:15]:
+            frame = tk.Frame(scrollable_frame, bg=self.colors["bg_secondary"], relief="flat")
+            frame.pack(fill="x", padx=12, pady=8)
+            
+            # Keyword and line info
+            info_frame = tk.Frame(frame, bg=self.colors["bg_secondary"])
+            info_frame.pack(fill="x", padx=12, pady=(8, 4))
+            
+            tk.Label(
+                info_frame,
+                text=f"📍 Line {opp['line']}: \"{opp['keyword']}\"",
+                font=("Segoe UI", 9, "bold"),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["accent"]
+            ).pack(anchor="w", side="left")
+            
+            # Context
+            tk.Label(
+                frame,
+                text=f"Context: {opp['text']}",
+                font=("Segoe UI", 8),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_secondary"],
+                wraplength=400,
+                justify="left"
+            ).pack(anchor="w", padx=12, pady=(0, 4))
+            
+            # Action button
+            btn_frame = tk.Frame(frame, bg=self.colors["bg_secondary"])
+            btn_frame.pack(fill="x", padx=12, pady=(0, 8))
+            
+            tk.Button(
+                btn_frame,
+                text="🔗 Add Link",
+                font=("Segoe UI", 8, "bold"),
+                bg=self.colors["accent_light"],
+                fg="white",
+                relief="flat",
+                padx=8,
+                pady=4,
+                command=lambda ln=opp['line'], kw=opp['keyword']: self.add_suggested_link(ln, kw, dialog)
+            ).pack(anchor="e")
+        
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+    
+    def add_suggested_link(self, line_num, keyword, dialog):
+        """Add a suggested internal link"""
+        # Create link dialog
+        link_dialog = tk.Toplevel(dialog)
+        link_dialog.title("Add Link")
+        link_dialog.geometry("400x200")
+        link_dialog.configure(bg=self.colors["bg_primary"])
+        
+        # URL input
+        tk.Label(
+            link_dialog,
+            text="Link URL:",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", padx=16, pady=(16, 8))
+        
+        url_var = tk.StringVar(value=f"/blog/{keyword.lower().replace(' ', '-')}")
+        url_entry = tk.Entry(
+            link_dialog,
+            textvariable=url_var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            bd=0
+        )
+        url_entry.pack(fill="x", padx=16, ipady=10)
+        url_entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+        
+        # Link text input
+        tk.Label(
+            link_dialog,
+            text="Link Text:",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", padx=16, pady=(12, 8))
+        
+        text_var = tk.StringVar(value=keyword)
+        text_entry = tk.Entry(
+            link_dialog,
+            textvariable=text_var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"],
+            relief="flat",
+            bd=0
+        )
+        text_entry.pack(fill="x", padx=16, ipady=10)
+        text_entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+        
+        # Insert button
+        def insert_link():
+            url = url_var.get()
+            text = text_var.get()
+            markdown_link = f"[{text}]({url})"
+            
+            # Find and replace first occurrence of keyword on that line
+            content = self.content_var.get("1.0", "end-1c")
+            lines = content.split('\n')
+            
+            if line_num - 1 < len(lines):
+                line = lines[line_num - 1]
+                # Replace first occurrence of keyword
+                import re
+                new_line = re.sub(rf'\b{re.escape(keyword)}\b', markdown_link, line, count=1, flags=re.IGNORECASE)
+                lines[line_num - 1] = new_line
+                
+                # Update content
+                self.content_var.delete("1.0", "end")
+                self.content_var.insert("1.0", '\n'.join(lines))
+                self.update_preview()
+                link_dialog.destroy()
+                dialog.destroy()
+                messagebox.showinfo("Success", f"Link added to line {line_num}")
+        
+        tk.Button(
+            link_dialog,
+            text="✅ Add Link",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["success"],
+            fg="white",
+            relief="flat",
+            padx=16,
+            pady=10,
+            command=insert_link
+        ).pack(anchor="e", padx=16, pady=12)
+
+    
     
     def show_stats(self):
         """Show writing statistics"""
