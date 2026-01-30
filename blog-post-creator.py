@@ -59,8 +59,14 @@ class BlogPostCreator:
         }
         
         self.tags_list = []
+        self.char_count = tk.IntVar(value=0)
+        self.autosave_status = tk.StringVar(value="")
+        
         self.setup_ui()
         self.load_config()
+        
+        # Auto-update preview
+        self.root.after(500, self.auto_update_preview)
         
     def detect_repo_path(self):
         """Detect the GitHub Pages repository path"""
@@ -105,33 +111,78 @@ class BlogPostCreator:
         self.create_editor_preview_panel(right_panel)
     
     def create_header(self, parent):
-        """Create the header section"""
-        header = tk.Frame(parent, bg=self.colors["bg_secondary"], height=70)
-        header.pack(fill="x", padx=12, pady=(12, 0))
+        """Create the header with improved visual hierarchy"""
+        header = tk.Frame(parent, bg=self.colors["bg_secondary"], height=85)
+        header.pack(fill="x", padx=16, pady=(16, 0))
         header.pack_propagate(False)
         
-        # Title
-        title_label = tk.Label(
-            header,
-            text="✍️  Blog Post Creator",
-            font=("Segoe UI", 28, "bold"),
+        # Left side - title and status
+        left_header = tk.Frame(header, bg=self.colors["bg_secondary"])
+        left_header.pack(side="left", fill="both", expand=True, padx=20, pady=15)
+        
+        title = tk.Label(
+            left_header,
+            text="✍️ Blog Post Creator",
+            font=("Segoe UI", 32, "bold"),
             bg=self.colors["bg_secondary"],
             fg=self.colors["text_primary"]
         )
-        title_label.pack(side="left", padx=20, pady=15)
+        title.pack(anchor="w")
         
-        # Subtitle
-        subtitle = tk.Label(
-            header,
-            text=f"Modern & Efficient • {os.path.basename(self.repo_path) if self.repo_path else 'No repo'}",
+        subtitle_frame = tk.Frame(left_header, bg=self.colors["bg_secondary"])
+        subtitle_frame.pack(anchor="w", pady=(8, 0))
+        
+        tk.Label(
+            subtitle_frame,
+            text="📂",
             font=("Segoe UI", 10),
             bg=self.colors["bg_secondary"],
             fg=self.colors["text_secondary"]
+        ).pack(side="left", padx=(0, 6))
+        
+        tk.Label(
+            subtitle_frame,
+            text=os.path.basename(self.repo_path) if self.repo_path else "No repository",
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_secondary"]
+        ).pack(side="left")
+        
+        # Right side - status
+        right_header = tk.Frame(header, bg=self.colors["bg_secondary"])
+        right_header.pack(side="right", padx=20, pady=15)
+        
+        status_label = tk.Label(
+            right_header,
+            textvariable=self.autosave_status,
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
         )
-        subtitle.pack(side="left", padx=20, pady=15)
+        status_label.pack()
     
     def create_form_panel(self, parent):
-        """Create the left side form panel"""
+        """Create the left form panel with improved UX"""
+        # Header
+        header = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        header.pack(fill="x", padx=18, pady=(18, 12))
+        
+        tk.Label(
+            header,
+            text="Post Details",
+            font=("Segoe UI", 14, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        tk.Label(
+            header,
+            text="Fill in the essential information",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(4, 0))
+        
         # Scrollable container
         canvas = tk.Canvas(parent, bg=self.colors["bg_secondary"], highlightthickness=0, bd=0)
         scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
@@ -150,12 +201,12 @@ class BlogPostCreator:
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
         canvas.bind_all("<MouseWheel>", _on_mousewheel)
         
-        # Title
-        self.create_form_field(scrollable_frame, "Post Title", "title", required=True)
+        # Title with auto-slug
+        self.create_text_field(scrollable_frame, "Post Title", "title", required=True, placeholder="Your engaging post title")
         
-        # Slug
+        # Slug (auto-generated)
         self.slug_var = tk.StringVar()
-        self.create_form_field(scrollable_frame, "URL Slug", "slug", readonly=True, default_var=self.slug_var)
+        self.create_text_field(scrollable_frame, "URL Slug", "slug", readonly=True, hint="Auto-generated from title", default_var=self.slug_var)
         
         # Date
         self.create_form_field(scrollable_frame, "Publication Date", "date", default=datetime.now().strftime("%Y-%m-%d"))
@@ -170,16 +221,147 @@ class BlogPostCreator:
         self.create_tags_selector(scrollable_frame)
         
         # Read Time
-        self.create_form_field(scrollable_frame, "Read Time (min)", "read_time", default="5")
+        self.create_text_field(scrollable_frame, "Read Time", "read_time", default="5", hint="Estimated minutes", width=8)
         
         # Image URL
-        self.create_form_field(scrollable_frame, "Featured Image URL", "image")
+        self.create_text_field(scrollable_frame, "Featured Image URL", "image", placeholder="/assets/images/post-image.jpg")
         
-        # Description
-        self.create_form_field(scrollable_frame, "Meta Description", "description", multiline=True, required=True, height=4)
+        # Description with character counter
+        self.create_description_field(scrollable_frame)
         
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
+    
+    def create_text_field(self, parent, label, var_name, required=False, readonly=False, placeholder="", hint="", default="", default_var=None, width=None):
+        """Create an improved text input field with better UX"""
+        container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        container.pack(fill="x", padx=18, pady=(0, 16))
+        
+        # Label with optional hint
+        label_frame = tk.Frame(container, bg=self.colors["bg_secondary"])
+        label_frame.pack(fill="x", pady=(0, 6))
+        
+        label_text = label + (" *" if required else "")
+        tk.Label(
+            label_frame,
+            text=label_text,
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w")
+        
+        if hint:
+            tk.Label(
+                label_frame,
+                text=hint,
+                font=("Segoe UI", 8),
+                bg=self.colors["bg_secondary"],
+                fg=self.colors["text_hint"]
+            ).pack(anchor="w", pady=(2, 0))
+        
+        # Input field
+        if default_var:
+            var = default_var
+        else:
+            if not hasattr(self, f"{var_name}_var"):
+                setattr(self, f"{var_name}_var", tk.StringVar(value=default))
+            var = getattr(self, f"{var_name}_var")
+        
+        entry = tk.Entry(
+            container,
+            textvariable=var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"],
+            insertbackground=self.colors["focus"],
+            relief="flat",
+            bd=0,
+            state="readonly" if readonly else "normal"
+        )
+        
+        if width:
+            entry.config(width=width)
+        
+        entry.pack(fill="x", ipady=10)
+        entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+        
+        # Bindings for auto-updates
+        if var_name == "title":
+            entry.config(state="normal")
+            entry.bind("<KeyRelease>", lambda e: self.update_slug_from_title(var.get()))
+            entry.bind("<KeyRelease>", lambda e: self.autosave_status.set("✏️ Editing..."), add=True)
+        
+        return var
+    
+    def create_description_field(self, parent):
+        """Create description field with visual character counter"""
+        container = tk.Frame(parent, bg=self.colors["bg_secondary"])
+        container.pack(fill="x", padx=18, pady=(0, 16))
+        
+        # Label with character counter
+        label_frame = tk.Frame(container, bg=self.colors["bg_secondary"])
+        label_frame.pack(fill="x", pady=(0, 6))
+        
+        tk.Label(
+            label_frame,
+            text="Meta Description *",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_primary"]
+        ).pack(anchor="w", side="left")
+        
+        self.desc_counter = tk.Label(
+            label_frame,
+            text="0/160",
+            font=("Segoe UI", 9),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        )
+        self.desc_counter.pack(anchor="e", side="right")
+        
+        tk.Label(
+            container,
+            text="For search results preview (keep under 160 characters)",
+            font=("Segoe UI", 8),
+            bg=self.colors["bg_secondary"],
+            fg=self.colors["text_hint"]
+        ).pack(anchor="w", pady=(0, 6))
+        
+        # Description entry
+        self.description_var = tk.StringVar()
+        self.description_var.trace("w", lambda *args: self.update_desc_count())
+        
+        desc_entry = tk.Entry(
+            container,
+            textvariable=self.description_var,
+            font=("Segoe UI", 10),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["text_primary"],
+            insertbackground=self.colors["focus"],
+            relief="flat",
+            bd=0
+        )
+        desc_entry.pack(fill="x", ipady=10)
+        desc_entry.config(highlightthickness=1, highlightbackground=self.colors["border"], highlightcolor=self.colors["focus"])
+    
+    def update_desc_count(self):
+        """Update description character count with visual feedback"""
+        length = len(self.description_var.get())
+        
+        if length > 160:
+            color = self.colors["error"]
+        elif length > 140:
+            color = self.colors["warning"]
+        else:
+            color = self.colors["text_hint"]
+        
+        self.desc_counter.config(text=f"{length}/160", fg=color)
+        self.auto_update_preview()
+    
+    def auto_update_preview(self):
+        """Auto-update preview with status feedback"""
+        self.update_preview()
+        self.root.after(1000, lambda: self.autosave_status.set(""))
     
     def create_form_field(self, parent, label, var_name, required=False, readonly=False, multiline=False, default="", default_var=None, height=1):
         """Create a form field with modern styling"""
@@ -425,15 +607,17 @@ class BlogPostCreator:
         # Editor
         self.content_var = tk.Text(
             self.editor_frame,
-            font=("Courier New", 10),
+            font=("Consolas", 11),
             bg=self.colors["bg_primary"],
             fg=self.colors["text_primary"],
-            insertbackground=self.colors["accent"],
+            insertbackground=self.colors["focus"],
             relief="flat",
             bd=0,
             padx=12,
             pady=12,
-            wrap="word"
+            wrap="word",
+            undo=True,
+            maxundo=-1
         )
         self.content_var.pack(fill="both", expand=True)
         
@@ -463,7 +647,11 @@ def hello_world():
 Summarize your key points and call to action."""
         
         self.content_var.insert("1.0", template)
-        self.content_var.bind("<KeyRelease>", lambda e: self.update_preview())
+        self.content_var.bind("<KeyRelease>", lambda e: self.auto_update_preview())
+        
+        # Add keyboard shortcuts
+        self.content_var.bind("<Control-b>", lambda e: self.wrap_selection("**", "**"))
+        self.content_var.bind("<Control-i>", lambda e: self.wrap_selection("*", "*"))
         
         # Preview
         self.preview_text = scrolledtext.ScrolledText(
@@ -496,6 +684,8 @@ Summarize your key points and call to action."""
         )
         refresh_btn.pack(side="left", padx=(0, 10))
         refresh_btn.bind("<Button-1>", lambda e: self.update_preview())
+        refresh_btn.bind("<Enter>", lambda e: refresh_btn.config(bg=self.colors["accent_hover"]))
+        refresh_btn.bind("<Leave>", lambda e: refresh_btn.config(bg=self.colors["accent"]))
         
         self.publish_btn = tk.Label(
             action_bar,
@@ -509,6 +699,8 @@ Summarize your key points and call to action."""
         )
         self.publish_btn.pack(side="left")
         self.publish_btn.bind("<Button-1>", lambda e: self.create_post())
+        self.publish_btn.bind("<Enter>", lambda e: self.publish_btn.config(bg=self.colors["success_hover"]))
+        self.publish_btn.bind("<Leave>", lambda e: self.publish_btn.config(bg=self.colors["success"]))
         
         self.current_tab = "editor"
     
