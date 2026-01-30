@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Martin Li - Learning & Development Progress Tracker. Following specializations and CBT-based goal tracking.">
+  <title>Learning & Development | Martin Li</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/modern.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  
+  <style>
+    /* ==================== LEARNING PAGE STYLES ==================== */
+    
+    .learning-hero {
+      background: var(--gradient-secondary);
+      padding: var(--spacing-3xl) var(--spacing-lg);
+      text-align: center;
+      color: var(--text-light);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .learning-hero h1 {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 700;
+    }
+    
+    .learning-hero p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* ==================== SPECIALIZATIONS SECTION ==================== */
+    
+    .learning-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-weight: 700;
+    }
+    
+    .section-title i {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+    }
+    
+    .specializations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .specialization-card {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    [data-theme="dark"] .specialization-card {
+      border-color: #3f4651;
+    }
+    
+    .specialization-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+    
+    .spec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .spec-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .spec-status {
+      background: #e8f5f1;
+      color: var(--accent-color);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    [data-theme="dark"] .spec-status {
+      background: #2d3e47;
+      color: #6ee0b8;
+    }
+    
+    .spec-title {
+      font-size: 1.25rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      font-weight: 700;
+    }
+    
+    .spec-institution {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .spec-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--spacing-md);
+      font-size: 0.95rem;
+    }
+    
+    /* ==================== PROGRESS BAR ==================== */
+    
+    .progress-section {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .progress-label-left {
+      color: var(--text-secondary);
+    }
+    
+    .progress-label-right {
+      color: var(--primary-color);
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-primary);
+      transition: width var(--transition-slow);
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 10px rgba(85, 214, 170, 0.3);
+    }
+    
+    /* ==================== COURSE MODULES ==================== */
+    
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+    
+    .module-badge {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background: var(--bg-secondary);
+      border: 1px solid #e0e7ff;
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      transition: all var(--transition-base);
+      cursor: default;
+    }
+    
+    [data-theme="dark"] .module-badge {
+      background: #2d3e47;
+      border-color: #3f4651;
+    }
+    
+    .module-badge.completed {
+      background: #d1fae5;
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+    
+    [data-theme="dark"] .module-badge.completed {
+      background: #064e3b;
+      color: #6ee0b8;
+    }
+    
+    /* ==================== UPDATE BUTTON ==================== */
+    
+    .spec-footer {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid #e0e7ff;
+    }
+    
+    [data-theme="dark"] .spec-footer {
+      border-top-color: #3f4651;
+    }
+    
+    .update-btn {
+      flex: 1;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+      text-decoration: none;
+    }
+    
+    .update-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(85, 214, 170, 0.3);
+    }
+    
+    /* ==================== CBT INSIGHT SECTION ==================== */
+    
+    .cbt-section {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-left: 4px solid #f59e0b;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    [data-theme="dark"] .cbt-section {
+      background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+      border-left-color: #d97706;
+    }
+    
+    .cbt-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    
+    .cbt-header i {
+      font-size: 1.5rem;
+      color: #f59e0b;
+    }
+    
+    .cbt-content {
+      color: #78350f;
+      line-height: 1.8;
+    }
+    
+    [data-theme="dark"] .cbt-content {
+      color: #fef3c7;
+    }
+    
+    .cbt-points {
+      list-style: none;
+      padding: 0;
+      margin-top: var(--spacing-md);
+    }
+    
+    .cbt-points li {
+      padding: var(--spacing-xs) 0;
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+    
+    .cbt-points li:before {
+      content: "✓";
+      color: #f59e0b;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    
+    /* ==================== STATS OVERVIEW ==================== */
+    
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+    
+    [data-theme="dark"] .stat-card {
+      border-color: #3f4651;
+    }
+    
+    .stat-number {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    
+    /* ==================== RESPONSIVE ==================== */
+    
+    @media (max-width: 768px) {
+      .learning-hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+      
+      .specializations-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-overview {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="site-nav" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">Martin Li</a>
+      
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#projects">Projects</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/learning.html" class="active">Learning</a></li>
+        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="learning-hero">
+    <h1>📚 Continuous Learning</h1>
+    <p>Tracking progress through specialized courses, certifications, and structured skill development. Below is my active pursuit of knowledge and professional growth.</p>
+  </section>
+  
+  <div class="learning-container">
+    
+    <!-- CBT Insight Section -->
+    <section class="cbt-section">
+      <div class="cbt-header">
+        <i class="fas fa-lightbulb"></i>
+        <span>Growth Mindset & CBT Integration</span>
+      </div>
+      <div class="cbt-content">
+        <p>I use evidence-based Cognitive Behavioral Therapy (CBT) principles to structure my learning:</p>
+        <ul class="cbt-points">
+          <li><strong>Thought Tracking:</strong> Breaking down courses into actionable steps, not just credentials</li>
+          <li><strong>Behavior Activation:</strong> Regular progress updates keep motivation high</li>
+          <li><strong>Cognitive Reframing:</strong> Viewing challenges as learning opportunities, not obstacles</li>
+          <li><strong>Progress Visualization:</strong> Seeing metrics helps rewire neural pathways toward achievement</li>
+        </ul>
+      </div>
+    </section>
+    
+    <!-- Stats Overview -->
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Active Specializations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalProgress">0%</div>
+        <div class="stat-label">Overall Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalModules">0</div>
+        <div class="stat-label">Courses Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2026</div>
+        <div class="stat-label">Target Year</div>
+      </div>
+    </div>
+    
+    <!-- Specializations -->
+    <section>
+      <h2 class="section-title">
+        <i class="fas fa-graduation-cap"></i>
+        Active Specializations
+      </h2>
+      
+      <div class="specializations-grid">
+        
+        <!-- Specialization 1: Financial Engineering -->
+        <div class="specialization-card">
+          <div class="spec-header">
+            <div class="spec-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <span class="spec-status">In Progress</span>
+          </div>
+          
+          <h3 class="spec-title">Financial Engineering & Risk Management</h3>
+          <p class="spec-institution">Columbia University</p>
+          
+          <p class="spec-description">
+            Advanced specialization covering derivatives pricing, portfolio optimization, and quantitative risk management techniques.
+          </p>
+          
+          <div class="progress-section">
+            <div class="progress-label">
+              <span class="progress-label-left">3 of 5 courses completed</span>
+              <span class="progress-label-right">60%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 60%"></div>
+            </div>
+          </div>
+          
+          <div class="modules-grid">
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Foundations
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Derivatives
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Portfolio Opt
+            </div>
+            <div class="module-badge">Risk Mgmt</div>
+            <div class="module-badge">Capstone</div>
+          </div>
+          
+          <div class="spec-footer">
+            <a href="https://www.coursera.org/specializations/financial-engineering-management" target="_blank" class="update-btn">
+              <i class="fas fa-external-link-alt"></i> View Course
+            </a>
+            <button class="update-btn" onclick="updateProgress('fe-risk', 0.6)">
+              <i class="fas fa-pencil-alt"></i> Update
+            </button>
+          </div>
+        </div>
+        
+        <!-- Specialization 2: Startup Entrepreneurship -->
+        <div class="specialization-card">
+          <div class="spec-header">
+            <div class="spec-icon">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <span class="spec-status">In Progress</span>
+          </div>
+          
+          <h3 class="spec-title">Startup Entrepreneurship Specialization</h3>
+          <p class="spec-institution">Technion - Israel Institute of Technology</p>
+          
+          <p class="spec-description">
+            Comprehensive program on building startups, from ideation through scaling. Covers business models, fundraising, and go-to-market strategies.
+          </p>
+          
+          <div class="progress-section">
+            <div class="progress-label">
+              <span class="progress-label-left">2 of 4 courses completed</span>
+              <span class="progress-label-right">50%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 50%"></div>
+            </div>
+          </div>
+          
+          <div class="modules-grid">
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Ideation
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Business Plan
+            </div>
+            <div class="module-badge">Fundraising</div>
+            <div class="module-badge">Scaling</div>
+          </div>
+          
+          <div class="spec-footer">
+            <a href="https://www.coursera.org/specializations/startup-entrepreneurship" target="_blank" class="update-btn">
+              <i class="fas fa-external-link-alt"></i> View Course
+            </a>
+            <button class="update-btn" onclick="updateProgress('startup', 0.5)">
+              <i class="fas fa-pencil-alt"></i> Update
+            </button>
+          </div>
+        </div>
+        
+        <!-- Specialization 3: Investment & Portfolio -->
+        <div class="specialization-card">
+          <div class="spec-header">
+            <div class="spec-icon">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <span class="spec-status">In Progress</span>
+          </div>
+          
+          <h3 class="spec-title">Investment & Portfolio Management</h3>
+          <p class="spec-institution">University of Michigan</p>
+          
+          <p class="spec-description">
+            Deep dive into portfolio theory, asset allocation, performance measurement, and investment strategies in modern markets.
+          </p>
+          
+          <div class="progress-section">
+            <div class="progress-label">
+              <span class="progress-label-left">2 of 5 courses completed</span>
+              <span class="progress-label-right">40%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 40%"></div>
+            </div>
+          </div>
+          
+          <div class="modules-grid">
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Theory
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Analysis
+            </div>
+            <div class="module-badge">Allocation</div>
+            <div class="module-badge">Performance</div>
+            <div class="module-badge">Capstone</div>
+          </div>
+          
+          <div class="spec-footer">
+            <a href="https://www.coursera.org/specializations/investment-management" target="_blank" class="update-btn">
+              <i class="fas fa-external-link-alt"></i> View Course
+            </a>
+            <button class="update-btn" onclick="updateProgress('investment', 0.4)">
+              <i class="fas fa-pencil-alt"></i> Update
+            </button>
+          </div>
+        </div>
+        
+        <!-- Specialization 4: Public Speaking -->
+        <div class="specialization-card">
+          <div class="spec-header">
+            <div class="spec-icon">
+              <i class="fas fa-microphone"></i>
+            </div>
+            <span class="spec-status">In Progress</span>
+          </div>
+          
+          <h3 class="spec-title">Dynamic Public Speaking Specialization</h3>
+          <p class="spec-institution">University of Washington</p>
+          
+          <p class="spec-description">
+            Practical communication skills for technical professionals. From presentation delivery to audience engagement and presence.
+          </p>
+          
+          <div class="progress-section">
+            <div class="progress-label">
+              <span class="progress-label-left">3 of 4 courses completed</span>
+              <span class="progress-label-right">75%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 75%"></div>
+            </div>
+          </div>
+          
+          <div class="modules-grid">
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Foundations
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Delivery
+            </div>
+            <div class="module-badge completed">
+              <i class="fas fa-check"></i> Presence
+            </div>
+            <div class="module-badge">Capstone</div>
+          </div>
+          
+          <div class="spec-footer">
+            <a href="https://www.coursera.org/specializations/public-speaking" target="_blank" class="update-btn">
+              <i class="fas fa-external-link-alt"></i> View Course
+            </a>
+            <button class="update-btn" onclick="updateProgress('speaking', 0.75)">
+              <i class="fas fa-pencil-alt"></i> Update
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+    
+  </div>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>Martin Li</h4>
+        <p>Software Engineer | AI Enthusiast | Lifelong Learner</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/learning.html">Learning</a></li>
+          <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect</h4>
+        <div class="social-links">
+          <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:simplisticmartin@gmail.com">Email</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Martin Li. All rights reserved. | <a href="/privacy.html">Privacy</a> | <a href="/terms.html">Terms</a></p>
+    </div>
+  </footer>
+  
+  <script>
+    // ==================== THEME TOGGLE ==================== 
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    html.setAttribute('data-theme', savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+    
+    // ==================== MOBILE MENU ==================== 
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    mobileMenuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+    
+    // ==================== UPDATE PROGRESS ==================== 
+    async function updateProgress(specId, progress) {
+      const progressPercent = Math.round(progress * 100);
+      
+      // Create a data file update
+      const message = `Updated ${specId} progress to ${progressPercent}%`;
+      
+      // Instructions for user
+      alert(`To update progress:\n\n1. Edit /data/learning-progress.json\n2. Update "${specId}": ${progress}\n3. Run: git add . && git commit -m "Update: ${message}" && git push\n\nThis ensures your progress is tracked in git!`);
+    }
+    
+    // ==================== CALCULATE OVERALL STATS ==================== 
+    function updateStats() {
+      const stats = {
+        'fe-risk': 0.60,
+        'startup': 0.50,
+        'investment': 0.40,
+        'speaking': 0.75
+      };
+      
+      // Calculate overall progress
+      const avgProgress = Object.values(stats).reduce((a, b) => a + b, 0) / Object.values(stats).length;
+      document.getElementById('totalProgress').textContent = Math.round(avgProgress * 100) + '%';
+      
+      // Calculate completed courses
+      const completedCourses = [3, 2, 2, 3].reduce((a, b) => a + b, 0);
+      document.getElementById('totalModules').textContent = completedCourses;
+    }
+    
+    updateStats();
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "last_updated": "2026-01-30",
+    "updated_by": "martin",
+    "note": "Track progress by editing this file and committing to git"
+  },
+  "specializations": {
+    "fe-risk": {
+      "name": "Financial Engineering & Risk Management",
+      "institution": "Columbia University",
+      "url": "https://www.coursera.org/specializations/financial-engineering-management",
+      "total_courses": 5,
+      "completed_courses": 3,
+      "progress": 0.60,
+      "status": "in-progress",
+      "courses": {
+        "1": {
+          "name": "Foundations of Financial Engineering",
+          "status": "completed",
+          "completed_date": "2025-11-15"
+        },
+        "2": {
+          "name": "Derivatives Pricing",
+          "status": "completed",
+          "completed_date": "2025-12-20"
+        },
+        "3": {
+          "name": "Portfolio Optimization",
+          "status": "completed",
+          "completed_date": "2026-01-10"
+        },
+        "4": {
+          "name": "Risk Management",
+          "status": "in-progress",
+          "estimated_completion": "2026-02-28"
+        },
+        "5": {
+          "name": "Capstone Project",
+          "status": "not-started",
+          "estimated_completion": "2026-04-30"
+        }
+      }
+    },
+    "startup": {
+      "name": "Startup Entrepreneurship Specialization",
+      "institution": "Technion - Israel Institute of Technology",
+      "url": "https://www.coursera.org/specializations/startup-entrepreneurship",
+      "total_courses": 4,
+      "completed_courses": 2,
+      "progress": 0.50,
+      "status": "in-progress",
+      "courses": {
+        "1": {
+          "name": "Ideation & Business Concepts",
+          "status": "completed",
+          "completed_date": "2025-10-22"
+        },
+        "2": {
+          "name": "Business Model & Plan",
+          "status": "completed",
+          "completed_date": "2025-12-05"
+        },
+        "3": {
+          "name": "Fundraising & Investment",
+          "status": "in-progress",
+          "estimated_completion": "2026-03-15"
+        },
+        "4": {
+          "name": "Scaling & Growth",
+          "status": "not-started",
+          "estimated_completion": "2026-05-30"
+        }
+      }
+    },
+    "investment": {
+      "name": "Investment & Portfolio Management",
+      "institution": "University of Michigan",
+      "url": "https://www.coursera.org/specializations/investment-management",
+      "total_courses": 5,
+      "completed_courses": 2,
+      "progress": 0.40,
+      "status": "in-progress",
+      "courses": {
+        "1": {
+          "name": "Portfolio Theory Fundamentals",
+          "status": "completed",
+          "completed_date": "2025-11-08"
+        },
+        "2": {
+          "name": "Financial Analysis",
+          "status": "completed",
+          "completed_date": "2025-12-18"
+        },
+        "3": {
+          "name": "Asset Allocation",
+          "status": "in-progress",
+          "estimated_completion": "2026-02-28"
+        },
+        "4": {
+          "name": "Performance Measurement",
+          "status": "not-started",
+          "estimated_completion": "2026-04-15"
+        },
+        "5": {
+          "name": "Capstone & Case Studies",
+          "status": "not-started",
+          "estimated_completion": "2026-05-30"
+        }
+      }
+    },
+    "speaking": {
+      "name": "Dynamic Public Speaking Specialization",
+      "institution": "University of Washington",
+      "url": "https://www.coursera.org/specializations/public-speaking",
+      "total_courses": 4,
+      "completed_courses": 3,
+      "progress": 0.75,
+      "status": "in-progress",
+      "courses": {
+        "1": {
+          "name": "Foundations of Public Speaking",
+          "status": "completed",
+          "completed_date": "2025-09-30"
+        },
+        "2": {
+          "name": "Delivery Techniques",
+          "status": "completed",
+          "completed_date": "2025-11-12"
+        },
+        "3": {
+          "name": "Presence & Confidence",
+          "status": "completed",
+          "completed_date": "2026-01-15"
+        },
+        "4": {
+          "name": "Capstone Presentation",
+          "status": "in-progress",
+          "estimated_completion": "2026-02-28"
+        }
+      }
+    }
+  },
+  "cbt_integration": {
+    "thought_tracking": {
+      "enabled": true,
+      "description": "Breaking down courses into actionable steps"
+    },
+    "behavior_activation": {
+      "enabled": true,
+      "weekly_goal": "Complete 5+ course modules per week"
+    },
+    "cognitive_reframing": {
+      "enabled": true,
+      "focus": "Viewing challenges as learning opportunities"
+    },
+    "progress_visualization": {
+      "enabled": true,
+      "update_frequency": "Weekly"
+    }
+  },
+  "goals": {
+    "2026": {
+      "target": "Complete at least 2 specializations",
+      "current_progress": "On track",
+      "priority": [
+        "Speaking (75% - closest to completion)",
+        "Financial Engineering (60% - strong technical foundation)"
+      ]
+    }
+  }
+}
