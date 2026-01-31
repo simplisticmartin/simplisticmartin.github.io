@@ -601,6 +601,14 @@
     </div>
   </nav>
   
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-content">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">Loading...</div>
+    </div>
+  </div>
+  
   <!-- Hero Section -->
   <section class="hero" id="home">
     <div class="hero-background" id="particlesBackground"></div>
@@ -652,40 +660,40 @@
   </section>
   
   <!-- Skills Section -->
-  <section class="skills-section">
+  <section class="skills-section reveal">
     <div class="section-header" style="max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-lg);">
       <h2 class="section-title fade-in-up">Tech Stack</h2>
     </div>
-    <div class="skills-grid">
-      <div class="skill-item fade-in-up">
+    <div class="skills-grid stagger-children">
+      <div class="skill-item" data-tooltip="My primary language for AI/ML">
         <div class="skill-icon">🐍</div>
         <div class="skill-name">Python</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Enterprise applications at JPMorgan">
         <div class="skill-icon">☕</div>
         <div class="skill-name">Java</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Frontend development">
         <div class="skill-icon">⚛️</div>
         <div class="skill-name">React</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Backend APIs">
         <div class="skill-icon">🟢</div>
         <div class="skill-name">Node.js</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Machine Learning & Deep Learning">
         <div class="skill-icon">🧠</div>
         <div class="skill-name">AI/ML</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Cloud infrastructure">
         <div class="skill-icon">☁️</div>
         <div class="skill-name">AWS</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Containerization">
         <div class="skill-icon">🐳</div>
         <div class="skill-name">Docker</div>
       </div>
-      <div class="skill-item fade-in-up">
+      <div class="skill-item" data-tooltip="Analytics & Visualization">
         <div class="skill-icon">📊</div>
         <div class="skill-name">Data Science</div>
       </div>
@@ -693,7 +701,7 @@
   </section>
   
   <!-- Projects Section -->
-  <section class="section" id="projects">
+  <section class="section reveal" id="projects">
     <div class="section-header">
       <h2 class="section-title fade-in-up">Featured Projects</h2>
       <p class="section-description fade-in-up">
@@ -702,13 +710,13 @@
       </p>
     </div>
     
-    <div class="projects-grid" id="projectsGrid">
+    <div class="projects-grid stagger-children" id="projectsGrid">
       <!-- Projects will be dynamically loaded here -->
     </div>
   </section>
   
   <!-- Contact Section -->
-  <section class="section contact-section" id="contact" style="background: var(--bg-secondary);">
+  <section class="section contact-section reveal" id="contact" style="background: var(--bg-secondary);">
     <div class="section-header">
       <h2 class="section-title fade-in-up">Let's Connect</h2>
       <p class="section-description fade-in-up">
@@ -745,24 +753,24 @@
   </section>
   
   <!-- Quick Links Section -->
-  <section class="quick-links-section">
+  <section class="quick-links-section reveal">
     <div class="section-header" style="max-width: 1200px; margin: 0 auto var(--spacing-2xl); padding: 0 var(--spacing-lg);">
       <h2 class="section-title fade-in-up">Explore More</h2>
     </div>
-    <div class="quick-links-grid">
-      <a href="/blog/" class="quick-link-card fade-in-up">
+    <div class="quick-links-grid stagger-children">
+      <a href="/blog/" class="quick-link-card">
         <div class="quick-link-icon">📝</div>
         <h3>Read My Blog</h3>
         <p>Insights on AI, software engineering, and lessons from JPMorgan Chase & Georgia Tech.</p>
         <span class="quick-link-arrow">Browse Posts <i class="fas fa-arrow-right"></i></span>
       </a>
-      <a href="/learning.html" class="quick-link-card fade-in-up">
+      <a href="/learning.html" class="quick-link-card">
         <div class="quick-link-icon">📚</div>
         <h3>Learning Journey</h3>
         <p>Track my progress through Coursera specializations in finance, entrepreneurship & more.</p>
         <span class="quick-link-arrow">View Progress <i class="fas fa-arrow-right"></i></span>
       </a>
-      <a href="/about/" class="quick-link-card fade-in-up">
+      <a href="/about/" class="quick-link-card">
         <div class="quick-link-icon">👨‍💻</div>
         <h3>About Me</h3>
         <p>Learn about my background, experience, and what drives me as a software engineer.</p>

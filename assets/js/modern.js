@@ -246,4 +246,181 @@ document.querySelectorAll('a[target="_blank"]').forEach(link => {
   });
 });
 
+// ==================== PAGE LOADER ====================
+function initPageLoader() {
+  const loader = document.querySelector('.page-loader');
+  if (loader) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 500);
+    });
+  }
+}
+initPageLoader();
+
+// ==================== CURSOR TRAILER ====================
+function initCursorTrailer() {
+  // Only on desktop
+  if (window.innerWidth < 768) return;
+  
+  const trailer = document.createElement('div');
+  trailer.className = 'cursor-trailer';
+  document.body.appendChild(trailer);
+  
+  let mouseX = 0, mouseY = 0;
+  let trailerX = 0, trailerY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  
+  // Interactive elements make cursor bigger
+  document.querySelectorAll('a, button, .project-card, .skill-item, .blog-card').forEach(el => {
+    el.addEventListener('mouseenter', () => trailer.classList.add('active'));
+    el.addEventListener('mouseleave', () => trailer.classList.remove('active'));
+  });
+  
+  function animateTrailer() {
+    trailerX += (mouseX - trailerX) * 0.15;
+    trailerY += (mouseY - trailerY) * 0.15;
+    
+    trailer.style.left = trailerX + 'px';
+    trailer.style.top = trailerY + 'px';
+    
+    requestAnimationFrame(animateTrailer);
+  }
+  animateTrailer();
+}
+initCursorTrailer();
+
+// ==================== REVEAL ON SCROLL ====================
+function initRevealAnimations() {
+  const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children');
+  
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  
+  reveals.forEach(el => revealObserver.observe(el));
+}
+initRevealAnimations();
+
+// ==================== TOAST NOTIFICATIONS ====================
+function showToast(message, type = 'success', duration = 3000) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// Make showToast globally available
+window.showToast = showToast;
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', (e) => {
+  // Press 'T' to toggle theme
+  if (e.key === 't' && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    toggleTheme();
+  }
+  
+  // Press 'H' to go home
+  if (e.key === 'h' && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    window.location.href = '/';
+  }
+  
+  // Press '?' to show shortcuts
+  if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+    showToast('⌨️ Shortcuts: T = Toggle theme, H = Home', 'success', 4000);
+  }
+});
+
+// ==================== SMOOTH PAGE TRANSITIONS ====================
+function initPageTransitions() {
+  // Add fade-in class to body
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity 0.3s ease';
+  
+  window.addEventListener('load', () => {
+    document.body.style.opacity = '1';
+  });
+  
+  // Handle internal link clicks
+  document.querySelectorAll('a[href^="/"], a[href^="./"]').forEach(link => {
+    // Skip external links and anchor links
+    if (link.target === '_blank' || link.getAttribute('href').startsWith('#')) return;
+    
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      e.preventDefault();
+      
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        window.location.href = href;
+      }, 300);
+    });
+  });
+}
+initPageTransitions();
+
+// ==================== KONAMI CODE EASTER EGG ====================
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let konamiIndex = 0;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === konamiCode[konamiIndex]) {
+    konamiIndex++;
+    if (konamiIndex === konamiCode.length) {
+      // Easter egg activated!
+      showToast('🎉 Konami Code Activated! You found the secret!', 'success', 5000);
+      document.body.style.animation = 'rainbow 2s linear';
+      setTimeout(() => {
+        document.body.style.animation = '';
+      }, 2000);
+      konamiIndex = 0;
+    }
+  } else {
+    konamiIndex = 0;
+  }
+});
+
+// Add rainbow animation
+const rainbowStyle = document.createElement('style');
+rainbowStyle.textContent = `
+  @keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+`;
+document.head.appendChild(rainbowStyle);
+
+// ==================== READING PROGRESS (for blog posts) ====================
+function initReadingProgress() {
+  const progressBar = document.querySelector('.reading-progress');
+  if (!progressBar) return;
+  
+  window.addEventListener('scroll', () => {
+    const winScroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    progressBar.style.width = scrolled + '%';
+  });
+}
+initReadingProgress();
+
 console.log('🚀 Modern Portfolio Loaded Successfully!');
+console.log('💡 Tip: Press ? for keyboard shortcuts');
