@@ -49,6 +49,85 @@
       50% { box-shadow: 0 0 0 15px rgba(85, 214, 170, 0); }
     }
     
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(85, 214, 170, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(85, 214, 170, 0.6); }
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* ==================== SCROLL PROGRESS BAR ==================== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--gradient-primary);
+      z-index: 9999;
+      transition: width 0.1s ease;
+    }
+    
+    /* ==================== BACK TO TOP BUTTON ==================== */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 20px rgba(85, 214, 170, 0.3);
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .back-to-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(85, 214, 170, 0.5);
+    }
+    
+    /* ==================== TYPING EFFECT ==================== */
+    .tagline {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tagline::after {
+      content: '|';
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+      color: var(--primary-color);
+    }
+    
     .fade-in-up {
       opacity: 0;
       transform: translateY(30px);
@@ -242,6 +321,209 @@
       color: white;
     }
     
+    /* ==================== QUICK LINKS SECTION ==================== */
+    .quick-links-section {
+      background: var(--bg-primary);
+      padding: var(--spacing-3xl) var(--spacing-lg);
+    }
+    
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-xl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .quick-link-card {
+      background: var(--bg-card);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quick-link-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    
+    .quick-link-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .quick-link-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .quick-link-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .quick-link-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+    
+    .quick-link-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .quick-link-arrow {
+      color: var(--primary-color);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .quick-link-arrow i {
+      transition: transform 0.3s ease;
+    }
+    
+    .quick-link-card:hover .quick-link-arrow i {
+      transform: translateX(5px);
+    }
+    
+    /* ==================== ENHANCED FOOTER ==================== */
+    .site-footer {
+      background: var(--bg-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-primary);
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-3xl) var(--spacing-lg) var(--spacing-xl);
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--spacing-2xl);
+      margin-bottom: var(--spacing-2xl);
+    }
+    
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .footer-brand p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .footer-social {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+    
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+    
+    .footer-social a:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .footer-column h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .footer-column li {
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .footer-column a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-column a:hover {
+      color: var(--primary-color);
+    }
+    
+    .footer-bottom {
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+    
+    .footer-copyright {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    .footer-made-with {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .footer-made-with .heart {
+      color: #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+    
     /* ==================== RESPONSIVE ==================== */
     @media (max-width: 768px) {
       .stats-bar {
@@ -265,10 +547,31 @@
         width: 100%;
         justify-content: center;
       }
+      
+      .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .footer-social {
+        justify-content: center;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
   
   <!-- Navigation -->
   <nav class="site-nav" id="navbar">
@@ -283,10 +586,10 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="/blog/">Blog</a></li>
+        <li><a href="/about/">About</a></li>
         <li><a href="/learning.html">Learning</a></li>
         <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li><a href="/old-version/index.html" class="btn-old-version">🕰️ Old Version</a></li>
         <li>
           <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
             <i class="fas fa-moon"></i>
@@ -440,21 +743,93 @@
     </div>
   </section>
   
+  <!-- Quick Links Section -->
+  <section class="quick-links-section">
+    <div class="section-header" style="max-width: 1200px; margin: 0 auto var(--spacing-2xl); padding: 0 var(--spacing-lg);">
+      <h2 class="section-title fade-in-up">Explore More</h2>
+    </div>
+    <div class="quick-links-grid">
+      <a href="/blog/" class="quick-link-card fade-in-up">
+        <div class="quick-link-icon">📝</div>
+        <h3>Read My Blog</h3>
+        <p>Insights on AI, software engineering, and lessons from JPMorgan Chase & Georgia Tech.</p>
+        <span class="quick-link-arrow">Browse Posts <i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a href="/learning.html" class="quick-link-card fade-in-up">
+        <div class="quick-link-icon">📚</div>
+        <h3>Learning Journey</h3>
+        <p>Track my progress through Coursera specializations in finance, entrepreneurship & more.</p>
+        <span class="quick-link-arrow">View Progress <i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a href="/about/" class="quick-link-card fade-in-up">
+        <div class="quick-link-icon">👨‍💻</div>
+        <h3>About Me</h3>
+        <p>Learn about my background, experience, and what drives me as a software engineer.</p>
+        <span class="quick-link-arrow">Get to Know Me <i class="fas fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+  
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="#projects">Projects</a>
-        <a href="/blog/">Blog</a>
-        <a href="/Resume.pdf">Resume</a>
-        <a href="/old-version/index.html">Old Version</a>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Martin Li</h3>
+          <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring the frontiers of AI while pursuing my Master's at Georgia Tech.</p>
+          <div class="footer-social">
+            <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="mailto:simplisticmartin@gmail.com" aria-label="Email">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="/about/">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
+            <li><a href="/learning.html">Learning</a></li>
+            <li><a href="/blog-post-creator.html">Blog Creator</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
+            <li><a href="https://github.com/simplisticmartin" target="_blank">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank">LinkedIn</a></li>
+          </ul>
+        </div>
       </div>
-      <p class="footer-copyright">
-        &copy; 2026 Martin Li. Built with modern web technologies.
-      </p>
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          &copy; 2026 Martin Li. All rights reserved.
+        </p>
+        <p class="footer-made-with">
+          Made with <span class="heart">❤️</span> using modern web technologies
+        </p>
+      </div>
     </div>
   </footer>
+  
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
   
   <!-- Scripts -->
   <script src="/assets/js/modern.js"></script>
@@ -462,10 +837,71 @@
   <script src="/assets/js/particles-modern.js"></script>
   <script src="/assets/js/performance.js" defer></script>
   
-  <!-- Scroll Animations -->
+  <!-- Scroll Animations & Interactive Features -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Scroll animation observer
+      // ==================== SCROLL PROGRESS BAR ====================
+      const scrollProgress = document.getElementById('scrollProgress');
+      window.addEventListener('scroll', () => {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        scrollProgress.style.width = scrolled + '%';
+      });
+      
+      // ==================== BACK TO TOP BUTTON ====================
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+      
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      
+      // ==================== TYPING EFFECT ====================
+      const roles = [
+        'Software Engineer @ JPMorgan Chase',
+        'MS CS Student @ Georgia Tech',
+        'Full-Stack Developer',
+        'AI & ML Enthusiast'
+      ];
+      let roleIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      const tagline = document.querySelector('.tagline');
+      
+      function typeRole() {
+        const currentRole = roles[roleIndex];
+        
+        if (isDeleting) {
+          tagline.textContent = currentRole.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          tagline.textContent = currentRole.substring(0, charIndex + 1);
+          charIndex++;
+        }
+        
+        if (!isDeleting && charIndex === currentRole.length) {
+          isDeleting = true;
+          setTimeout(typeRole, 2000); // Pause at end
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          roleIndex = (roleIndex + 1) % roles.length;
+          setTimeout(typeRole, 500);
+        } else {
+          setTimeout(typeRole, isDeleting ? 50 : 100);
+        }
+      }
+      
+      // Start typing effect
+      setTimeout(typeRole, 1500);
+      
+      // ==================== SCROLL ANIMATIONS ====================
       const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -475,7 +911,6 @@
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
           if (entry.isIntersecting) {
-            // Add staggered delay based on element index
             const delay = index * 100;
             setTimeout(() => {
               entry.target.classList.add('visible');
@@ -484,7 +919,6 @@
         });
       }, observerOptions);
       
-      // Observe all fade-in-up elements
       document.querySelectorAll('.fade-in-up').forEach(el => {
         observer.observe(el);
       });
@@ -492,30 +926,65 @@
       // Animate skill items with stagger
       const skillItems = document.querySelectorAll('.skill-item');
       skillItems.forEach((item, index) => {
-        item.style.animationDelay = `${index * 0.1}s`;
+        item.style.transitionDelay = `${index * 0.1}s`;
       });
       
-      // Animate stat numbers on scroll
-      const animateStats = () => {
-        const statNumbers = document.querySelectorAll('.stat-number');
-        statNumbers.forEach(stat => {
-          const target = stat.textContent;
-          stat.style.opacity = '1';
-          stat.style.transform = 'translateY(0)';
-        });
+      // ==================== COUNTER ANIMATION ====================
+      const animateCounter = (element, target) => {
+        const num = parseInt(target);
+        const duration = 2000;
+        const step = num / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+          current += step;
+          if (current < num) {
+            element.textContent = Math.floor(current) + (target.includes('+') ? '+' : '');
+            requestAnimationFrame(updateCounter);
+          } else {
+            element.textContent = target;
+          }
+        };
+        updateCounter();
       };
       
-      // Stats bar observer
       const statsBar = document.querySelector('.stats-bar');
       if (statsBar) {
         const statsObserver = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
-            animateStats();
+            document.querySelectorAll('.stats-bar .stat-number').forEach(stat => {
+              animateCounter(stat, stat.textContent);
+            });
             statsObserver.disconnect();
           }
         }, { threshold: 0.5 });
         statsObserver.observe(statsBar);
       }
+      
+      // ==================== SMOOTH SCROLL ====================
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+      
+      // ==================== NAVBAR HIDE ON SCROLL DOWN ====================
+      let lastScroll = 0;
+      const navbar = document.getElementById('navbar');
+      
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          navbar.style.transform = 'translateY(-100%)';
+        } else {
+          navbar.style.transform = 'translateY(0)';
+        }
+        lastScroll = currentScroll;
+      });
     });
   </script>
 </body>
