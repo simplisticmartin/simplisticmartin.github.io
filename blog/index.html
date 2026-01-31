@@ -23,6 +23,404 @@
   
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
+  
+  <!-- Enhanced Blog Styles -->
+  <style>
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Enhanced Blog Hero */
+    .blog-hero {
+      position: relative;
+      padding: 120px 0 80px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), #8b5cf6);
+      background-size: 200% 200%;
+      animation: gradientShift 8s ease infinite;
+      overflow: hidden;
+    }
+    
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+      background-size: 1000px 100%;
+      animation: shimmer 3s infinite;
+    }
+    
+    .blog-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(to top, var(--bg-primary), transparent);
+    }
+    
+    .blog-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .blog-hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: white;
+      margin-bottom: var(--spacing-md);
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .blog-hero p {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease 0.2s forwards;
+      opacity: 0;
+    }
+    
+    /* Hero Stats */
+    .blog-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-2xl);
+      margin-top: var(--spacing-xl);
+      animation: fadeInUp 0.8s ease 0.4s forwards;
+      opacity: 0;
+    }
+    
+    .blog-stat {
+      text-align: center;
+    }
+    
+    .blog-stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .blog-stat-label {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Enhanced Category Cards */
+    .category-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    
+    .category-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .category-card:hover .category-icon {
+      animation: float 2s ease-in-out infinite;
+    }
+    
+    .category-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-md);
+      transition: transform 0.3s ease;
+    }
+    
+    /* Section Improvements */
+    .section-title {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Enhanced Filter Buttons */
+    .blog-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-full);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .filter-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+    
+    .filter-btn:hover::before,
+    .filter-btn.active::before {
+      left: 0;
+    }
+    
+    .filter-btn:hover,
+    .filter-btn.active {
+      color: white;
+      border-color: transparent;
+    }
+    
+    /* Enhanced Blog Cards */
+    .blog-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: 10;
+    }
+    
+    .blog-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .blog-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+    
+    .blog-card:hover .blog-image img {
+      transform: scale(1.1);
+    }
+    
+    .blog-image img {
+      transition: transform 0.5s ease;
+    }
+    
+    .blog-read-more {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      color: var(--primary-color);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .blog-read-more i {
+      transition: transform 0.3s ease;
+    }
+    
+    .blog-read-more:hover i {
+      transform: translateX(5px);
+    }
+    
+    /* Reading Time Badge */
+    .reading-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      margin-left: var(--spacing-sm);
+    }
+    
+    /* Newsletter Section Enhancement */
+    .newsletter-section {
+      background: var(--gradient-primary);
+      padding: var(--spacing-3xl) var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin: var(--spacing-2xl) auto;
+      max-width: 800px;
+    }
+    
+    .newsletter-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+      background-size: 1000px 100%;
+      animation: shimmer 3s infinite;
+    }
+    
+    .newsletter-section h2 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: var(--spacing-md);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .newsletter-section p {
+      color: rgba(255,255,255,0.9);
+      max-width: 500px;
+      margin: 0 auto var(--spacing-xl);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .newsletter-section .social-links {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .newsletter-section .social-link {
+      background: white !important;
+      color: var(--primary-color) !important;
+      transition: all 0.3s ease;
+    }
+    
+    .newsletter-section .social-link:hover {
+      transform: translateY(-5px) scale(1.1);
+    }
+    
+    /* Write Post CTA */
+    .write-post-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-xl);
+      background: white;
+      color: var(--primary-color);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      margin-top: var(--spacing-lg);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .write-post-cta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    /* Footer Enhancement */
+    .site-footer {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient-primary);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .blog-stats {
+        gap: var(--spacing-lg);
+      }
+      
+      .blog-stat-number {
+        font-size: 1.5rem;
+      }
+      
+      .filter-btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
   
@@ -58,12 +456,32 @@
     <div class="blog-hero-content">
       <h1>📝 Blog</h1>
       <p>Insights on AI, software engineering at scale, and lessons from JPMorgan Chase & Georgia Tech.</p>
+      
+      <!-- Blog Stats -->
+      <div class="blog-stats">
+        <div class="blog-stat">
+          <div class="blog-stat-number">7</div>
+          <div class="blog-stat-label">Categories</div>
+        </div>
+        <div class="blog-stat">
+          <div class="blog-stat-number" id="totalPosts">{{ site.posts | size }}</div>
+          <div class="blog-stat-label">Posts</div>
+        </div>
+        <div class="blog-stat">
+          <div class="blog-stat-number">2019</div>
+          <div class="blog-stat-label">Since</div>
+        </div>
+      </div>
     </div>
   </section>
   
   <!-- Blog Categories -->
   <section class="section">
     <div class="container">
+      <div class="section-header fade-in-up">
+        <h2 class="section-title">Explore Topics</h2>
+        <p class="section-description">Dive into different areas of my expertise and interests.</p>
+      </div>
       <div class="category-grid">
         
         <a href="#career" class="category-card" data-category="career">
@@ -123,8 +541,8 @@
   <section class="section" style="background: var(--bg-secondary);">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">All Posts</h2>
-        <div class="blog-filters">
+        <h2 class="section-title fade-in-up">All Posts</h2>
+        <div class="blog-filters fade-in-up">
           <button class="filter-btn active" data-filter="all">All</button>
           <button class="filter-btn" data-filter="career">💼 Career</button>
           <button class="filter-btn" data-filter="ai">🤖 AI</button>
@@ -191,20 +609,26 @@
   
   <!-- Newsletter Section -->
   <section class="section">
-    <div class="container" style="max-width: 600px; text-align: center;">
-      <h2 class="section-title">Stay Updated</h2>
-      <p class="section-description">
-        Want to be notified when I publish new posts? Follow me on social media!
-      </p>
-      <div class="social-links" style="margin-top: var(--spacing-xl);">
-        <a href="https://github.com/simplisticmartin" class="social-link" style="background: var(--text-primary); color: white;">
-          <i class="fab fa-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/simplisticmartin" class="social-link" style="background: #0077b5; color: white;">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        <a href="mailto:simplisticmartin@gmail.com" class="social-link" style="background: #ea4335; color: white;">
-          <i class="fas fa-envelope"></i>
+    <div class="container">
+      <div class="newsletter-section fade-in-up">
+        <h2>✨ Stay Updated</h2>
+        <p>
+          Want to be notified when I publish new posts? Follow me on social media or check back regularly!
+        </p>
+        <div class="social-links">
+          <a href="https://github.com/simplisticmartin" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/simplisticmartin" class="social-link" target="_blank" rel="noopener">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="mailto:simplisticmartin@gmail.com" class="social-link">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+        <a href="{{ '/blog-post-creator.html' | relative_url }}" class="write-post-cta">
+          <i class="fas fa-pen"></i>
+          Write a New Post
         </a>
       </div>
     </div>
@@ -231,5 +655,74 @@
   <script src="{{ '/assets/js/modern.js' | relative_url }}"></script>
   <script src="{{ '/assets/js/blog-categories.js' | relative_url }}"></script>
   <script src="{{ '/assets/js/performance.js' | relative_url }}" defer></script>
+  
+  <!-- Scroll Animations & Enhancements -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Scroll animation observer
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            const delay = index * 50;
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, delay);
+          }
+        });
+      }, observerOptions);
+      
+      // Observe all fade-in-up elements
+      document.querySelectorAll('.fade-in-up').forEach(el => {
+        observer.observe(el);
+      });
+      
+      // Add fade-in-up to category cards with stagger
+      document.querySelectorAll('.category-card').forEach((card, index) => {
+        card.classList.add('fade-in-up');
+        card.style.transitionDelay = `${index * 0.1}s`;
+        observer.observe(card);
+      });
+      
+      // Add fade-in-up to blog cards with stagger
+      document.querySelectorAll('.blog-card').forEach((card, index) => {
+        card.classList.add('fade-in-up');
+        card.style.transitionDelay = `${index * 0.1}s`;
+        observer.observe(card);
+      });
+      
+      // Add reading time to blog posts
+      document.querySelectorAll('.blog-card').forEach(card => {
+        const excerpt = card.querySelector('.blog-excerpt');
+        if (excerpt) {
+          const words = excerpt.textContent.split(/\s+/).length;
+          const readTime = Math.max(1, Math.ceil(words / 200));
+          const dateSpan = card.querySelector('.blog-date');
+          if (dateSpan && !card.querySelector('.reading-time')) {
+            const readingTimeSpan = document.createElement('span');
+            readingTimeSpan.className = 'reading-time';
+            readingTimeSpan.innerHTML = `<i class="fas fa-clock"></i> ${readTime} min read`;
+            dateSpan.parentNode.insertBefore(readingTimeSpan, dateSpan.nextSibling);
+          }
+        }
+      });
+      
+      // Parallax effect on hero
+      const blogHero = document.querySelector('.blog-hero');
+      if (blogHero) {
+        window.addEventListener('scroll', () => {
+          const scrolled = window.pageYOffset;
+          if (scrolled < 500) {
+            blogHero.style.backgroundPosition = `50% ${scrolled * 0.5}px`;
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
