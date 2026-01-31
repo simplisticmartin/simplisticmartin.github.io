@@ -360,6 +360,226 @@
       margin-left: var(--spacing-sm);
     }
     
+    /* ==================== LIFE QUOTES SECTION ==================== */
+    .quotes-section {
+      padding: var(--spacing-3xl) var(--spacing-lg);
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quotes-section::before {
+      content: '"';
+      position: absolute;
+      top: -50px;
+      left: 20px;
+      font-size: 300px;
+      font-family: Georgia, serif;
+      color: var(--primary-color);
+      opacity: 0.05;
+      line-height: 1;
+      pointer-events: none;
+    }
+    
+    .quotes-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .quotes-header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+    
+    .quotes-header h2 {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .quotes-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Quote Carousel */
+    .quote-carousel {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .quote-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-2xl) var(--spacing-3xl);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .quote-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+    
+    .quote-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+    
+    .quote-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      opacity: 0.3;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .quote-text {
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.8;
+      margin-bottom: var(--spacing-xl);
+      position: relative;
+    }
+    
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .quote-author-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+    }
+    
+    .quote-author-info h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .quote-author-info span {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    
+    /* Quote Navigation */
+    .quote-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-xl);
+    }
+    
+    .quote-nav-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .quote-nav-btn:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .quote-dots {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+    
+    .quote-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .quote-dot.active {
+      background: var(--primary-color);
+      transform: scale(1.2);
+    }
+    
+    .quote-dot:hover {
+      background: var(--primary-light);
+    }
+    
+    /* Quote Counter */
+    .quote-counter {
+      text-align: center;
+      margin-top: var(--spacing-md);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    
+    /* View All Quotes Link */
+    .view-all-quotes {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-xl);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .view-all-quotes:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .quote-card {
+        padding: var(--spacing-xl);
+      }
+      
+      .quote-text {
+        font-size: 1.1rem;
+      }
+      
+      .quotes-section::before {
+        font-size: 150px;
+      }
+    }
+    
     /* Newsletter Section Enhancement */
     .newsletter-section {
       background: var(--gradient-primary);
@@ -654,6 +874,55 @@
     </div>
   </section>
   
+  <!-- Life Quotes Section -->
+  <section class="quotes-section">
+    <div class="quotes-container">
+      <div class="quotes-header fade-in-up">
+        <h2>💭 Life Quotes</h2>
+        <p>Wisdom and inspiration I've collected throughout my journey. The dates mark when I discovered each quote.</p>
+      </div>
+      
+      <div class="quote-carousel fade-in-up">
+        <div class="quote-card" id="quoteCard">
+          <i class="fas fa-quote-left quote-icon"></i>
+          <p class="quote-text" id="quoteText">
+            You can't control everything that happens to you but you can control how you react to things that are out of your control.
+          </p>
+          <div class="quote-author">
+            <img src="/Projects/Quote-Generator/img/epictetus.jpg" alt="Quote Author" class="quote-author-image" id="quoteImage" onerror="this.style.display='none'">
+            <div class="quote-author-info">
+              <h4 id="quoteAuthor">Epictetus</h4>
+              <span id="quoteDate">Discovered ~2014</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quote-nav">
+          <button class="quote-nav-btn" id="quotePrev" aria-label="Previous quote">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="quote-dots" id="quoteDots">
+            <!-- Dots will be generated by JS -->
+          </div>
+          <button class="quote-nav-btn" id="quoteNext" aria-label="Next quote">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        
+        <div class="quote-counter">
+          <span id="quoteCounter">1</span> of <span id="quoteTotalCount">10</span> quotes
+        </div>
+        
+        <div style="text-align: center;">
+          <a href="/Projects/Quote-Generator/" class="view-all-quotes">
+            <i class="fas fa-external-link-alt"></i>
+            View Full Quote Timeline
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
   <!-- Newsletter Section -->
   <section class="section">
     <div class="container">
@@ -814,6 +1083,144 @@
         }
         lastScroll = currentScroll;
       });
+      
+      // ==================== LIFE QUOTES CAROUSEL ====================
+      const lifeQuotes = [
+        {
+          quote: "You can't control everything that happens to you but you can control how you react to things that are out of your control.",
+          author: "Epictetus",
+          date: "~2014",
+          image: "/Projects/Quote-Generator/img/epictetus.jpg"
+        },
+        {
+          quote: "The Law of Serendipity: Lady Luck favors the one who tries.",
+          author: "Barbara Oakley",
+          date: "~2017",
+          image: "/Projects/Quote-Generator/img/Boakley.jpg"
+        },
+        {
+          quote: "Work hard, be kind and amazing things will happen.",
+          author: "Conan O'Brien",
+          date: "~2017",
+          image: "/Projects/Quote-Generator/img/conan.jpg"
+        },
+        {
+          quote: "The shortest way to do many things is to do one thing at a time.",
+          author: "Samuel Smiles",
+          date: "2014",
+          image: "/Projects/Quote-Generator/img/smiles.webp"
+        },
+        {
+          quote: "Being open with your insecurities paradoxically makes you more confident and charismatic around others.",
+          author: "Mark Manson",
+          date: "~2017",
+          image: "/Projects/Quote-Generator/img/manson.jpg"
+        },
+        {
+          quote: "Everything worthwhile in life is won through surmounting the associated negative experience.",
+          author: "Mark Manson",
+          date: "~2017",
+          image: "/Projects/Quote-Generator/img/manson.jpg"
+        },
+        {
+          quote: "What determines your success isn't what you want to enjoy. The relevant question is what pain do you want to sustain?",
+          author: "Mark Manson",
+          date: "~2017",
+          image: "/Projects/Quote-Generator/img/manson.jpg"
+        },
+        {
+          quote: "All we really own in life are moments in time.",
+          author: "Tyson Fury",
+          date: "November 2019",
+          image: "/Projects/Quote-Generator/img/TFury.jpg"
+        },
+        {
+          quote: "History is written by victors.",
+          author: "Winston Churchill",
+          date: "12/30/2019",
+          image: "/Projects/Quote-Generator/img/churchill.jpg"
+        },
+        {
+          quote: "At some point, you'll have to move from imitating your heroes to emulating them. Imitation is about copying. Emulation is when imitation goes one step further, breaking through into your own thing.",
+          author: "Austin Kleon",
+          date: "02/21/2020",
+          image: "/Projects/Quote-Generator/img/keon.jpg"
+        }
+      ];
+      
+      let currentQuoteIndex = 0;
+      const quoteText = document.getElementById('quoteText');
+      const quoteAuthor = document.getElementById('quoteAuthor');
+      const quoteDate = document.getElementById('quoteDate');
+      const quoteImage = document.getElementById('quoteImage');
+      const quoteCounter = document.getElementById('quoteCounter');
+      const quoteTotalCount = document.getElementById('quoteTotalCount');
+      const quoteDots = document.getElementById('quoteDots');
+      const quotePrev = document.getElementById('quotePrev');
+      const quoteNext = document.getElementById('quoteNext');
+      const quoteCard = document.getElementById('quoteCard');
+      
+      // Initialize
+      quoteTotalCount.textContent = lifeQuotes.length;
+      
+      // Create dots
+      lifeQuotes.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'quote-dot' + (index === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goToQuote(index));
+        quoteDots.appendChild(dot);
+      });
+      
+      function updateQuote() {
+        const quote = lifeQuotes[currentQuoteIndex];
+        
+        // Add fade out
+        quoteCard.style.opacity = '0';
+        quoteCard.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          quoteText.textContent = quote.quote;
+          quoteAuthor.textContent = quote.author;
+          quoteDate.textContent = 'Discovered ' + quote.date;
+          quoteImage.src = quote.image;
+          quoteImage.alt = quote.author;
+          quoteImage.style.display = 'block';
+          quoteCounter.textContent = currentQuoteIndex + 1;
+          
+          // Update dots
+          document.querySelectorAll('.quote-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentQuoteIndex);
+          });
+          
+          // Fade in
+          quoteCard.style.opacity = '1';
+          quoteCard.style.transform = 'translateY(0)';
+        }, 300);
+      }
+      
+      function goToQuote(index) {
+        currentQuoteIndex = index;
+        updateQuote();
+      }
+      
+      function nextQuote() {
+        currentQuoteIndex = (currentQuoteIndex + 1) % lifeQuotes.length;
+        updateQuote();
+      }
+      
+      function prevQuote() {
+        currentQuoteIndex = (currentQuoteIndex - 1 + lifeQuotes.length) % lifeQuotes.length;
+        updateQuote();
+      }
+      
+      quotePrev.addEventListener('click', prevQuote);
+      quoteNext.addEventListener('click', nextQuote);
+      
+      // Auto-advance every 8 seconds
+      setInterval(nextQuote, 8000);
+      
+      // Add smooth transition to quote card
+      quoteCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     });
   </script>
 </body>
