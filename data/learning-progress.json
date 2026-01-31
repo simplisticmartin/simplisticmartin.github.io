@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-01-30",
+    "last_updated": "2026-01-31",
     "updated_by": "martin",
     "note": "Track progress by editing this file and committing to git"
   },
@@ -65,14 +65,10 @@
     },
     "investment": {
       "name": "Investment & Portfolio Management",
-      "institution": "University of Michigan",
+      "institution": "Rice University",
       "url": "https://www.coursera.org/specializations/investment-management",
       "total_courses": 5,
-      "completed_courses": 2,
-      "progress": 0.40,
-      "status": "in-progress",
-      "courses": {
-        "1": {0,
+      "completed_courses": 0,
       "progress": 0.00,
       "status": "not-started",
       "courses": {
@@ -94,17 +90,16 @@
         },
         "5": {
           "name": "Capstone & Case Studies",
-          "status": "not-started
+          "status": "not-started"
+        }
+      }
+    },
+    "speaking": {
       "name": "Dynamic Public Speaking Specialization",
       "institution": "University of Washington",
       "url": "https://www.coursera.org/specializations/public-speaking",
       "total_courses": 4,
-      "completed_courses": 3,
-      "progress": 0.75,
-      "status": "in-progress",
-      "courses": {
-        "1": {
-          "name": "Foundati0,
+      "completed_courses": 0,
       "progress": 0.00,
       "status": "not-started",
       "courses": {
@@ -122,7 +117,12 @@
         },
         "4": {
           "name": "Capstone Presentation",
-          "status": "not-started
+          "status": "not-started"
+        }
+      }
+    }
+  },
+  "cbt_integration": {
     "thought_tracking": {
       "enabled": true,
       "description": "Breaking down courses into actionable steps"
@@ -142,14 +142,14 @@
   },
   "goals": {
     "2026": {
-      "target": "Complete at least 2 specializations",
-      "current_progress": "On track",
-      "priority": [
-        "Speaking (75% - closest to completion)",
-        "FinanciaStart building expertise in all 4 specializations",
+      "target": "Start building expertise in all 4 specializations",
       "current_progress": "Just getting started",
       "priority": [
         "Financial Engineering (strong technical foundation)",
         "Dynamic Public Speaking (professional communication)",
         "Startup Entrepreneurship (innovation mindset)",
-        "Investment Management (portfolio expertise
+        "Investment Management (portfolio expertise)"
+      ]
+    }
+  }
+}
