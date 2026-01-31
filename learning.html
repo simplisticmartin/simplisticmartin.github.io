@@ -31,13 +31,33 @@
       border-radius: var(--radius-lg);
       margin-bottom: var(--spacing-3xl);
       box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .learning-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      animation: shimmer 8s infinite linear;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
     .learning-hero h1 {
       font-size: 2.5rem;
       font-family: var(--font-heading);
       margin-bottom: var(--spacing-sm);
-      font-weight: 700;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
     }
     
     .learning-hero p {
@@ -45,6 +65,32 @@
       opacity: 0.95;
       max-width: 600px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .learning-hero .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-xl);
+      margin-top: var(--spacing-lg);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-stat {
+      text-align: center;
+    }
+    
+    .hero-stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      display: block;
+    }
+    
+    .hero-stat-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
     }
     
     /* ==================== SPECIALIZATIONS SECTION ==================== */
@@ -85,6 +131,24 @@
       padding: var(--spacing-lg);
       transition: all var(--transition-base);
       box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .specialization-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform var(--transition-base);
+    }
+    
+    .specialization-card:hover::before {
+      transform: scaleX(1);
     }
     
     [data-theme="dark"] .specialization-card {
@@ -92,9 +156,25 @@
     }
     
     .specialization-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
       border-color: var(--primary-color);
+    }
+    
+    .spec-priority {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      width: 28px;
+      height: 28px;
+      background: var(--gradient-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
     }
     
     .spec-header {
@@ -187,9 +267,27 @@
     .progress-fill {
       height: 100%;
       background: var(--gradient-primary);
-      transition: width var(--transition-slow);
+      transition: width 1s ease-out;
       border-radius: var(--radius-full);
       box-shadow: 0 0 10px rgba(85, 214, 170, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: progressShine 2s ease-in-out infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
     
     /* ==================== COURSE MODULES ==================== */
@@ -211,6 +309,14 @@
       color: var(--text-secondary);
       transition: all var(--transition-base);
       cursor: default;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .module-badge:hover {
+      transform: scale(1.05);
     }
     
     [data-theme="dark"] .module-badge {
@@ -225,9 +331,31 @@
       font-weight: 600;
     }
     
+    .module-badge.completed i {
+      color: var(--accent-color);
+    }
+    
+    .module-badge.in-progress {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #92400e;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
     [data-theme="dark"] .module-badge.completed {
       background: #064e3b;
       color: #6ee0b8;
+    }
+    
+    [data-theme="dark"] .module-badge.in-progress {
+      background: #78350f;
+      color: #fde68a;
     }
     
     /* ==================== UPDATE BUTTON ==================== */
@@ -339,6 +467,24 @@
       padding: var(--spacing-lg);
       border-radius: var(--radius-lg);
       text-align: center;
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
     }
     
     [data-theme="dark"] .stat-card {
@@ -359,11 +505,177 @@
       font-weight: 600;
     }
     
+    /* ==================== LEARNING STREAK ==================== */
+    
+    .streak-section {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-3xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+    
+    [data-theme="dark"] .streak-section {
+      border-color: #3f4651;
+    }
+    
+    .streak-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .streak-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    
+    .streak-text h3 {
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    
+    .streak-text p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    .streak-days {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .day-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      transition: all var(--transition-base);
+    }
+    
+    .day-dot.active {
+      background: var(--primary-color);
+      box-shadow: 0 0 8px rgba(85, 214, 170, 0.5);
+    }
+    
+    .day-dot.today {
+      background: #f59e0b;
+      animation: todayPulse 2s infinite;
+    }
+    
+    @keyframes todayPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+    }
+    
+    /* ==================== MILESTONES ==================== */
+    
+    .milestones-section {
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .milestones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    
+    .milestone-card {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+      transition: all var(--transition-base);
+    }
+    
+    [data-theme="dark"] .milestone-card {
+      border-color: #3f4651;
+    }
+    
+    .milestone-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .milestone-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .milestone-card.achieved .milestone-icon {
+      background: #d1fae5;
+    }
+    
+    [data-theme="dark"] .milestone-card.achieved .milestone-icon {
+      background: #064e3b;
+    }
+    
+    .milestone-content h4 {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    
+    .milestone-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .milestone-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    .milestone-card.achieved .milestone-badge {
+      background: #d1fae5;
+      color: var(--accent-color);
+    }
+    
+    [data-theme="dark"] .milestone-card.achieved .milestone-badge {
+      background: #064e3b;
+      color: #6ee0b8;
+    }
+    
     /* ==================== RESPONSIVE ==================== */
     
     @media (max-width: 768px) {
       .learning-hero h1 {
         font-size: 1.8rem;
+      }
+      
+      .learning-hero .hero-stats {
+        flex-direction: column;
+        gap: var(--spacing-md);
       }
       
       .section-title {
@@ -377,6 +689,32 @@
       .stats-overview {
         grid-template-columns: repeat(2, 1fr);
       }
+      
+      .streak-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .streak-info {
+        flex-direction: column;
+      }
+      
+      .milestones-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* ==================== SCROLL ANIMATIONS ==================== */
+    
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -412,12 +750,46 @@
   <section class="learning-hero">
     <h1>📚 Continuous Learning</h1>
     <p>Tracking progress through specialized courses, certifications, and structured skill development. Below is my active pursuit of knowledge and professional growth.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-number" id="heroProgress">0%</span>
+        <span class="hero-stat-label">Overall Progress</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">18</span>
+        <span class="hero-stat-label">Total Courses</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number" id="heroCompleted">0</span>
+        <span class="hero-stat-label">Completed</span>
+      </div>
+    </div>
   </section>
   
   <div class="learning-container">
     
+    <!-- Learning Streak -->
+    <section class="streak-section fade-in-up">
+      <div class="streak-info">
+        <div class="streak-icon">🔥</div>
+        <div class="streak-text">
+          <h3>Learning Streak</h3>
+          <p>Stay consistent! Complete at least one module daily.</p>
+        </div>
+      </div>
+      <div class="streak-days">
+        <div class="day-dot active" title="Mon"></div>
+        <div class="day-dot active" title="Tue"></div>
+        <div class="day-dot active" title="Wed"></div>
+        <div class="day-dot active" title="Thu"></div>
+        <div class="day-dot" title="Fri"></div>
+        <div class="day-dot" title="Sat"></div>
+        <div class="day-dot today" title="Today"></div>
+      </div>
+    </section>
+    
     <!-- CBT Insight Section -->
-    <section class="cbt-section">
+    <section class="cbt-section fade-in-up">
       <div class="cbt-header">
         <i class="fas fa-lightbulb"></i>
         <span>Growth Mindset & CBT Integration</span>
@@ -434,7 +806,7 @@
     </section>
     
     <!-- Stats Overview -->
-    <div class="stats-overview">
+    <div class="stats-overview fade-in-up">
       <div class="stat-card">
         <div class="stat-number">4</div>
         <div class="stat-label">Active Specializations</div>
@@ -463,12 +835,13 @@
       <div class="specializations-grid">
         
         <!-- Specialization 1: Financial Engineering -->
-        <div class="specialization-card">
+        <div class="specialization-card fade-in-up">
+          <span class="spec-priority">1</span>
           <div class="spec-header">
             <div class="spec-icon">
               <i class="fas fa-chart-line"></i>
             </div>
-            <span class="spec-status">In Progress</span>
+            <span class="spec-status">Not Started</span>
           </div>
           
           <h3 class="spec-title">Financial Engineering & Risk Management</h3>
@@ -480,24 +853,18 @@
           
           <div class="progress-section">
             <div class="progress-label">
-              <span class="progress-label-left">3 of 5 courses completed</span>
-              <span class="progress-label-right">60%</span>
+              <span class="progress-label-left">0 of 5 courses completed</span>
+              <span class="progress-label-right">0%</span>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 60%"></div>
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
           </div>
           
           <div class="modules-grid">
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Foundations
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Derivatives
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Portfolio Opt
-            </div>
+            <div class="module-badge">Foundations</div>
+            <div class="module-badge">Derivatives</div>
+            <div class="module-badge">Portfolio Opt</div>
             <div class="module-badge">Risk Mgmt</div>
             <div class="module-badge">Capstone</div>
           </div>
@@ -513,12 +880,13 @@
         </div>
         
         <!-- Specialization 2: Startup Entrepreneurship -->
-        <div class="specialization-card">
+        <div class="specialization-card fade-in-up">
+          <span class="spec-priority">2</span>
           <div class="spec-header">
             <div class="spec-icon">
               <i class="fas fa-rocket"></i>
             </div>
-            <span class="spec-status">In Progress</span>
+            <span class="spec-status">Not Started</span>
           </div>
           
           <h3 class="spec-title">Startup Entrepreneurship Specialization</h3>
@@ -530,21 +898,17 @@
           
           <div class="progress-section">
             <div class="progress-label">
-              <span class="progress-label-left">2 of 4 courses completed</span>
-              <span class="progress-label-right">50%</span>
+              <span class="progress-label-left">0 of 4 courses completed</span>
+              <span class="progress-label-right">0%</span>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 50%"></div>
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
           </div>
           
           <div class="modules-grid">
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Ideation
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Business Plan
-            </div>
+            <div class="module-badge">Ideation</div>
+            <div class="module-badge">Business Plan</div>
             <div class="module-badge">Fundraising</div>
             <div class="module-badge">Scaling</div>
           </div>
@@ -560,12 +924,13 @@
         </div>
         
         <!-- Specialization 3: Investment & Portfolio -->
-        <div class="specialization-card">
+        <div class="specialization-card fade-in-up">
+          <span class="spec-priority">3</span>
           <div class="spec-header">
             <div class="spec-icon">
               <i class="fas fa-piggy-bank"></i>
             </div>
-            <span class="spec-status">In Progress</span>
+            <span class="spec-status">Not Started</span>
           </div>
           
           <h3 class="spec-title">Investment & Portfolio Management</h3>
@@ -577,21 +942,17 @@
           
           <div class="progress-section">
             <div class="progress-label">
-              <span class="progress-label-left">2 of 5 courses completed</span>
-              <span class="progress-label-right">40%</span>
+              <span class="progress-label-left">0 of 5 courses completed</span>
+              <span class="progress-label-right">0%</span>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 40%"></div>
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
           </div>
           
           <div class="modules-grid">
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Theory
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Analysis
-            </div>
+            <div class="module-badge">Theory</div>
+            <div class="module-badge">Analysis</div>
             <div class="module-badge">Allocation</div>
             <div class="module-badge">Performance</div>
             <div class="module-badge">Capstone</div>
@@ -608,12 +969,13 @@
         </div>
         
         <!-- Specialization 4: Public Speaking -->
-        <div class="specialization-card">
+        <div class="specialization-card fade-in-up">
+          <span class="spec-priority">4</span>
           <div class="spec-header">
             <div class="spec-icon">
               <i class="fas fa-microphone"></i>
             </div>
-            <span class="spec-status">In Progress</span>
+            <span class="spec-status">Not Started</span>
           </div>
           
           <h3 class="spec-title">Dynamic Public Speaking Specialization</h3>
@@ -625,24 +987,18 @@
           
           <div class="progress-section">
             <div class="progress-label">
-              <span class="progress-label-left">3 of 4 courses completed</span>
-              <span class="progress-label-right">75%</span>
+              <span class="progress-label-left">0 of 4 courses completed</span>
+              <span class="progress-label-right">0%</span>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 75%"></div>
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
           </div>
           
           <div class="modules-grid">
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Foundations
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Delivery
-            </div>
-            <div class="module-badge completed">
-              <i class="fas fa-check"></i> Presence
-            </div>
+            <div class="module-badge">Foundations</div>
+            <div class="module-badge">Delivery</div>
+            <div class="module-badge">Presence</div>
             <div class="module-badge">Capstone</div>
           </div>
           
@@ -656,6 +1012,52 @@
           </div>
         </div>
         
+      </div>
+    </section>
+    
+    <!-- Milestones Section -->
+    <section class="milestones-section">
+      <h2 class="section-title fade-in-up">
+        <i class="fas fa-trophy"></i>
+        Learning Milestones
+      </h2>
+      
+      <div class="milestones-grid">
+        <div class="milestone-card fade-in-up">
+          <div class="milestone-icon">🎯</div>
+          <div class="milestone-content">
+            <h4>First Course Completed</h4>
+            <p>Complete your first full course in any specialization</p>
+            <span class="milestone-badge">Upcoming</span>
+          </div>
+        </div>
+        
+        <div class="milestone-card fade-in-up">
+          <div class="milestone-icon">📊</div>
+          <div class="milestone-content">
+            <h4>Halfway There</h4>
+            <p>Reach 50% overall progress across all specializations</p>
+            <span class="milestone-badge">Upcoming</span>
+          </div>
+        </div>
+        
+        <div class="milestone-card fade-in-up">
+          <div class="milestone-icon">🏆</div>
+          <div class="milestone-content">
+            <h4>First Specialization</h4>
+            <p>Complete one full specialization with certificate</p>
+            <span class="milestone-badge">Upcoming</span>
+          </div>
+        </div>
+        
+        <div class="milestone-card fade-in-up">
+          <div class="milestone-icon">🎓</div>
+          <div class="milestone-content">
+            <h4>Learning Champion</h4>
+            <p>Complete all 4 specializations by end of 2026</p>
+            <span class="milestone-badge">2026 Goal</span>
+          </div>
+        </div>
       </div>
     </section>
     
@@ -716,6 +1118,25 @@
       navLinks.classList.toggle('active');
     });
     
+    // ==================== SCROLL ANIMATIONS ==================== 
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+      observer.observe(el);
+    });
+    
     // ==================== UPDATE PROGRESS ==================== 
     async function updateProgress(specId, progress) {
       const progressPercent = Math.round(progress * 100);
@@ -730,22 +1151,56 @@
     // ==================== CALCULATE OVERALL STATS ==================== 
     function updateStats() {
       const stats = {
-        'fe-risk': 0.60,
-        'startup': 0.50,
-        'investment': 0.40,
-        'speaking': 0.75
+        'fe-risk': 0.00,
+        'startup': 0.00,
+        'investment': 0.00,
+        'speaking': 0.00
       };
       
       // Calculate overall progress
       const avgProgress = Object.values(stats).reduce((a, b) => a + b, 0) / Object.values(stats).length;
-      document.getElementById('totalProgress').textContent = Math.round(avgProgress * 100) + '%';
+      const progressPercent = Math.round(avgProgress * 100);
+      
+      document.getElementById('totalProgress').textContent = progressPercent + '%';
+      document.getElementById('heroProgress').textContent = progressPercent + '%';
       
       // Calculate completed courses
-      const completedCourses = [3, 2, 2, 3].reduce((a, b) => a + b, 0);
+      const completedCourses = [0, 0, 0, 0].reduce((a, b) => a + b, 0);
       document.getElementById('totalModules').textContent = completedCourses;
+      document.getElementById('heroCompleted').textContent = completedCourses;
     }
     
+    // ==================== ANIMATE PROGRESS BARS ==================== 
+    function animateProgressBars() {
+      const progressBars = document.querySelectorAll('.progress-fill');
+      progressBars.forEach(bar => {
+        const targetWidth = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = targetWidth;
+        }, 300);
+      });
+    }
+    
+    // ==================== STREAK DAYS CALCULATION ==================== 
+    function updateStreakDays() {
+      const dayDots = document.querySelectorAll('.day-dot');
+      const today = new Date().getDay(); // 0 = Sunday
+      
+      // Remap to start week on Monday (0 = Monday, 6 = Sunday)
+      const adjustedToday = today === 0 ? 6 : today - 1;
+      
+      dayDots.forEach((dot, index) => {
+        if (index === adjustedToday) {
+          dot.classList.add('today');
+        }
+      });
+    }
+    
+    // Initialize
     updateStats();
+    animateProgressBars();
+    updateStreakDays();
   </script>
   
 </body>
