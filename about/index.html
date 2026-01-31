@@ -48,6 +48,25 @@
       50% { transform: scale(1.05); }
     }
     
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    
     @keyframes glow {
       0%, 100% { box-shadow: 0 0 20px rgba(85, 214, 170, 0.3); }
       50% { box-shadow: 0 0 40px rgba(85, 214, 170, 0.6); }
@@ -546,6 +565,246 @@
       transform: scale(1.05);
     }
     
+    /* ==================== FUN FACTS SECTION ==================== */
+    
+    .fun-facts-section {
+      background: var(--gradient-hero);
+      padding: var(--spacing-2xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    [data-theme="dark"] .fun-facts-section {
+      background: var(--bg-tertiary);
+    }
+    
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .fact-item {
+      background: var(--bg-card);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-base);
+      border: 2px solid transparent;
+    }
+    
+    .fact-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary-color);
+    }
+    
+    .fact-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      display: block;
+    }
+    
+    .fact-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      display: block;
+    }
+    
+    .fact-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: var(--spacing-xs);
+    }
+    
+    /* ==================== INTERESTS SECTION ==================== */
+    
+    .interests-section {
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .interest-item {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+      cursor: default;
+    }
+    
+    [data-theme="dark"] .interest-item {
+      border-color: #3f4651;
+    }
+    
+    .interest-item:hover {
+      transform: scale(1.05);
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .interest-item:hover .interest-icon,
+    .interest-item:hover .interest-name {
+      color: white;
+    }
+    
+    .interest-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-xs);
+      display: block;
+      transition: color var(--transition-fast);
+    }
+    
+    .interest-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: color var(--transition-fast);
+    }
+    
+    /* ==================== JOURNEY TIMELINE ==================== */
+    
+    .journey-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: var(--spacing-2xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .journey-card::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      font-size: 150px;
+      opacity: 0.1;
+      font-family: Georgia, serif;
+    }
+    
+    .journey-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .journey-card p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      opacity: 0.95;
+    }
+    
+    .journey-card .author {
+      margin-top: var(--spacing-md);
+      font-style: italic;
+      opacity: 0.8;
+    }
+    
+    /* ==================== ENHANCED FOOTER ==================== */
+    
+    .about-footer {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      padding: var(--spacing-2xl) var(--spacing-lg);
+      margin-top: var(--spacing-xl);
+    }
+    
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--spacing-xl);
+    }
+    
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+    }
+    
+    .footer-brand p {
+      opacity: 0.8;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    
+    .footer-column h4 {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--primary-color);
+    }
+    
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-column ul li {
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .footer-column ul li a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    
+    .footer-column ul li a:hover {
+      color: var(--primary-color);
+    }
+    
+    .footer-social {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+    
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: all var(--transition-base);
+    }
+    
+    .footer-social a:hover {
+      background: var(--primary-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      max-width: 1100px;
+      margin: var(--spacing-xl) auto 0;
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+    
+    .footer-bottom p {
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+    
     /* ==================== RESPONSIVE ==================== */
     
     @media (max-width: 768px) {
@@ -593,6 +852,28 @@
         width: 100%;
         justify-content: center;
       }
+      
+      .facts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .interests-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .footer-social {
+        justify-content: center;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -626,8 +907,19 @@
   
   <!-- Hero Section -->
   <section class="about-hero">
-    <h1>About Me</h1>
+    <h1>👋 About Me</h1>
     <p class="subtitle">Software Engineer, AI Enthusiast, and Continuous Learner</p>
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-briefcase"></i> JPMorgan Chase
+      </span>
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-graduation-cap"></i> Georgia Tech
+      </span>
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-robot"></i> AI Specialist
+      </span>
+    </div>
   </section>
   
   <div class="about-container">
@@ -804,6 +1096,87 @@
       </div>
     </section>
     
+    <!-- Fun Facts Section -->
+    <section class="fun-facts-section">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i>
+        Fun Facts
+      </h2>
+      
+      <div class="facts-grid">
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">☕</span>
+          <span class="fact-number">1000+</span>
+          <span class="fact-label">Cups of coffee consumed</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">🐛</span>
+          <span class="fact-number">∞</span>
+          <span class="fact-label">Bugs squashed</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">💻</span>
+          <span class="fact-number">10K+</span>
+          <span class="fact-label">Lines of code written</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">📖</span>
+          <span class="fact-number">50+</span>
+          <span class="fact-label">Tech books read</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Interests Section -->
+    <section class="interests-section timeline-section">
+      <h2 class="section-title">
+        <i class="fas fa-gamepad"></i>
+        When I'm Not Coding
+      </h2>
+      
+      <div class="interests-grid">
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🥊</span>
+          <span class="interest-name">Boxing</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🎮</span>
+          <span class="interest-name">Gaming</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">📚</span>
+          <span class="interest-name">Reading</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🎬</span>
+          <span class="interest-name">Movies</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🏋️</span>
+          <span class="interest-name">Fitness</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">✈️</span>
+          <span class="interest-name">Travel</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🧠</span>
+          <span class="interest-name">AI Research</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">📈</span>
+          <span class="interest-name">Investing</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Personal Philosophy -->
+    <section class="journey-card fade-in-up">
+      <h3>My Philosophy</h3>
+      <p>I believe in building technology that makes a real difference. Every line of code is an opportunity to create something meaningful, to solve a problem that matters, and to push the boundaries of what's possible. The journey from idea to impact is what drives me every day.</p>
+      <p class="author">— Martin Li</p>
+    </section>
+    
     <!-- CTA Section -->
     <section class="cta-section">
       <h2>Let's Work Together</h2>
@@ -826,12 +1199,13 @@
     
   </div>
   
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-content">
-        <p>&copy; 2026 Martin Li. Built with passion and caffeine ☕</p>
-        <div class="footer-links">
+  <!-- Enhanced Footer -->
+  <footer class="about-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Martin Li</h3>
+        <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring AI frontiers while pursuing my Master's at Georgia Tech.</p>
+        <div class="footer-social">
           <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener noreferrer" title="GitHub">
             <i class="fab fa-github"></i>
           </a>
@@ -843,6 +1217,35 @@
           </a>
         </div>
       </div>
+      <div class="footer-column">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
+          <li><a href="/learning.html">Learning</a></li>
+          <li><a href="/old-version/index.html">Old Version</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
+          <li><a href="https://github.com/simplisticmartin" target="_blank">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Martin Li. All rights reserved.</p>
+      <p>Made with <span style="color: #ef4444;">❤️</span> and lots of ☕</p>
     </div>
   </footer>
   
@@ -855,9 +1258,8 @@
   </button>
   
   <!-- Scripts -->
-  <script src="/assets/js/theme-toggle.js"></script>
-  <script src="/assets/js/mobile-menu.js"></script>
-  
+  <script src="/assets/js/modern.js"></script>
+
   <script>
     // ==================== SCROLL PROGRESS BAR ====================
     const scrollProgress = document.getElementById('scrollProgress');
