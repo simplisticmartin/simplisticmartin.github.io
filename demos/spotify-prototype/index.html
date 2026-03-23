@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify Queue Redesign — Interactive Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#1DB954; --black:#121212; --dark:#181818;
+  --card:#282828; --card2:#333; --sub:#b3b3b3;
+  --white:#fff; --blue:#4a90e2; --red:#e74c3c;
+  --yellow:#f39c12; --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-direction:column;
+     align-items:center;min-height:100vh;padding:24px 12px 60px;color:var(--white)}
+
+.page-hdr{text-align:center;margin-bottom:24px;max-width:900px}
+.page-hdr h1{font-size:20px;font-weight:700;color:var(--green);letter-spacing:.4px;margin-bottom:4px}
+.page-hdr p{font-size:13px;color:var(--sub)}
+
+.step-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.step-btn{background:var(--card);border:1px solid #444;color:var(--sub);font-size:11px;font-weight:600;
+          padding:6px 14px;border-radius:16px;cursor:pointer;transition:all .15s}
+.step-btn:hover{border-color:var(--green);color:var(--white)}
+.step-btn.active{background:var(--green);border-color:var(--green);color:#000}
+
+.step-intro{text-align:center;font-size:13px;color:var(--sub);max-width:720px;margin-bottom:20px;line-height:1.6}
+.step-intro strong{color:var(--white)}
+
+.screens{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:flex-start;max-width:1100px;width:100%}
+
+.phone-wrap{display:flex;flex-direction:column;align-items:center}
+.phone{width:320px;background:var(--black);border-radius:34px;border:2.5px solid #333;
+       overflow:hidden;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.7);flex-shrink:0}
+.notch{background:var(--black);height:26px;display:flex;align-items:center;justify-content:center}
+.notch::after{content:'';width:90px;height:13px;background:#000;border-radius:0 0 9px 9px;display:block}
+.status{background:var(--black);display:flex;align-items:center;justify-content:space-between;
+        padding:0 18px 5px;font-size:11px;font-weight:600}
+.screen{position:relative;height:560px;overflow:hidden;background:var(--black)}
+.screen-lbl{text-align:center;font-size:11px;color:var(--sub);margin-top:8px;font-weight:500}
+.screen-lbl .num{display:inline-flex;align-items:center;justify-content:center;
+                 background:var(--green);color:#000;font-size:10px;font-weight:700;
+                 width:17px;height:17px;border-radius:50%;margin-right:4px}
+
+.hint-box{max-width:320px;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid #2a2a2a;
+          border-radius:7px;padding:9px 13px;font-size:11px;color:var(--sub);line-height:1.65}
+.hint-box strong{color:var(--white)}
+
+.app-hdr{padding:14px 18px 6px;display:flex;align-items:center;justify-content:space-between}
+.app-title{font-size:22px;font-weight:700}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1DB954,#158a3e);
+        display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000}
+
+.sec-title{font-size:14px;font-weight:700;padding:8px 18px 7px}
+.card-row{display:flex;gap:10px;overflow:hidden;padding:0 18px 12px}
+.card{width:86px;background:var(--card);border-radius:6px;overflow:hidden;flex-shrink:0}
+.card-art{width:86px;height:86px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.card-name{font-size:10px;padding:4px 6px 6px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.song-list{overflow-y:auto;padding-bottom:110px}
+.song-row{display:flex;align-items:center;padding:8px 18px;cursor:pointer;transition:background .12s;position:relative}
+.song-row:hover{background:rgba(255,255,255,.06)}
+.s-art{width:42px;height:42px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;margin-right:11px}
+.s-info{flex:1;min-width:0}
+.s-title{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-artist{font-size:11px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.add-btn{width:28px;height:28px;border-radius:50%;background:var(--green);border:none;cursor:pointer;
+         display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;
+         color:#000;flex-shrink:0;transition:transform .1s,background .1s}
+.add-btn:hover{background:#1ed760;transform:scale(1.1)}
+.add-btn.done{background:var(--card2);color:var(--sub);cursor:default}
+
+.np-bar{position:absolute;bottom:0;left:0;right:0;background:#252525;border-top:1px solid #333;
+        padding:9px 14px 12px;display:flex;align-items:center;gap:9px;z-index:20;cursor:pointer}
+.np-art{width:40px;height:40px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+        font-size:17px;flex-shrink:0;background:#333}
+.np-info{flex:1;min-width:0}
+.np-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-artist{font-size:11px;color:var(--sub)}
+.np-ctrls{display:flex;align-items:center;gap:8px}
+.ctrl{background:none;border:none;cursor:pointer;color:var(--white);font-size:17px;padding:4px;transition:color .1s}
+.ctrl:hover{color:var(--green)}
+.qbadge-wrap{position:relative}
+.qbadge{position:absolute;top:-7px;right:-7px;background:var(--green);color:#000;font-size:9px;font-weight:700;
+        width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pull-zone{position:absolute;bottom:100%;left:0;right:0;text-align:center;padding:5px 0 0;cursor:pointer}
+.pull-handle{width:38px;height:4px;background:#555;border-radius:2px;margin:0 auto 5px}
+.pull-hint{font-size:9px;color:var(--sub);letter-spacing:.5px}
+
+.q-panel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-radius:18px 18px 0 0;
+         border-top:1px solid #333;z-index:30;transform:translateY(100%);
+         transition:transform .33s cubic-bezier(.4,0,.2,1);max-height:88%;overflow-y:auto}
+.q-panel.open{transform:translateY(0)}
+.q-ph{display:flex;align-items:center;justify-content:space-between;padding:13px 18px 9px;
+      position:sticky;top:0;background:#1a1a1a;z-index:5;border-bottom:1px solid #2a2a2a}
+.q-ph-title{font-size:15px;font-weight:700}
+.q-ph-btns{display:flex;gap:8px}
+.q-chip{background:none;border:1px solid var(--green);color:var(--green);font-size:11px;font-weight:600;
+        padding:3px 11px;border-radius:18px;cursor:pointer;transition:background .12s}
+.q-chip:hover{background:rgba(29,185,84,.15)}
+.q-chip.grey{border-color:#555;color:#999}
+.q-chip.grey:hover{border-color:#888;color:var(--white)}
+.q-sec-lbl{font-size:10px;font-weight:700;letter-spacing:1px;padding:9px 18px 5px}
+.q-sec-lbl.user{color:#6fa8dc}
+.q-sec-lbl.algo{color:var(--sub)}
+.q-item{display:flex;align-items:center;padding:7px 18px;cursor:pointer;position:relative;transition:background .12s}
+.q-item:hover{background:rgba(255,255,255,.05)}
+.q-item.u-added{background:rgba(74,144,226,.06)}
+.drag-h{color:#555;font-size:15px;margin-right:9px;cursor:grab;padding:5px 4px;min-width:22px;text-align:center;user-select:none}
+.q-art{width:38px;height:38px;border-radius:4px;margin-right:9px;flex-shrink:0;
+       display:flex;align-items:center;justify-content:center;font-size:15px}
+.q-info{flex:1;min-width:0}
+.q-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-artist{font-size:11px;color:var(--sub)}
+.rm-btn{background:none;border:none;cursor:pointer;color:var(--sub);font-size:15px;padding:6px;transition:color .12s}
+.rm-btn:hover{color:var(--red)}
+
+.undo-bar{position:absolute;bottom:4px;left:10px;right:10px;padding:10px 14px;border-radius:7px;
+          display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:500;
+          transform:translateY(70px);transition:transform .25s;z-index:50;pointer-events:none}
+.undo-bar.show{transform:translateY(0);pointer-events:all}
+.undo-bar.green{background:#1a4a27;border:1px solid #1DB954;color:#a8e6c0}
+.undo-bar.yellow{background:#4a3a10;border:1px solid #f39c12;color:#f5d06b}
+.undo-btn{background:none;border:1px solid currentColor;color:inherit;font-size:11px;font-weight:700;
+          padding:3px 10px;border-radius:12px;cursor:pointer}
+
+.d-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;
+           justify-content:center;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+.d-overlay.show{opacity:1;pointer-events:all}
+.dialog{background:var(--card);border-radius:12px;padding:22px 18px 16px;width:250px;text-align:center}
+.dialog h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.dialog p{font-size:12px;color:var(--sub);margin-bottom:16px;line-height:1.5}
+.d-input{width:100%;background:#3a3a3a;border:1px solid #555;border-radius:6px;padding:7px 9px;
+         color:var(--white);font-size:13px;margin-bottom:13px;outline:none}
+.d-input:focus{border-color:var(--green)}
+.d-btns{display:flex;gap:9px}
+.btn-ok{flex:1;background:var(--green);color:#000;border:none;border-radius:18px;padding:8px;
+        font-size:13px;font-weight:700;cursor:pointer;transition:background .1s}
+.btn-ok:hover{background:#1ed760}
+.btn-cancel{flex:1;background:#444;color:var(--white);border:none;border-radius:18px;padding:8px;
+            font-size:13px;font-weight:600;cursor:pointer;transition:background .1s}
+.btn-cancel:hover{background:#555}
+
+.recent-scr{position:absolute;inset:0;background:var(--black);z-index:40;
+            transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.recent-scr.open{transform:translateX(0)}
+.scr-nav{display:flex;align-items:center;padding:13px 14px 7px;gap:9px}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--green);font-size:22px;padding:3px}
+.scr-nav-title{font-size:16px;font-weight:700}
+.saved-item{display:flex;align-items:center;padding:11px 18px;gap:12px;cursor:pointer;
+            transition:background .12s;border-bottom:1px solid rgba(255,255,255,.06)}
+.saved-item:hover{background:rgba(255,255,255,.05)}
+.sv-art{width:48px;height:48px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;
+        justify-content:center;font-size:20px;background:var(--card)}
+.sv-info{flex:1}
+.sv-name{font-size:13px;font-weight:600}
+.sv-meta{font-size:11px;color:var(--sub);margin-top:2px}
+.load-chip{background:none;border:1px solid #555;color:var(--sub);font-size:10px;padding:3px 8px;
+           border-radius:10px;cursor:pointer;transition:all .1s}
+.load-chip:hover{border-color:var(--green);color:var(--green)}
+
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(55px);
+       background:var(--card2);border:1px solid #444;padding:9px 18px;border-radius:20px;
+       font-size:12px;font-weight:500;transition:transform .28s,opacity .28s;
+       opacity:0;z-index:9999;white-space:nowrap;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="page-hdr">
+  <h1>Spotify Queue Redesign — Interactive Prototype</h1>
+  <p>Martin Li &nbsp;·&nbsp; CS 6750 Individual Project &nbsp;·&nbsp; Medium-Fidelity Prototype</p>
+</div>
+
+<div class="step-nav" id="step-nav">
+  <button class="step-btn active" onclick="setStep(0)">① Browse + Add</button>
+  <button class="step-btn" onclick="setStep(1)">② Queue Panel</button>
+  <button class="step-btn" onclick="setStep(2)">③ Remove + Undo</button>
+  <button class="step-btn" onclick="setStep(3)">④ Save Queue</button>
+  <button class="step-btn" onclick="setStep(4)">⑤ Recent Queues</button>
+</div>
+
+<p class="step-intro" id="step-intro">
+  Browse a playlist and tap <strong>+</strong> to add songs to your queue. Watch the badge count update.
+</p>
+
+<div class="screens" id="screens"></div>
+<div id="toast"></div>
+
+<script>
+
+const SONGS=[
+  {t:"Bohemian Rhapsody",a:"Queen",e:"🎭"},
+  {t:"Hotel California",a:"Eagles",e:"🏨"},
+  {t:"Stairway to Heaven",a:"Led Zeppelin",e:"🎸"},
+  {t:"Free Bird",a:"Lynyrd Skynyrd",e:"🐦"},
+  {t:"Comfortably Numb",a:"Pink Floyd",e:"🌀"},
+  {t:"Smells Like Teen Spirit",a:"Nirvana",e:"⚡"},
+  {t:"Purple Haze",a:"Jimi Hendrix",e:"💜"},
+  {t:"Layla",a:"Eric Clapton",e:"🎵"},
+];
+const ALGO=[
+  {t:"Black Dog",a:"Led Zeppelin",e:"🐕"},
+  {t:"Wish You Were Here",a:"Pink Floyd",e:"⭐"},
+  {t:"Sultans of Swing",a:"Dire Straits",e:"🎺"},
+];
+const SAVED=[
+  {n:"Friday Jazz Night",d:"Feb 21 · 8:30 PM",c:"8 songs",e:"🎷"},
+  {n:"Morning Workout",d:"Feb 20 · 6:00 AM",c:"12 songs",e:"💪"},
+  {n:"Study Session",d:"Feb 19 · 3:15 PM",c:"5 songs",e:"📚"},
+  {n:"Road Trip Mix",d:"Feb 15 · 2:00 PM",c:"23 songs",e:"🚗"},
+];
+const STEP_INTROS=[
+  'Browse and tap <strong>+</strong> to add songs. The badge in the Now Playing bar tracks how many are queued.',
+  'Your queue is a half-sheet panel. <strong>Blue = you added it.</strong> Gray = Spotify\'s auto-suggestions. Drag <strong>≡</strong> to reorder.',
+  'Click <strong>✕</strong> on a song to remove it. A yellow undo bar appears for 5 seconds — click <strong>Undo</strong> to restore.',
+  'Click <strong>Save</strong> in the queue header to save the queue with a custom name.',
+  'Browse saved queues. Click <strong>Load</strong> to restore one — a confirmation dialog prevents accidental replacement.',
+];
+const GRADS=[
+  'linear-gradient(135deg,#1a1a2e,#16213e)',
+  'linear-gradient(135deg,#1a2e1a,#0d2b0d)',
+  'linear-gradient(135deg,#2e1a1a,#2b0d0d)',
+  'linear-gradient(135deg,#2a1a2e,#1a2a2e)',
+  'linear-gradient(135deg,#2e2a1a,#1a2e2a)',
+  'linear-gradient(135deg,#1f1a2e,#2e1a1f)',
+];
+function grad(i){return GRADS[i%GRADS.length]}
+
+let queue=[]; 
+let removed=null, removedIdx=null, undoTmr=null;
+let step=0;
+
+let toastTmr=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  if(toastTmr) clearTimeout(toastTmr);
+  toastTmr=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+function setStep(s){
+  step=s;
+  document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===s));
+  document.getElementById('step-intro').innerHTML=STEP_INTROS[s];
+  render();
+}
+
+function makePhoneWrap(labelHTML){
+  const wrap=document.createElement('div');
+  wrap.className='phone-wrap';
+  const phone=document.createElement('div'); phone.className='phone';
+  const notch=document.createElement('div'); notch.className='notch';
+  const status=document.createElement('div'); status.className='status';
+  status.innerHTML='<span>9:41</span><span>📶</span><span>🔋 87%</span>';
+  const screen=document.createElement('div'); screen.className='screen';
+  phone.appendChild(notch); phone.appendChild(status); phone.appendChild(screen);
+  const lbl=document.createElement('div'); lbl.className='screen-lbl'; lbl.innerHTML=labelHTML;
+  wrap.appendChild(phone); wrap.appendChild(lbl);
+  return {wrap,screen};
+}
+function addHint(wrap, html){
+  const d=document.createElement('div'); d.className='hint-box'; d.innerHTML=html;
+  wrap.appendChild(d);
+}
+
+function buildBrowse(){
+  const {wrap,screen}=makePhoneWrap('<span class="num">1</span> Browsing — tap + to add songs');
+
+  const hdr=el('div','app-hdr');
+  hdr.innerHTML='<span class="app-title">Good Evening</span><div class="avatar">ML</div>';
+  screen.appendChild(hdr);
+
+  const row=el('div','card-row');
+  row.style.padding='0 18px 12px';
+  ['🎸 Rock','🎷 Jazz','💿 90s','🎹 Piano'].forEach((c,i)=>{
+    const [em,nm]=c.split(' ');
+    const card=el('div','card');
+    card.innerHTML=`<div class="card-art" style="background:${grad(i)}">${em}</div><div class="card-name">${nm}</div>`;
+    row.appendChild(card);
+  });
+  const st=el('div','sec-title'); st.textContent='Classic Rock Hits';
+  screen.appendChild(st); screen.appendChild(row);
+
+  const list=el('div','song-list');
+  SONGS.forEach((s,i)=>{
+    const row2=el('div','song-row');
+    const isAdded=queue.some(q=>q.t===s.t);
+    row2.innerHTML=`
+      <div class="s-art" style="background:${grad(i)}">${s.e}</div>
+      <div class="s-info"><div class="s-title">${s.t}</div><div class="s-artist">${s.a}</div></div>
+      <button class="add-btn ${isAdded?'done':''}">${isAdded?'✓':'+'}</button>
+    `;
+    row2.querySelector('.add-btn').addEventListener('click',ev=>{
+      ev.stopPropagation(); if(isAdded) return;
+      queue.push(s); toast(`Added "${s.t}"`); render();
+    });
+    list.appendChild(row2);
+  });
+  screen.appendChild(list);
+
+  const np=makeNP(screen,true);
+  screen.appendChild(np);
+
+  addHint(wrap,`<strong>Add songs:</strong> Tap the green <strong>+</strong> button.<br>
+    The badge in the Now Playing bar updates instantly.<br>
+    Then go to <strong>② Queue Panel</strong> to see your queue.`);
+  return wrap;
+}
+
+function buildQueuePanel(){
+  const {wrap,screen}=makePhoneWrap('<span class="num">2</span> Queue Panel — persistent view');
+  
+  const hdr=el('div','app-hdr');
+  hdr.innerHTML='<span class="app-title">Good Evening</span><div class="avatar">ML</div>';
+  screen.appendChild(hdr);
+  const st=el('div','sec-title'); st.textContent='Classic Rock Hits';
+  screen.appendChild(st);
+  const mini=el('div','song-list');
+  SONGS.slice(0,4).forEach((s,i)=>{
+    const r=el('div','song-row');
+    r.innerHTML=`<div class="s-art" style="background:${grad(i)}">${s.e}</div>
+      <div class="s-info"><div class="s-title">${s.t}</div><div class="s-artist">${s.a}</div></div>`;
+    mini.appendChild(r);
+  });
+  screen.appendChild(mini);
+
+  const np=makeNP(screen,true);
+  screen.appendChild(np);
+
+  const qp=makeQueuePanel(screen);
+  screen.appendChild(qp);
+  setTimeout(()=>qp.classList.add('open'),80);
+
+  addHint(wrap,`<strong>Blue section</strong> = songs you added.<br>
+    <strong>Gray section</strong> = Spotify's auto-suggestions.<br>
+    Drag <strong>≡</strong> to reorder. Click <strong>Save</strong> or <strong>Recent</strong>.`);
+  return wrap;
+}
+
+function buildRemove(){
+  if(queue.length===0) queue=[SONGS[0],SONGS[1],SONGS[2]];
+  const {wrap,screen}=makePhoneWrap('<span class="num">3</span> Remove song + Undo');
+
+  const qp=makeQueuePanel(screen,true);
+  qp.style.cssText='position:relative;transform:none;border-radius:0;max-height:none;border-top:none';
+  screen.appendChild(qp);
+
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`Click <strong>✕</strong> on any blue song to remove it.<br>
+    The yellow undo bar stays visible for <strong>5 seconds</strong>.<br>
+    Click <strong>Undo</strong> to instantly restore the song.`);
+  return wrap;
+}
+
+function buildSave(){
+  if(queue.length===0) queue=[SONGS[0],SONGS[1],SONGS[2]];
+  const {wrap,screen}=makePhoneWrap('<span class="num">4</span> Save Queue');
+
+  const qp=makeQueuePanel(screen,false,true);
+  qp.style.cssText='position:relative;transform:none;border-radius:0;max-height:none;border-top:none';
+  screen.appendChild(qp);
+
+  
+  const ov=el('div','d-overlay');
+  ov.innerHTML=`<div class="dialog">
+    <h3>Save Queue</h3>
+    <p>Give your queue a name so you can find it later.</p>
+    <input class="d-input" id="qname" value="Queue — Mar 22, 9:41 PM"/>
+    <div class="d-btns">
+      <button class="btn-cancel" id="save-cancel">Cancel</button>
+      <button class="btn-ok" id="save-ok">Save</button>
+    </div>
+  </div>`;
+  screen.appendChild(ov);
+  ov.querySelector('#save-cancel').onclick=()=>ov.classList.remove('show');
+  ov.querySelector('#save-ok').onclick=()=>{
+    ov.classList.remove('show');
+    toast('Queue saved! Find it in Recent Queues.');
+  };
+  setTimeout(()=>{
+    const sb=qp.querySelector('.q-chip:not(.grey)');
+    if(sb) sb.onclick=()=>ov.classList.add('show');
+  },30);
+
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`Click the <strong>Save</strong> button in the queue header.<br>
+    Edit the name or keep the auto-generated timestamp.<br>
+    Saved queues appear in <strong>⑤ Recent Queues</strong>.`);
+  return wrap;
+}
+
+function buildRecent(){
+  const {wrap,screen}=makePhoneWrap('<span class="num">5</span> Recent Queues');
+  const rs=el('div','recent-scr open');
+
+  const nav=el('div','scr-nav');
+  nav.innerHTML=`<button class="back-btn" id="rback">‹</button>
+    <span class="scr-nav-title">Recent Queues</span>`;
+  rs.appendChild(nav);
+
+  SAVED.forEach((sq,i)=>{
+    const item=el('div','saved-item');
+    item.innerHTML=`
+      <div class="sv-art" style="background:${grad(i+2)}">${sq.e}</div>
+      <div class="sv-info"><div class="sv-name">${sq.n}</div><div class="sv-meta">${sq.d} · ${sq.c}</div></div>
+      <button class="load-chip">Load</button>
+    `;
+    item.querySelector('.load-chip').addEventListener('click',ev=>{
+      ev.stopPropagation();
+      showConfirm(screen,sq.n);
+    });
+    rs.appendChild(item);
+  });
+  screen.appendChild(rs);
+
+  nav.querySelector('#rback').onclick=()=>setStep(3);
+
+  
+  const co=el('div','d-overlay');
+  co.id='confirm-ov';
+  co.innerHTML=`<div class="dialog">
+    <h3>Load this queue?</h3>
+    <p id="confirm-txt">Your current queue will be replaced.</p>
+    <div class="d-btns">
+      <button class="btn-cancel" id="co-cancel">Cancel</button>
+      <button class="btn-ok" id="co-ok">Load</button>
+    </div>
+  </div>`;
+  screen.appendChild(co);
+  co.querySelector('#co-cancel').onclick=()=>co.classList.remove('show');
+  co.querySelector('#co-ok').onclick=()=>{co.classList.remove('show');toast('Queue loaded!');};
+
+  function showConfirm(sc,name){
+    sc.querySelector('#confirm-txt').textContent=`"${name}" will replace your current queue. This cannot be undone.`;
+    sc.querySelector('#confirm-ov').classList.add('show');
+  }
+  window.showConfirm=showConfirm;
+
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`All saved queues with name, date, and song count.<br>
+    Click <strong>Load</strong> → confirmation dialog appears.<br>
+    Tap the <strong>‹</strong> back arrow to return to the save screen.`);
+  return wrap;
+}
+
+function makeNP(screen,withToggle){
+  const bar=el('div','np-bar');
+  bar.innerHTML=`
+    <div class="np-art">🎵</div>
+    <div class="np-info"><div class="np-title">Yesterday</div><div class="np-artist">The Beatles</div></div>
+    <div class="np-ctrls">
+      <button class="ctrl">⏮</button><button class="ctrl">⏸</button><button class="ctrl">⏭</button>
+      ${withToggle?`<div class="qbadge-wrap">
+        <button class="ctrl" id="qtoggle">≡</button>
+        <div class="qbadge" id="qbadge-n">${queue.length}</div>
+      </div>`:''}
+    </div>
+  `;
+  if(withToggle){
+    const pz=el('div','pull-zone');
+    pz.innerHTML='<div class="pull-handle"></div><div class="pull-hint">▲ YOUR QUEUE</div>';
+    bar.appendChild(pz);
+    const toggleQP=()=>{
+      const qp=screen.querySelector('.q-panel');
+      if(qp) qp.classList.toggle('open');
+    };
+    pz.addEventListener('click',toggleQP);
+    bar.querySelector('#qtoggle').addEventListener('click',toggleQP);
+  }
+  return bar;
+}
+
+function makeQueuePanel(screen, showUndo, isSaveStep){
+  const qp=el('div','q-panel');
+
+  const ph=el('div','q-ph');
+  ph.innerHTML=`<span class="q-ph-title">Your Queue</span>
+    <div class="q-ph-btns">
+      <button class="q-chip">${isSaveStep?'Save':'Save'}</button>
+      <button class="q-chip grey" onclick="setStep(4)">Recent</button>
+    </div>`;
+  qp.appendChild(ph);
+
+  if(queue.length>0){
+    const sl=el('div','q-sec-lbl user'); sl.textContent='ADDED BY YOU';
+    qp.appendChild(sl);
+    queue.forEach((song,i)=>{
+      qp.appendChild(makeQItem(song,i));
+    });
+  }else{
+    const empty=el('div','q-sec-lbl algo');
+    empty.textContent='No songs added yet — go to ① Browse';
+    empty.style.padding='14px 18px';
+    qp.appendChild(empty);
+  }
+
+  const al=el('div','q-sec-lbl algo'); al.textContent='NEXT FROM: CLASSIC ROCK';
+  qp.appendChild(al);
+  ALGO.forEach((s,i)=>{
+    const item=el('div','q-item');
+    item.innerHTML=`<div style="width:22px;margin-right:9px"></div>
+      <div class="q-art" style="background:${grad(i+5)}">${s.e}</div>
+      <div class="q-info"><div class="q-title" style="color:#888">${s.t}</div><div class="q-artist">${s.a}</div></div>`;
+    qp.appendChild(item);
+  });
+  qp.style.paddingBottom='40px';
+
+  
+  const ub=el('div','undo-bar yellow');
+  ub.innerHTML=`<span id="undo-txt">Removed song. Undo?</span><button class="undo-btn" id="undo-act">Undo</button>`;
+  qp.appendChild(ub);
+  ub.querySelector('#undo-act').addEventListener('click',()=>{
+    if(removed!==null){
+      queue.splice(removedIdx,0,removed);
+      removed=null;
+      toast('Song restored!'); render();
+    }
+  });
+  if(showUndo) setTimeout(()=>ub.classList.add('show'),500);
+
+  return qp;
+}
+
+function makeQItem(song,i){
+  const item=el('div','q-item u-added');
+  item.innerHTML=`
+    <div class="drag-h" title="Drag to reorder">≡</div>
+    <div class="q-art" style="background:${grad(i)}">${song.e}</div>
+    <div class="q-info"><div class="q-title">${song.t}</div><div class="q-artist">${song.a}</div></div>
+    <button class="rm-btn" title="Remove">✕</button>
+  `;
+  item.querySelector('.rm-btn').addEventListener('click',()=>{
+    removed=queue[i]; removedIdx=i;
+    queue.splice(i,1);
+    if(undoTmr) clearTimeout(undoTmr);
+    render();
+    setTimeout(()=>{
+      document.querySelectorAll('.undo-bar').forEach(u=>{
+        u.querySelector('#undo-txt') && (u.querySelector('#undo-txt').textContent=`Removed "${removed?.t||'song'}". Undo?`);
+        u.classList.add('show');
+      });
+      undoTmr=setTimeout(()=>{
+        document.querySelectorAll('.undo-bar').forEach(u=>u.classList.remove('show'));
+        removed=null;
+      },5000);
+    },60);
+  });
+  return item;
+}
+
+function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e}
+
+function render(){
+  const c=document.getElementById('screens');
+  c.innerHTML='';
+  if(step===0) c.appendChild(buildBrowse());
+  else if(step===1) c.appendChild(buildQueuePanel());
+  else if(step===2) c.appendChild(buildRemove());
+  else if(step===3) c.appendChild(buildSave());
+  else if(step===4) c.appendChild(buildRecent());
+}
+
+const _urlP=new URLSearchParams(location.search);
+const _exportN=_urlP.get('export');
+if(_exportN!==null){
+  
+  ['page-hdr','step-nav','export-bar','step-intro'].forEach(id=>{
+    const el=document.getElementById(id)||document.querySelector('.'+id);
+    if(el) el.style.display='none';
+  });
+  
+  const hideAfter=()=>{
+    document.querySelectorAll('.screen-lbl,.hint-box').forEach(e=>e.style.display='none');
+  };
+  setTimeout(hideAfter,50); setTimeout(hideAfter,300);
+  document.body.style.padding='20px 0';
+  document.body.style.alignItems='center';
+  document.getElementById('screens').style.justifyContent='center';
+
+  const n=parseInt(_exportN,10);
+  
+  if(n>=2) queue=[SONGS[0],SONGS[1],SONGS[2]];
+
+  const stepMap={1:0,2:1,3:2,4:3,5:4,6:4};
+  step=stepMap[n]??0;
+  render();
+
+  
+  if(n===3){
+    
+    setTimeout(()=>{
+      document.querySelectorAll('.undo-bar').forEach(u=>{
+        if(u.querySelector('#undo-txt'))
+          u.querySelector('#undo-txt').textContent='Removed "Hotel California". Undo?';
+        u.classList.add('show');
+      });
+    },200);
+  }
+  if(n===4){
+    
+    setTimeout(()=>{
+      const ov=document.querySelector('.d-overlay');
+      if(ov) ov.classList.add('show');
+    },200);
+  }
+  if(n===6){
+    
+    setTimeout(()=>{
+      const items=document.querySelectorAll('.load-chip');
+      if(items[0]) items[0].click();
+    },200);
+  }
+} else {
+  render();
+}
+</script>
+</body>
+</html>
