@@ -19,10 +19,6 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-directi
 .page-hdr{text-align:center;margin-bottom:24px;max-width:900px}
 .page-hdr h1{font-size:20px;font-weight:700;color:var(--green);letter-spacing:.4px;margin-bottom:4px}
 .page-hdr p{font-size:13px;color:var(--sub)}
-.demo-controls{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-.demo-btn{background:#222;border:1px solid #444;color:#ddd;font-size:11px;font-weight:600;
-         padding:6px 12px;border-radius:16px;cursor:pointer;transition:all .12s}
-.demo-btn:hover{border-color:#1DB954;color:#fff}
 
 .step-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
 .step-btn{background:var(--card);border:1px solid #444;color:var(--sub);font-size:11px;font-weight:600;
@@ -112,17 +108,12 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-directi
 .q-item{display:flex;align-items:center;padding:7px 18px;cursor:pointer;position:relative;transition:background .12s}
 .q-item:hover{background:rgba(255,255,255,.05)}
 .q-item.u-added{background:rgba(74,144,226,.06)}
-.q-item.drag-over{outline:1px dashed #4a90e2;outline-offset:-6px}
 .drag-h{color:#555;font-size:15px;margin-right:9px;cursor:grab;padding:5px 4px;min-width:22px;text-align:center;user-select:none}
 .q-art{width:38px;height:38px;border-radius:4px;margin-right:9px;flex-shrink:0;
        display:flex;align-items:center;justify-content:center;font-size:15px}
 .q-info{flex:1;min-width:0}
 .q-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .q-artist{font-size:11px;color:var(--sub)}
-.q-actions{display:flex;align-items:center;gap:4px}
-.move-btn{background:none;border:1px solid #4b4b4b;color:#bbb;cursor:pointer;
-          font-size:10px;padding:2px 6px;border-radius:10px;line-height:1}
-.move-btn:hover{border-color:#6fa8dc;color:#cfe4ff}
 .rm-btn{background:none;border:none;cursor:pointer;color:var(--sub);font-size:15px;padding:6px;transition:color .12s}
 .rm-btn:hover{color:var(--red)}
 
@@ -132,7 +123,6 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-directi
 .undo-bar.show{transform:translateY(0);pointer-events:all}
 .undo-bar.green{background:#1a4a27;border:1px solid #1DB954;color:#a8e6c0}
 .undo-bar.yellow{background:#4a3a10;border:1px solid #f39c12;color:#f5d06b}
-.undo-bar.blue{background:#0f2f4f;border:1px solid #4a90e2;color:#b8d7ff}
 .undo-btn{background:none;border:1px solid currentColor;color:inherit;font-size:11px;font-weight:700;
           padding:3px 10px;border-radius:12px;cursor:pointer}
 
@@ -183,9 +173,6 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-directi
 <div class="page-hdr">
   <h1>Spotify Queue Redesign — Interactive Prototype</h1>
   <p>Martin Li &nbsp;·&nbsp; CS 6750 Individual Project &nbsp;·&nbsp; Medium-Fidelity Prototype</p>
-  <div class="demo-controls">
-    <button class="demo-btn" type="button" onclick="resetDemoState()">Reset Demo State</button>
-  </div>
 </div>
 
 <div class="step-nav" id="step-nav">
@@ -204,6 +191,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;display:flex;flex-directi
 <div id="toast"></div>
 
 <script>
+
 const SONGS=[
   {t:"Bohemian Rhapsody",a:"Queen",e:"🎭"},
   {t:"Hotel California",a:"Eagles",e:"🏨"},
@@ -227,10 +215,10 @@ const SAVED=[
 ];
 const STEP_INTROS=[
   'Browse and tap <strong>+</strong> to add songs. The badge in the Now Playing bar tracks how many are queued.',
-  'Your queue is a half-sheet panel. <strong>Blue = you added it.</strong> Gray = Spotify\'s auto-suggestions. Use buttons or gestures for the same actions.',
-  'Click <strong>✕</strong> to remove, drag rows to reorder, or use <strong>▲/▼</strong> for reliable reorder. Undo stays visible for 5 seconds.',
-  'Click <strong>Save</strong> to create a timestamped snapshot of the current queue.',
-  'Browse saved queues. Click <strong>Load</strong> to restore one with confirmation.',
+  'Your queue is a half-sheet panel. <strong>Blue = you added it.</strong> Gray = Spotify\'s auto-suggestions. Drag <strong>≡</strong> to reorder.',
+  'Click <strong>✕</strong> on a song to remove it. A yellow undo bar appears for 5 seconds — click <strong>Undo</strong> to restore.',
+  'Click <strong>Save</strong> in the queue header to save the queue with a custom name.',
+  'Browse saved queues. Click <strong>Load</strong> to restore one — a confirmation dialog prevents accidental replacement.',
 ];
 const GRADS=[
   'linear-gradient(135deg,#1a1a2e,#16213e)',
@@ -242,38 +230,9 @@ const GRADS=[
 ];
 function grad(i){return GRADS[i%GRADS.length]}
 
-let queue=[];
-let savedQueues=SAVED.map((s,i)=>({
-  ...s,
-  id:`seed-${i}`,
-  queue:[]
-}));
-let lastAction=null;
-let undoTmr=null;
-let draggingIdx=null;
-let pendingLoadId=null;
+let queue=[]; 
+let removed=null, removedIdx=null, undoTmr=null;
 let step=0;
-let queueIdCounter=1;
-
-function makeQueueItem(song){
-  return {id:`q-${queueIdCounter++}`,t:song.t,a:song.a,e:song.e};
-}
-function cloneQueue(items){
-  return items.map(s=>({...s,id:s.id||`q-${queueIdCounter++}`}));
-}
-function ensureQueueSeeded(){
-  if(queue.length===0){
-    queue=[makeQueueItem(SONGS[0]),makeQueueItem(SONGS[1]),makeQueueItem(SONGS[2])];
-  }
-}
-function seedSavedQueues(){
-  return SAVED.map((s,i)=>({
-    ...s,
-    id:`seed-${i}-${Math.random().toString(36).slice(2,6)}`,
-    queue:cloneQueue(i%2===0?[makeQueueItem(SONGS[0]),makeQueueItem(SONGS[1]),makeQueueItem(SONGS[2])]:[makeQueueItem(SONGS[2]),makeQueueItem(SONGS[4]),makeQueueItem(SONGS[6])])
-  }));
-}
-savedQueues=seedSavedQueues();
 
 let toastTmr=null;
 function toast(msg){
@@ -283,92 +242,11 @@ function toast(msg){
   toastTmr=setTimeout(()=>el.classList.remove('show'),2400);
 }
 
-function defaultQueueName(){
-  const d=new Date();
-  const stamp=d.toLocaleString('en-US',{month:'short',day:'2-digit',hour:'numeric',minute:'2-digit'});
-  return `Queue — ${stamp}`;
-}
-
-function mkSnapshot(){
-  return cloneQueue(queue);
-}
-
 function setStep(s){
   step=s;
   document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===s));
-  const intro=document.getElementById('step-intro');
-  if(intro) intro.innerHTML=STEP_INTROS[s];
+  document.getElementById('step-intro').innerHTML=STEP_INTROS[s];
   render();
-}
-function resetDemoState(){
-  queueIdCounter=1;
-  queue=[];
-  savedQueues=seedSavedQueues();
-  pendingLoadId=null;
-  clearUndo();
-  setStep(0);
-  toast('Demo state reset.');
-}
-
-function clearUndo(){
-  if(undoTmr) clearTimeout(undoTmr);
-  undoTmr=null;
-  lastAction=null;
-}
-
-function showUndo(kind,text,action){
-  clearUndo();
-  lastAction=action;
-  render();
-  setTimeout(()=>{
-    document.querySelectorAll('.undo-bar').forEach(u=>{
-      u.classList.remove('green','yellow','blue');
-      u.classList.add(kind);
-      const txt=u.querySelector('#undo-txt');
-      if(txt) txt.textContent=text;
-      u.classList.add('show');
-    });
-    undoTmr=setTimeout(()=>{
-      document.querySelectorAll('.undo-bar').forEach(u=>u.classList.remove('show'));
-      clearUndo();
-    },5000);
-  },30);
-}
-
-function applyUndo(){
-  if(!lastAction) return;
-  const a=lastAction;
-  if(a.type==='add'){
-    const idx=queue.findIndex(s=>s.id===a.itemId);
-    if(idx>=0) queue.splice(idx,1);
-  }else if(a.type==='remove'){
-    queue.splice(a.idx,0,{...a.song});
-  }else if(a.type==='reorder'){
-    queue=cloneQueue(a.prevQueue);
-  }
-  clearUndo();
-  toast('Action undone.');
-  render();
-}
-
-function saveCurrentQueue(name){
-  if(queue.length===0){
-    toast('Add at least one song before saving a queue.');
-    return false;
-  }
-  const trimmed=(name||'').trim();
-  const n=trimmed||defaultQueueName();
-  const entry={
-    id:`save-${Date.now()}-${Math.random().toString(36).slice(2,6)}`,
-    n,
-    d:new Date().toLocaleString('en-US',{month:'short',day:'2-digit',hour:'numeric',minute:'2-digit'}),
-    c:`${queue.length} songs`,
-    e:queue[0]?.e||'🎵',
-    queue:mkSnapshot()
-  };
-  savedQueues.unshift(entry);
-  toast(`Saved "${entry.n}"`);
-  return true;
 }
 
 function makePhoneWrap(labelHTML){
@@ -391,9 +269,11 @@ function addHint(wrap, html){
 
 function buildBrowse(){
   const {wrap,screen}=makePhoneWrap('<span class="num">1</span> Browsing — tap + to add songs');
+
   const hdr=el('div','app-hdr');
   hdr.innerHTML='<span class="app-title">Good Evening</span><div class="avatar">ML</div>';
   screen.appendChild(hdr);
+
   const row=el('div','card-row');
   row.style.padding='0 18px 12px';
   ['🎸 Rock','🎷 Jazz','💿 90s','🎹 Piano'].forEach((c,i)=>{
@@ -408,29 +288,32 @@ function buildBrowse(){
   const list=el('div','song-list');
   SONGS.forEach((s,i)=>{
     const row2=el('div','song-row');
+    const isAdded=queue.some(q=>q.t===s.t);
     row2.innerHTML=`
       <div class="s-art" style="background:${grad(i)}">${s.e}</div>
       <div class="s-info"><div class="s-title">${s.t}</div><div class="s-artist">${s.a}</div></div>
-      <button class="add-btn" title="Add to queue">+</button>
+      <button class="add-btn ${isAdded?'done':''}">${isAdded?'✓':'+'}</button>
     `;
     row2.querySelector('.add-btn').addEventListener('click',ev=>{
-      ev.stopPropagation();
-      const queued=makeQueueItem(s);
-      queue.push(queued);
-      showUndo('green',`Added "${s.t}". Undo?`,{type:'add',itemId:queued.id});
+      ev.stopPropagation(); if(isAdded) return;
+      queue.push(s); toast(`Added "${s.t}"`); render();
     });
     list.appendChild(row2);
   });
   screen.appendChild(list);
-  screen.appendChild(makeNP(screen,true));
-  screen.appendChild(makeStandaloneUndoBar());
+
+  const np=makeNP(screen,true);
+  screen.appendChild(np);
+
   addHint(wrap,`<strong>Add songs:</strong> Tap the green <strong>+</strong> button.<br>
-    Badge count updates immediately. Use <strong>② Queue Panel</strong> for reorder/remove.`);
+    The badge in the Now Playing bar updates instantly.<br>
+    Then go to <strong>② Queue Panel</strong> to see your queue.`);
   return wrap;
 }
 
 function buildQueuePanel(){
   const {wrap,screen}=makePhoneWrap('<span class="num">2</span> Queue Panel — persistent view');
+  
   const hdr=el('div','app-hdr');
   hdr.innerHTML='<span class="app-title">Good Evening</span><div class="avatar">ML</div>';
   screen.appendChild(hdr);
@@ -439,46 +322,56 @@ function buildQueuePanel(){
   const mini=el('div','song-list');
   SONGS.slice(0,4).forEach((s,i)=>{
     const r=el('div','song-row');
-    r.innerHTML=`<div class="s-art" style="background:${grad(i)}">${s.e}</div><div class="s-info"><div class="s-title">${s.t}</div><div class="s-artist">${s.a}</div></div>`;
+    r.innerHTML=`<div class="s-art" style="background:${grad(i)}">${s.e}</div>
+      <div class="s-info"><div class="s-title">${s.t}</div><div class="s-artist">${s.a}</div></div>`;
     mini.appendChild(r);
   });
   screen.appendChild(mini);
-  screen.appendChild(makeNP(screen,true));
+
+  const np=makeNP(screen,true);
+  screen.appendChild(np);
+
   const qp=makeQueuePanel(screen);
   screen.appendChild(qp);
   setTimeout(()=>qp.classList.add('open'),80);
-  addHint(wrap,`<strong>Blue</strong> = added by you. <strong>Gray</strong> = Spotify continuation.<br>
-    Reorder with drag or <strong>▲/▼</strong>. Click <strong>Tips</strong> for quick guidance.`);
+
+  addHint(wrap,`<strong>Blue section</strong> = songs you added.<br>
+    <strong>Gray section</strong> = Spotify's auto-suggestions.<br>
+    Drag <strong>≡</strong> to reorder. Click <strong>Save</strong> or <strong>Recent</strong>.`);
   return wrap;
 }
 
 function buildRemove(){
-  ensureQueueSeeded();
+  if(queue.length===0) queue=[SONGS[0],SONGS[1],SONGS[2]];
   const {wrap,screen}=makePhoneWrap('<span class="num">3</span> Remove song + Undo');
+
   const qp=makeQueuePanel(screen,true);
   qp.style.cssText='position:relative;transform:none;border-radius:0;max-height:none;border-top:none';
   screen.appendChild(qp);
-  screen.appendChild(makeNP(screen,false));
-  addHint(wrap,`Click <strong>✕</strong> to remove a song.<br>
-    Reorder with drag or <strong>▲/▼</strong>. Undo remains active for <strong>5 seconds</strong>.`);
+
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`Click <strong>✕</strong> on any blue song to remove it.<br>
+    The yellow undo bar stays visible for <strong>5 seconds</strong>.<br>
+    Click <strong>Undo</strong> to instantly restore the song.`);
   return wrap;
 }
 
 function buildSave(){
-  ensureQueueSeeded();
+  if(queue.length===0) queue=[SONGS[0],SONGS[1],SONGS[2]];
   const {wrap,screen}=makePhoneWrap('<span class="num">4</span> Save Queue');
-  let ov;
-  const qp=makeQueuePanel(screen,false,{
-    onSaveClick:()=>ov.classList.add('show'),
-    onRecentClick:()=>setStep(4)
-  });
+
+  const qp=makeQueuePanel(screen,false,true);
   qp.style.cssText='position:relative;transform:none;border-radius:0;max-height:none;border-top:none';
   screen.appendChild(qp);
-  ov=el('div','d-overlay');
+
+  
+  const ov=el('div','d-overlay');
   ov.innerHTML=`<div class="dialog">
     <h3>Save Queue</h3>
     <p>Give your queue a name so you can find it later.</p>
-    <input class="d-input" id="qname" value="${defaultQueueName()}"/>
+    <input class="d-input" id="qname" value="Queue — Mar 22, 9:41 PM"/>
     <div class="d-btns">
       <button class="btn-cancel" id="save-cancel">Cancel</button>
       <button class="btn-ok" id="save-ok">Save</button>
@@ -487,48 +380,50 @@ function buildSave(){
   screen.appendChild(ov);
   ov.querySelector('#save-cancel').onclick=()=>ov.classList.remove('show');
   ov.querySelector('#save-ok').onclick=()=>{
-    const name=ov.querySelector('#qname').value;
-    const ok=saveCurrentQueue(name);
-    if(ok){
-      ov.classList.remove('show');
-      render();
-    }
+    ov.classList.remove('show');
+    toast('Queue saved! Find it in Recent Queues.');
   };
-  screen.appendChild(makeNP(screen,false));
-  addHint(wrap,`Click <strong>Save</strong> in the queue header.<br>
-    Named snapshots appear in <strong>⑤ Recent Queues</strong>.`);
+  setTimeout(()=>{
+    const sb=qp.querySelector('.q-chip:not(.grey)');
+    if(sb) sb.onclick=()=>ov.classList.add('show');
+  },30);
+
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`Click the <strong>Save</strong> button in the queue header.<br>
+    Edit the name or keep the auto-generated timestamp.<br>
+    Saved queues appear in <strong>⑤ Recent Queues</strong>.`);
   return wrap;
 }
 
 function buildRecent(){
   const {wrap,screen}=makePhoneWrap('<span class="num">5</span> Recent Queues');
   const rs=el('div','recent-scr open');
+
   const nav=el('div','scr-nav');
-  nav.innerHTML=`<button class="back-btn" id="rback">‹</button><span class="scr-nav-title">Recent Queues</span>`;
+  nav.innerHTML=`<button class="back-btn" id="rback">‹</button>
+    <span class="scr-nav-title">Recent Queues</span>`;
   rs.appendChild(nav);
-  if(savedQueues.length===0){
-    const empty=el('div','q-sec-lbl algo');
-    empty.style.padding='18px';
-    empty.textContent='No saved queues yet. Save from step ④.';
-    rs.appendChild(empty);
-  }else{
-    savedQueues.forEach((sq,i)=>{
-      const item=el('div','saved-item');
-      item.innerHTML=`
-        <div class="sv-art" style="background:${grad(i+2)}">${sq.e||'🎵'}</div>
-        <div class="sv-info"><div class="sv-name">${sq.n}</div><div class="sv-meta">${sq.d} · ${sq.c}</div></div>
-        <button class="load-chip">Load</button>`;
-      item.querySelector('.load-chip').addEventListener('click',ev=>{
-        ev.stopPropagation();
-        pendingLoadId=sq.id;
-        showConfirm(screen,sq.n);
-      });
-      rs.appendChild(item);
+
+  SAVED.forEach((sq,i)=>{
+    const item=el('div','saved-item');
+    item.innerHTML=`
+      <div class="sv-art" style="background:${grad(i+2)}">${sq.e}</div>
+      <div class="sv-info"><div class="sv-name">${sq.n}</div><div class="sv-meta">${sq.d} · ${sq.c}</div></div>
+      <button class="load-chip">Load</button>
+    `;
+    item.querySelector('.load-chip').addEventListener('click',ev=>{
+      ev.stopPropagation();
+      showConfirm(screen,sq.n);
     });
-  }
+    rs.appendChild(item);
+  });
   screen.appendChild(rs);
+
   nav.querySelector('#rback').onclick=()=>setStep(3);
 
+  
   const co=el('div','d-overlay');
   co.id='confirm-ov';
   co.innerHTML=`<div class="dialog">
@@ -540,28 +435,21 @@ function buildRecent(){
     </div>
   </div>`;
   screen.appendChild(co);
-  co.querySelector('#co-cancel').onclick=()=>{pendingLoadId=null;co.classList.remove('show');};
-  co.querySelector('#co-ok').onclick=()=>{
-    const match=savedQueues.find(s=>s.id===pendingLoadId);
-    if(match){
-      queue=cloneQueue(match.queue);
-      toast(`Loaded "${match.n}"`);
-    }else{
-      toast('Could not load queue. Please try again.');
-    }
-    pendingLoadId=null;
-    co.classList.remove('show');
-    render();
-  };
+  co.querySelector('#co-cancel').onclick=()=>co.classList.remove('show');
+  co.querySelector('#co-ok').onclick=()=>{co.classList.remove('show');toast('Queue loaded!');};
 
   function showConfirm(sc,name){
-    sc.querySelector('#confirm-txt').textContent=`"${name}" will replace your current queue. Confirm before loading.`;
+    sc.querySelector('#confirm-txt').textContent=`"${name}" will replace your current queue. This cannot be undone.`;
     sc.querySelector('#confirm-ov').classList.add('show');
   }
+  window.showConfirm=showConfirm;
 
-  screen.appendChild(makeNP(screen,false));
-  addHint(wrap,`Click <strong>Load</strong> to restore a saved queue.<br>
-    Confirmation prevents accidental replacement.`);
+  const np=makeNP(screen,false);
+  screen.appendChild(np);
+
+  addHint(wrap,`All saved queues with name, date, and song count.<br>
+    Click <strong>Load</strong> → confirmation dialog appears.<br>
+    Tap the <strong>‹</strong> back arrow to return to the save screen.`);
   return wrap;
 }
 
@@ -572,8 +460,12 @@ function makeNP(screen,withToggle){
     <div class="np-info"><div class="np-title">Yesterday</div><div class="np-artist">The Beatles</div></div>
     <div class="np-ctrls">
       <button class="ctrl">⏮</button><button class="ctrl">⏸</button><button class="ctrl">⏭</button>
-      ${withToggle?`<div class="qbadge-wrap"><button class="ctrl" id="qtoggle">≡</button><div class="qbadge">${queue.length}</div></div>`:''}
-    </div>`;
+      ${withToggle?`<div class="qbadge-wrap">
+        <button class="ctrl" id="qtoggle">≡</button>
+        <div class="qbadge" id="qbadge-n">${queue.length}</div>
+      </div>`:''}
+    </div>
+  `;
   if(withToggle){
     const pz=el('div','pull-zone');
     pz.innerHTML='<div class="pull-handle"></div><div class="pull-hint">▲ YOUR QUEUE</div>';
@@ -588,30 +480,27 @@ function makeNP(screen,withToggle){
   return bar;
 }
 
-function makeQueuePanel(screen,showUndo,options={}){
-  const {onSaveClick,onRecentClick}=options;
+function makeQueuePanel(screen, showUndo, isSaveStep){
   const qp=el('div','q-panel');
+
   const ph=el('div','q-ph');
   ph.innerHTML=`<span class="q-ph-title">Your Queue</span>
     <div class="q-ph-btns">
-      <button class="q-chip grey tips">Tips</button>
-      <button class="q-chip save">Save</button>
-      <button class="q-chip grey">Recent</button>
+      <button class="q-chip">${isSaveStep?'Save':'Save'}</button>
+      <button class="q-chip grey" onclick="setStep(4)">Recent</button>
     </div>`;
   qp.appendChild(ph);
-
-  ph.querySelector('.tips').onclick=()=>toast('Tip: use drag OR ▲/▼ to reorder, then Undo if needed.');
-  ph.querySelector('.save').onclick=onSaveClick||(()=>{ if(step!==3) setStep(3); });
-  ph.querySelector('.q-chip.grey:last-child').onclick=onRecentClick||(()=>setStep(4));
 
   if(queue.length>0){
     const sl=el('div','q-sec-lbl user'); sl.textContent='ADDED BY YOU';
     qp.appendChild(sl);
-    queue.forEach((song,i)=>qp.appendChild(makeQItem(song,i)));
+    queue.forEach((song,i)=>{
+      qp.appendChild(makeQItem(song,i));
+    });
   }else{
     const empty=el('div','q-sec-lbl algo');
-    empty.style.padding='14px 18px';
     empty.textContent='No songs added yet — go to ① Browse';
+    empty.style.padding='14px 18px';
     qp.appendChild(empty);
   }
 
@@ -619,94 +508,58 @@ function makeQueuePanel(screen,showUndo,options={}){
   qp.appendChild(al);
   ALGO.forEach((s,i)=>{
     const item=el('div','q-item');
-    item.innerHTML=`<div style="width:22px;margin-right:9px"></div><div class="q-art" style="background:${grad(i+5)}">${s.e}</div><div class="q-info"><div class="q-title" style="color:#888">${s.t}</div><div class="q-artist">${s.a}</div></div>`;
+    item.innerHTML=`<div style="width:22px;margin-right:9px"></div>
+      <div class="q-art" style="background:${grad(i+5)}">${s.e}</div>
+      <div class="q-info"><div class="q-title" style="color:#888">${s.t}</div><div class="q-artist">${s.a}</div></div>`;
     qp.appendChild(item);
   });
   qp.style.paddingBottom='40px';
 
+  
   const ub=el('div','undo-bar yellow');
-  ub.innerHTML=`<span id="undo-txt">Action complete. Undo?</span><button class="undo-btn" id="undo-act">Undo</button>`;
-  ub.querySelector('#undo-act').onclick=applyUndo;
+  ub.innerHTML=`<span id="undo-txt">Removed song. Undo?</span><button class="undo-btn" id="undo-act">Undo</button>`;
   qp.appendChild(ub);
+  ub.querySelector('#undo-act').addEventListener('click',()=>{
+    if(removed!==null){
+      queue.splice(removedIdx,0,removed);
+      removed=null;
+      toast('Song restored!'); render();
+    }
+  });
   if(showUndo) setTimeout(()=>ub.classList.add('show'),500);
+
   return qp;
 }
 
 function makeQItem(song,i){
   const item=el('div','q-item u-added');
-  item.draggable=true;
-  item.dataset.idx=i;
   item.innerHTML=`
     <div class="drag-h" title="Drag to reorder">≡</div>
     <div class="q-art" style="background:${grad(i)}">${song.e}</div>
     <div class="q-info"><div class="q-title">${song.t}</div><div class="q-artist">${song.a}</div></div>
-    <div class="q-actions">
-      <button class="move-btn up" title="Move up">▲</button>
-      <button class="move-btn down" title="Move down">▼</button>
-      <button class="rm-btn" title="Remove">✕</button>
-    </div>`;
-
-  item.querySelector('.rm-btn').onclick=()=>{
-    const removed=queue[i];
+    <button class="rm-btn" title="Remove">✕</button>
+  `;
+  item.querySelector('.rm-btn').addEventListener('click',()=>{
+    removed=queue[i]; removedIdx=i;
     queue.splice(i,1);
-    showUndo('yellow',`Removed "${removed.t}". Undo?`,{type:'remove',song:{...removed},idx:i});
-  };
-  item.querySelector('.move-btn.up').onclick=()=>{
-    if(i===0) return;
-    const prev=mkSnapshot();
-    const moved=queue[i];
-    queue.splice(i,1);
-    queue.splice(i-1,0,moved);
-    showUndo('blue',`Moved "${moved.t}" up. Undo?`,{type:'reorder',prevQueue:prev});
-  };
-  item.querySelector('.move-btn.down').onclick=()=>{
-    if(i===queue.length-1) return;
-    const prev=mkSnapshot();
-    const moved=queue[i];
-    queue.splice(i,1);
-    queue.splice(i+1,0,moved);
-    showUndo('blue',`Moved "${moved.t}" down. Undo?`,{type:'reorder',prevQueue:prev});
-  };
-
-  item.addEventListener('dragstart',()=>{
-    draggingIdx=i;
-    item.style.opacity='0.55';
-  });
-  item.addEventListener('dragend',()=>{
-    draggingIdx=null;
-    item.style.opacity='1';
-  });
-  item.addEventListener('dragover',e=>{
-    e.preventDefault();
-    item.classList.add('drag-over');
-  });
-  item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
-  item.addEventListener('drop',e=>{
-    e.preventDefault();
-    item.classList.remove('drag-over');
-    const toIdx=Number(item.dataset.idx);
-    if(draggingIdx===null||draggingIdx===toIdx) return;
-    const prev=mkSnapshot();
-    const [moved]=queue.splice(draggingIdx,1);
-    const insertIdx=draggingIdx<toIdx?toIdx-1:toIdx;
-    queue.splice(insertIdx,0,moved);
-    showUndo('blue',`Moved "${moved.t}". Undo?`,{type:'reorder',prevQueue:prev});
+    if(undoTmr) clearTimeout(undoTmr);
+    render();
+    setTimeout(()=>{
+      document.querySelectorAll('.undo-bar').forEach(u=>{
+        u.querySelector('#undo-txt') && (u.querySelector('#undo-txt').textContent=`Removed "${removed?.t||'song'}". Undo?`);
+        u.classList.add('show');
+      });
+      undoTmr=setTimeout(()=>{
+        document.querySelectorAll('.undo-bar').forEach(u=>u.classList.remove('show'));
+        removed=null;
+      },5000);
+    },60);
   });
   return item;
 }
 
-function makeStandaloneUndoBar(){
-  const ub=el('div','undo-bar yellow');
-  ub.style.bottom='74px';
-  ub.style.left='14px';
-  ub.style.right='14px';
-  ub.style.zIndex='45';
-  ub.innerHTML=`<span id="undo-txt">Action complete. Undo?</span><button class="undo-btn" id="undo-act">Undo</button>`;
-  ub.querySelector('#undo-act').onclick=applyUndo;
-  return ub;
-}
-
 function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e}
+
 function render(){
   const c=document.getElementById('screens');
   c.innerHTML='';
@@ -717,7 +570,59 @@ function render(){
   else if(step===4) c.appendChild(buildRecent());
 }
 
-render();
+const _urlP=new URLSearchParams(location.search);
+const _exportN=_urlP.get('export');
+if(_exportN!==null){
+  
+  ['page-hdr','step-nav','export-bar','step-intro'].forEach(id=>{
+    const el=document.getElementById(id)||document.querySelector('.'+id);
+    if(el) el.style.display='none';
+  });
+  
+  const hideAfter=()=>{
+    document.querySelectorAll('.screen-lbl,.hint-box').forEach(e=>e.style.display='none');
+  };
+  setTimeout(hideAfter,50); setTimeout(hideAfter,300);
+  document.body.style.padding='20px 0';
+  document.body.style.alignItems='center';
+  document.getElementById('screens').style.justifyContent='center';
+
+  const n=parseInt(_exportN,10);
+  
+  if(n>=2) queue=[SONGS[0],SONGS[1],SONGS[2]];
+
+  const stepMap={1:0,2:1,3:2,4:3,5:4,6:4};
+  step=stepMap[n]??0;
+  render();
+
+  
+  if(n===3){
+    
+    setTimeout(()=>{
+      document.querySelectorAll('.undo-bar').forEach(u=>{
+        if(u.querySelector('#undo-txt'))
+          u.querySelector('#undo-txt').textContent='Removed "Hotel California". Undo?';
+        u.classList.add('show');
+      });
+    },200);
+  }
+  if(n===4){
+    
+    setTimeout(()=>{
+      const ov=document.querySelector('.d-overlay');
+      if(ov) ov.classList.add('show');
+    },200);
+  }
+  if(n===6){
+    
+    setTimeout(()=>{
+      const items=document.querySelectorAll('.load-chip');
+      if(items[0]) items[0].click();
+    },200);
+  }
+} else {
+  render();
+}
 </script>
 </body>
 </html>
