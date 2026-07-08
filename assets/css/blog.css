@@ -186,7 +186,7 @@
 .blog-post-content a {
   color: var(--primary-color);
   text-decoration: underline;
-  text-decoration-color: rgba(99, 102, 241, 0.3);
+  text-decoration-color: rgba(85, 214, 170, 0.4);
   text-underline-offset: 3px;
   transition: all var(--transition-base);
 }
@@ -300,4 +300,120 @@
   .blog-post-content {
     padding: var(--spacing-2xl) var(--spacing-md);
   }
+}
+
+/* ==================== ENHANCED POST HEADER ==================== */
+.blog-post-categories {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-md);
+}
+
+.blog-category-tag {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: capitalize;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+a.blog-category-tag:hover {
+  background: var(--primary-color);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.blog-post-subtitle {
+  max-width: 700px;
+  margin: 0 auto var(--spacing-lg);
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ==================== POST COVER IMAGE ==================== */
+.blog-post-cover {
+  margin: calc(-1 * var(--spacing-lg)) auto var(--spacing-xl);
+  max-width: 860px;
+  padding: 0 var(--spacing-lg);
+}
+
+.blog-post-cover img {
+  width: 100%;
+  max-height: 460px;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ==================== POST TAGS ==================== */
+.blog-post-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-tertiary);
+}
+
+.blog-tag {
+  padding: 0.25rem 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* ==================== AUTHOR CARD ==================== */
+.blog-author-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  border-left: 4px solid var(--primary-color);
+}
+
+.blog-author-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.blog-author-info h4 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.blog-author-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ==================== SHARE BLOCK ==================== */
+.blog-share {
+  margin-top: var(--spacing-3xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 2px solid var(--bg-tertiary);
+  text-align: center;
+}
+
+.blog-share h3 {
+  margin-bottom: var(--spacing-lg);
 }

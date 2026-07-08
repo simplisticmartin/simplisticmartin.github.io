@@ -1,3 +1,7 @@
+---
+layout: none
+permalink: /learning.html
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -768,30 +772,7 @@
 <body>
   
   <!-- Navigation -->
-  <nav class="site-nav" id="navbar">
-    <div class="nav-container">
-      <a href="/" class="nav-logo">Martin Li</a>
-      
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <ul class="nav-links" id="navLinks">
-        <li><a href="/">Home</a></li>
-        <li><a href="/#projects">Projects</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/learning.html" class="active">Learning</a></li>
-        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <li>
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-            <i class="fas fa-sun"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  {% include navigation.html %}
   
   <!-- Hero Section -->
   <section class="learning-hero">
@@ -1111,34 +1092,7 @@
   </div>
   
   <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-section">
-        <h4>Martin Li</h4>
-        <p>Software Engineer | AI Enthusiast | Lifelong Learner</p>
-      </div>
-      <div class="footer-section">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/learning.html">Learning</a></li>
-          <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h4>Connect</h4>
-        <div class="social-links">
-          <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="mailto:simplisticmartin@gmail.com">Email</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 Martin Li. All rights reserved. | Made with ❤️</p>
-    </div>
-  </footer>
+  {% include footer.html %}
   
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>

@@ -1,3 +1,7 @@
+---
+layout: none
+permalink: /about/
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -880,30 +884,7 @@
 <body>
   
   <!-- Navigation -->
-  <nav class="site-nav" id="navbar">
-    <div class="nav-container">
-      <a href="/" class="nav-logo">Martin Li</a>
-      
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <ul class="nav-links" id="navLinks">
-        <li><a href="/">Home</a></li>
-        <li><a href="/#projects">Projects</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/learning.html">Learning</a></li>
-        <li><a href="/about/" class="active">About</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <li>
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-            <i class="fas fa-sun"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  {% include navigation.html %}
   
   <!-- Hero Section -->
   <section class="about-hero">
@@ -1199,55 +1180,8 @@
     
   </div>
   
-  <!-- Enhanced Footer -->
-  <footer class="about-footer">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <h3>Martin Li</h3>
-        <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring AI frontiers while pursuing my Master's at Georgia Tech.</p>
-        <div class="footer-social">
-          <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener noreferrer" title="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener noreferrer" title="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="mailto:simplisticmartin@gmail.com" title="Email">
-            <i class="fas fa-envelope"></i>
-          </a>
-        </div>
-      </div>
-      <div class="footer-column">
-        <h4>Navigation</h4>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/#projects">Projects</a></li>
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">About</a></li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-          <li><a href="/learning.html">Learning</a></li>
-          <li><a href="/old-version/index.html">Old Version</a></li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h4>Connect</h4>
-        <ul>
-          <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
-          <li><a href="https://github.com/simplisticmartin" target="_blank">GitHub</a></li>
-          <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank">LinkedIn</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 Martin Li. All rights reserved.</p>
-      <p>Made with <span style="color: #ef4444;">❤️</span> and lots of ☕</p>
-    </div>
-  </footer>
+  <!-- Footer -->
+  {% include footer.html %}
   
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>

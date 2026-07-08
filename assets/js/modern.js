@@ -410,17 +410,32 @@ document.head.appendChild(rainbowStyle);
 
 // ==================== READING PROGRESS (for blog posts) ====================
 function initReadingProgress() {
-  const progressBar = document.querySelector('.reading-progress');
+  const progressBar = document.querySelector('.reading-progress, .scroll-progress');
   if (!progressBar) return;
-  
+
   window.addEventListener('scroll', () => {
     const winScroll = document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
     progressBar.style.width = scrolled + '%';
   });
 }
 initReadingProgress();
+
+// ==================== BACK TO TOP ====================
+function initBackToTop() {
+  const btn = document.getElementById('backToTop') || document.querySelector('.back-to-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.pageYOffset > 400);
+  });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+initBackToTop();
 
 console.log('🚀 Modern Portfolio Loaded Successfully!');
 console.log('💡 Tip: Press ? for keyboard shortcuts');

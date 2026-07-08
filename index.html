@@ -1,3 +1,6 @@
+---
+layout: none
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -574,32 +577,7 @@
   <div class="scroll-progress" id="scrollProgress"></div>
   
   <!-- Navigation -->
-  <nav class="site-nav" id="navbar">
-    <div class="nav-container">
-      <a href="/" class="nav-logo">Martin Li</a>
-      
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/learning.html">Learning</a></li>
-        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="/old-version/index.html" class="btn-old-version">🕰️ Old Version</a></li>
-        <li>
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-            <i class="fas fa-sun"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  {% include navigation.html %}
   
   <!-- Page Loader -->
   <div class="page-loader">
@@ -780,60 +758,7 @@
   </section>
   
   <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3>Martin Li</h3>
-          <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring the frontiers of AI while pursuing my Master's at Georgia Tech.</p>
-          <div class="footer-social">
-            <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" aria-label="GitHub">
-              <i class="fab fa-github"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener" aria-label="LinkedIn">
-              <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="mailto:simplisticmartin@gmail.com" aria-label="Email">
-              <i class="fas fa-envelope"></i>
-            </a>
-          </div>
-        </div>
-        <div class="footer-column">
-          <h4>Navigation</h4>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="/blog/">Blog</a></li>
-            <li><a href="/about/">About</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-            <li><a href="/learning.html">Learning</a></li>
-            <li><a href="/blog-post-creator.html">Blog Creator</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4>Connect</h4>
-          <ul>
-            <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
-            <li><a href="https://github.com/simplisticmartin" target="_blank">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank">LinkedIn</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p class="footer-copyright">
-          &copy; 2026 Martin Li. All rights reserved.
-        </p>
-        <p class="footer-made-with">
-          Made with <span class="heart">❤️</span> using modern web technologies
-        </p>
-      </div>
-    </div>
-  </footer>
+  {% include footer.html %}
   
   <!-- Back to Top Button -->
   <button class="back-to-top" id="backToTop" aria-label="Back to top">

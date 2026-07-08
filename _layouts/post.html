@@ -2,10 +2,26 @@
 layout: default
 ---
 
+<!-- Reading progress bar -->
+<div class="reading-progress" id="readingProgress"></div>
+
 <!-- Blog Post Header -->
 <section class="blog-post-header">
   <div class="container">
+    {% if page.categories %}
+    <div class="blog-post-categories">
+      {% for cat in page.categories %}
+      <a href="{{ '/blog/' | relative_url }}#{{ cat }}" class="blog-category-tag">{{ cat }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <h1 class="blog-post-title">{{ page.title }}</h1>
+
+    {% if page.description %}
+    <p class="blog-post-subtitle">{{ page.description }}</p>
+    {% endif %}
+
     <div class="blog-post-meta">
       <span>
         <i class="fas fa-calendar"></i>
@@ -15,47 +31,71 @@ layout: default
         <i class="fas fa-user"></i>
         {{ page.author | default: site.author }}
       </span>
-      {% if page.read_time %}
       <span>
         <i class="fas fa-clock"></i>
-        {{ page.read_time }} min read
+        {% if page.read_time %}{{ page.read_time }}{% else %}{{ content | number_of_words | divided_by: 200 | plus: 1 }}{% endif %} min read
       </span>
-      {% endif %}
     </div>
   </div>
 </section>
 
+{% if page.image %}
+<div class="blog-post-cover container">
+  <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" loading="lazy"
+       onerror="this.parentNode.style.display='none'">
+</div>
+{% endif %}
+
 <!-- Blog Post Content -->
 <article class="blog-post-content">
   {{ content }}
-  
-  <!-- Share Buttons (Optional) -->
-  <div style="margin-top: var(--spacing-3xl); padding-top: var(--spacing-2xl); border-top: 2px solid var(--bg-tertiary);">
-    <h3 style="text-align: center; margin-bottom: var(--spacing-lg);">Share this post</h3>
+
+  {% if page.tags %}
+  <div class="blog-post-tags">
+    <i class="fas fa-tags"></i>
+    {% for tag in page.tags %}
+    <span class="blog-tag">#{{ tag }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Author Card -->
+  <div class="blog-author-card">
+    <img src="{{ '/assets/images/author.jpg' | relative_url }}" alt="{{ site.author }}"
+         class="blog-author-avatar" onerror="this.style.display='none'">
+    <div class="blog-author-info">
+      <h4>{{ page.author | default: site.author }}</h4>
+      <p>{{ site.tagline }}</p>
+    </div>
+  </div>
+
+  <!-- Share Buttons -->
+  <div class="blog-share">
+    <h3>Share this post</h3>
     <div class="social-links">
-      <a href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&url={{ page.url | absolute_url | uri_escape }}" 
-         target="_blank" rel="noopener" class="social-link" style="background: #1DA1F2; color: white;" 
+      <a href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&url={{ page.url | absolute_url | uri_escape }}"
+         target="_blank" rel="noopener" class="social-link" style="background: #1DA1F2; color: white;"
          aria-label="Share on Twitter">
         <i class="fab fa-twitter"></i>
       </a>
-      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" 
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}"
          target="_blank" rel="noopener" class="social-link" style="background: #0077b5; color: white;"
          aria-label="Share on LinkedIn">
         <i class="fab fa-linkedin"></i>
       </a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}" 
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}"
          target="_blank" rel="noopener" class="social-link" style="background: #1877F2; color: white;"
          aria-label="Share on Facebook">
         <i class="fab fa-facebook"></i>
       </a>
-      <a href="mailto:?subject={{ page.title | uri_escape }}&body={{ page.url | absolute_url | uri_escape }}" 
+      <a href="mailto:?subject={{ page.title | uri_escape }}&body={{ page.url | absolute_url | uri_escape }}"
          class="social-link" style="background: #ea4335; color: white;"
          aria-label="Share via Email">
         <i class="fas fa-envelope"></i>
       </a>
     </div>
   </div>
-  
+
   <!-- Blog Navigation -->
   <nav class="blog-navigation">
     {% if page.previous.url %}
@@ -66,7 +106,7 @@ layout: default
     {% else %}
     <div style="flex: 1;"></div>
     {% endif %}
-    
+
     {% if page.next.url %}
     <a href="{{ page.next.url | relative_url }}" class="blog-nav-item" style="text-align: right;">
       <div class="blog-nav-label">Next →</div>
@@ -74,10 +114,10 @@ layout: default
     </a>
     {% endif %}
   </nav>
-  
+
   <!-- Back to Blog -->
   <div style="text-align: center; margin-top: var(--spacing-2xl);">
-    <a href="{{ '/blog' | relative_url }}" class="btn btn-outline">
+    <a href="{{ '/blog/' | relative_url }}" class="btn btn-outline">
       <i class="fas fa-arrow-left"></i> Back to Blog
     </a>
   </div>

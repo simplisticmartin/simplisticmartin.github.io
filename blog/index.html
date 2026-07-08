@@ -692,31 +692,7 @@
 <body>
   
   <!-- Navigation -->
-  <nav class="site-nav" id="navbar">
-    <div class="nav-container">
-      <a href="{{ '/' | relative_url }}" class="nav-logo">Martin Li</a>
-      
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <ul class="nav-links" id="navLinks">
-        <li><a href="{{ '/' | relative_url }}">Home</a></li>
-        <li><a href="{{ '/#projects' | relative_url }}">Projects</a></li>
-        <li><a href="{{ '/blog/' | relative_url }}" style="color: var(--primary-color); font-weight: 600;">Blog</a></li>
-        <li><a href="{{ '/about' | relative_url }}">About</a></li>
-        <li><a href="{{ '/Resume.pdf' | relative_url }}" target="_blank">Resume</a></li>
-        <li><a href="{{ '/blog-post-creator.html' | relative_url }}" class="btn-old-version">✍️ New Post</a></li>
-        <li><a href="{{ '/old-version/Blog.html' | relative_url }}" class="btn-old-version">🕰️ Old Blog</a></li>
-        <li>
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-            <i class="fas fa-sun"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  {% include navigation.html %}
   
   <!-- Blog Hero -->
   <section class="blog-hero">
@@ -834,6 +810,8 @@
             <div class="blog-meta">
               <span class="blog-date">
                 <i class="fas fa-calendar"></i> {{ post.date | date: "%B %d, %Y" }}
+                &nbsp;·&nbsp;
+                <i class="fas fa-clock"></i> {% if post.read_time %}{{ post.read_time }}{% else %}{{ post.content | number_of_words | divided_by: 200 | plus: 1 }}{% endif %} min read
               </span>
               {% if post.categories %}
               <span class="blog-categories">
@@ -951,21 +929,7 @@
   </section>
   
   <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="{{ '/' | relative_url }}">Home</a>
-        <a href="{{ '/#projects' | relative_url }}">Projects</a>
-        <a href="{{ '/blog/' | relative_url }}">Blog</a>
-        <a href="{{ '/about' | relative_url }}">About</a>
-        <a href="{{ '/Resume.pdf' | relative_url }}">Resume</a>
-        <a href="{{ '/old-version/Blog.html' | relative_url }}">🕰️ Old Blog</a>
-      </div>
-      <p class="footer-copyright">
-        &copy; {{ 'now' | date: "%Y" }} Martin Li. Made with ❤️ using Jekyll & GitHub Pages.
-      </p>
-    </div>
-  </footer>
+  {% include footer.html %}
   
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
@@ -1019,23 +983,7 @@
         card.style.transitionDelay = `${index * 0.1}s`;
         observer.observe(card);
       });
-      
-      // Add reading time to blog posts
-      document.querySelectorAll('.blog-card').forEach(card => {
-        const excerpt = card.querySelector('.blog-excerpt');
-        if (excerpt) {
-          const words = excerpt.textContent.split(/\s+/).length;
-          const readTime = Math.max(1, Math.ceil(words / 200));
-          const dateSpan = card.querySelector('.blog-date');
-          if (dateSpan && !card.querySelector('.reading-time')) {
-            const readingTimeSpan = document.createElement('span');
-            readingTimeSpan.className = 'reading-time';
-            readingTimeSpan.innerHTML = `<i class="fas fa-clock"></i> ${readTime} min read`;
-            dateSpan.parentNode.insertBefore(readingTimeSpan, dateSpan.nextSibling);
-          }
-        }
-      });
-      
+
       // Parallax effect on hero
       const blogHero = document.querySelector('.blog-hero');
       if (blogHero) {

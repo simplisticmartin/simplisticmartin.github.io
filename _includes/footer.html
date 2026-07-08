@@ -1,18 +1,45 @@
+<!-- Canonical site footer — single source of truth for every page -->
 <footer class="site-footer">
   <div class="footer-content">
-      <div class="footer-links">
-        <a href="{{ '/' | relative_url }}">Home</a>
-        <a href="{{ '/#projects' | relative_url }}">Projects</a>
-        <a href="{{ '/blog' | relative_url }}">Blog</a>
-        <a href="{{ '/about' | relative_url }}">About</a>
-        <a href="{{ '/Resume.pdf' | relative_url }}">Resume</a>
-        <a href="{{ '/old-version/index.html' | relative_url }}">Old Version</a>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Martin Li</h3>
+        <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring the frontiers of AI while pursuing my Master's at Georgia Tech.</p>
+        <div class="footer-social">
+          <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="mailto:simplisticmartin@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
       </div>
-    <p class="footer-copyright">
-      &copy; {{ 'now' | date: "%Y" }} {{ site.author }}. Built with 
-      <a href="https://jekyllrb.com/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Jekyll</a> 
-      & hosted on 
-      <a href="https://pages.github.com/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">GitHub Pages</a>.
-    </p>
+      <div class="footer-column">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="{{ '/' | relative_url }}">Home</a></li>
+          <li><a href="{{ '/#projects' | relative_url }}">Projects</a></li>
+          <li><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
+          <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="{{ '/learning.html' | relative_url }}">Learning</a></li>
+          <li><a href="{{ '/Resume.pdf' | relative_url }}" target="_blank" rel="noopener">Resume</a></li>
+          <li><a href="{{ '/old-version/index.html' | relative_url }}">Old Version</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
+          <li><a href="https://github.com/simplisticmartin" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; {{ 'now' | date: "%Y" }} Martin Li. All rights reserved.</p>
+      <p class="footer-made-with">Built with <span class="heart">❤</span> using Jekyll &amp; GitHub Pages</p>
+    </div>
   </div>
 </footer>

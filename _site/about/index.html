@@ -3,31 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Learn more about Martin Li - Software Engineer, Developer, and Technology Enthusiast">
-  
-  <title>About Me | Martin Li</title>
-  
-  <!-- SEO -->
-  <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>About Me | Martin Li</title>
-<meta name="generator" content="Jekyll v3.10.0" />
-<meta property="og:title" content="About Me" />
-<meta name="author" content="Martin Li" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Learn more about Martin Li - Software Engineer, Developer, and Technology Enthusiast" />
-<meta property="og:description" content="Learn more about Martin Li - Software Engineer, Developer, and Technology Enthusiast" />
-<link rel="canonical" href="http://localhost:4000/about/" />
-<meta property="og:url" content="http://localhost:4000/about/" />
-<meta property="og:site_name" content="Martin Li" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="About Me" />
-<meta name="twitter:site" content="@" />
-<meta name="twitter:creator" content="@Martin Li" />
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Martin Li"},"description":"Learn more about Martin Li - Software Engineer, Developer, and Technology Enthusiast","headline":"About Me","name":"Martin Li","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/favicon.png"},"name":"Martin Li"},"url":"http://localhost:4000/about/"}</script>
-<!-- End Jekyll SEO tag -->
-
+  <meta name="description" content="About Martin Li - Software Engineer, AI Specialist, and Technology Enthusiast at JPMorgan Chase">
+  <title>About | Martin Li</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,151 +17,1320 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/assets/css/modern.css">
   
-  
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
   
-  <!-- RSS Feed -->
-  <link rel="alternate" type="application/rss+xml" title="Martin Li" href="/feed.xml">
-  
-  
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '');
-  </script>
-  
+  <style>
+    /* ==================== ANIMATIONS ==================== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(85, 214, 170, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(85, 214, 170, 0.6); }
+    }
+    
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* ==================== SCROLL PROGRESS BAR ==================== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--gradient-primary);
+      z-index: 9999;
+      transition: width 0.1s ease;
+    }
+    
+    /* ==================== BACK TO TOP BUTTON ==================== */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 20px rgba(85, 214, 170, 0.3);
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .back-to-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(85, 214, 170, 0.5);
+    }
+    
+    /* ==================== ABOUT PAGE STYLES ==================== */
+    
+    .about-hero {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), #8b5cf6);
+      background-size: 200% 200%;
+      animation: gradientShift 8s ease infinite;
+      padding: var(--spacing-3xl) var(--spacing-lg);
+      text-align: center;
+      color: var(--text-light);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+      background-size: 1000px 100%;
+      animation: shimmer 3s infinite;
+    }
+    
+    .about-hero h1 {
+      font-size: 3rem;
+      font-family: var(--font-heading);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .about-hero .subtitle {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease 0.2s forwards;
+      opacity: 0;
+    }
+    
+    /* ==================== PROFILE SECTION ==================== */
+    
+    .about-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+    }
+    
+    .profile-section {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--spacing-3xl);
+      align-items: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .profile-image {
+      position: relative;
+    }
+    
+    .profile-image img {
+      width: 100%;
+      max-width: 350px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-2xl);
+      display: block;
+      margin: 0 auto;
+      border: 3px solid var(--primary-color);
+      animation: float 4s ease-in-out infinite, glow 3s ease-in-out infinite;
+    }
+    
+    .profile-image::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 110%;
+      height: 110%;
+      background: var(--gradient-primary);
+      border-radius: var(--radius-xl);
+      z-index: -1;
+      opacity: 0.2;
+      filter: blur(30px);
+    }
+    
+    .profile-content h2 {
+      font-size: 2.2rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+      font-weight: 800;
+    }
+    
+    .profile-content .role {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .profile-content .role i {
+      font-size: 1.5rem;
+    }
+    
+    .profile-content p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 1.05rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
+    }
+    
+    .stat-item {
+      background: var(--bg-secondary);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    [data-theme="dark"] .stat-item {
+      background: var(--bg-tertiary);
+    }
+    
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: var(--spacing-xs);
+    }
+    
+    /* ==================== EXPERIENCE TIMELINE ==================== */
+    
+    .timeline-section {
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-weight: 800;
+    }
+    
+    .section-title i {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+    }
+    
+    .timeline {
+      position: relative;
+      padding-left: var(--spacing-lg);
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-lg);
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 0;
+      width: 15px;
+      height: 15px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 0 3px var(--primary-color);
+    }
+    
+    [data-theme="dark"] .timeline-item::before {
+      border-color: var(--bg-card);
+    }
+    
+    .timeline-item h3 {
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      font-weight: 700;
+    }
+    
+    .timeline-item .position {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .timeline-item .date {
+      color: var(--text-tertiary);
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .timeline-item p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    /* ==================== SKILLS SECTION ==================== */
+    
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .skill-card {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    [data-theme="dark"] .skill-card {
+      border-color: #3f4651;
+    }
+    
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+    
+    .skill-card h3 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-weight: 700;
+    }
+    
+    .skill-card i {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      min-width: 30px;
+    }
+    
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    
+    .skill-tag {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid #e0e7ff;
+      transition: all var(--transition-fast);
+    }
+    
+    [data-theme="dark"] .skill-tag {
+      background: var(--bg-tertiary);
+      border-color: #3f4651;
+    }
+    
+    .skill-tag:hover {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      transform: scale(1.05);
+    }
+    
+    /* ==================== VALUES SECTION ==================== */
+    
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .value-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+    
+    [data-theme="dark"] .value-card {
+      background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+    }
+    
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .value-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .value-card h3 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 700;
+    }
+    
+    [data-theme="dark"] .value-card h3 {
+      color: #fff;
+    }
+    
+    .value-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    
+    [data-theme="dark"] .value-card p {
+      color: #e2e8f0;
+    }
+    
+    /* ==================== CTA SECTION ==================== */
+    
+    .cta-section {
+      background: var(--gradient-primary);
+      color: var(--text-light);
+      padding: var(--spacing-3xl) var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      margin-top: var(--spacing-3xl);
+      margin-bottom: var(--spacing-3xl);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .cta-section h2 {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-md);
+      font-weight: 800;
+    }
+    
+    .cta-section p {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-lg);
+      opacity: 0.95;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .cta-btn {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .cta-btn-primary {
+      background: white;
+      color: var(--primary-color);
+    }
+    
+    .cta-btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cta-btn-secondary {
+      border: 2px solid white;
+      color: white;
+      background: transparent;
+    }
+    
+    .cta-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+    
+    /* ==================== FUN FACTS SECTION ==================== */
+    
+    .fun-facts-section {
+      background: var(--gradient-hero);
+      padding: var(--spacing-2xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    [data-theme="dark"] .fun-facts-section {
+      background: var(--bg-tertiary);
+    }
+    
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .fact-item {
+      background: var(--bg-card);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-base);
+      border: 2px solid transparent;
+    }
+    
+    .fact-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary-color);
+    }
+    
+    .fact-emoji {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      display: block;
+    }
+    
+    .fact-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      display: block;
+    }
+    
+    .fact-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: var(--spacing-xs);
+    }
+    
+    /* ==================== INTERESTS SECTION ==================== */
+    
+    .interests-section {
+      margin-bottom: var(--spacing-3xl);
+    }
+    
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .interest-item {
+      background: var(--bg-card);
+      border: 1px solid #e0e7ff;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+      cursor: default;
+    }
+    
+    [data-theme="dark"] .interest-item {
+      border-color: #3f4651;
+    }
+    
+    .interest-item:hover {
+      transform: scale(1.05);
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .interest-item:hover .interest-icon,
+    .interest-item:hover .interest-name {
+      color: white;
+    }
+    
+    .interest-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-xs);
+      display: block;
+      transition: color var(--transition-fast);
+    }
+    
+    .interest-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: color var(--transition-fast);
+    }
+    
+    /* ==================== JOURNEY TIMELINE ==================== */
+    
+    .journey-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: var(--spacing-2xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-3xl);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .journey-card::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      font-size: 150px;
+      opacity: 0.1;
+      font-family: Georgia, serif;
+    }
+    
+    .journey-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .journey-card p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      opacity: 0.95;
+    }
+    
+    .journey-card .author {
+      margin-top: var(--spacing-md);
+      font-style: italic;
+      opacity: 0.8;
+    }
+    
+    /* ==================== ENHANCED FOOTER ==================== */
+    
+    .about-footer {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      padding: var(--spacing-2xl) var(--spacing-lg);
+      margin-top: var(--spacing-xl);
+    }
+    
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--spacing-xl);
+    }
+    
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+    }
+    
+    .footer-brand p {
+      opacity: 0.8;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    
+    .footer-column h4 {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--primary-color);
+    }
+    
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-column ul li {
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .footer-column ul li a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    
+    .footer-column ul li a:hover {
+      color: var(--primary-color);
+    }
+    
+    .footer-social {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+    
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: all var(--transition-base);
+    }
+    
+    .footer-social a:hover {
+      background: var(--primary-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
+      max-width: 1100px;
+      margin: var(--spacing-xl) auto 0;
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+    
+    .footer-bottom p {
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+    
+    /* ==================== RESPONSIVE ==================== */
+    
+    @media (max-width: 768px) {
+      .about-hero {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+        margin-bottom: var(--spacing-2xl);
+      }
+      
+      .about-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .about-hero .subtitle {
+        font-size: 1rem;
+      }
+      
+      .profile-section {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-2xl);
+      }
+      
+      .quick-stats {
+        grid-template-columns: 1fr;
+        margin: var(--spacing-md) 0;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+      
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+      }
+      
+      .cta-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .facts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .interests-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .footer-social {
+        justify-content: center;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
   
   <!-- Navigation -->
-  <nav class="site-nav" id="navbar">
-    <div class="nav-container">
-      <a href="/" class="nav-logo">Martin Li</a>
-      
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <ul class="nav-links" id="navLinks">
-        <li><a href="/">Home</a></li>
-        <li><a href="/#projects">Projects</a></li>
-        <li><a href="/Blog.html">Blog</a></li>
-        <li><a href="/Resume.pdf" target="_blank">Resume</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <li><a href="/old-version/index.html" class="btn-old-version">🕰️ Old Version</a></li>
-      </ul>
-    </div>
-  </nav>
+  <!-- Canonical site navigation — single source of truth for every page -->
+<nav class="site-nav" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">Martin Li</a>
+
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/learning.html">Learning</a></li>
+      <li><a href="/about/" class="active">About</a></li>
+      <li><a href="/Resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+      <li><a href="/#contact">Contact</a></li>
+      <li><a href="/old-version/index.html" class="btn-old-version">🕰️ Old Version</a></li>
+      <li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
   
-  <!-- Main Content -->
-  <main>
-    <section class="blog-hero">
-  <div class="blog-hero-content">
-    <h1>About Me</h1>
+  <!-- Hero Section -->
+  <section class="about-hero">
+    <h1>👋 About Me</h1>
+    <p class="subtitle">Software Engineer, AI Enthusiast, and Continuous Learner</p>
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-briefcase"></i> JPMorgan Chase
+      </span>
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-graduation-cap"></i> Georgia Tech
+      </span>
+      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+        <i class="fas fa-robot"></i> AI Specialist
+      </span>
+    </div>
+  </section>
+  
+  <div class="about-container">
     
-    <p>Learn more about Martin Li - Software Engineer, Developer, and Technology Enthusiast</p>
+    <!-- Profile Section -->
+    <section class="profile-section">
+      <div class="profile-image">
+        <img src="/img/profile-pic.jpg" alt="Martin Li - Profile Picture">
+      </div>
+      <div class="profile-content">
+        <h2>Martin Li</h2>
+        <div class="role">
+          <i class="fas fa-code"></i>
+          Software Engineer at JPMorgan Chase
+        </div>
+        <p>I'm a passionate software engineer building scalable financial systems at JPMorgan Chase. With a strong foundation in Computer Science and a specialized focus on Artificial Intelligence, I bridge the gap between cutting-edge technology and real-world business impact.</p>
+        <p>Currently pursuing my Master's degree in Computer Science with an AI specialization at Georgia Tech, I'm committed to continuous learning and staying at the forefront of technological innovation.</p>
+        
+        <div class="quick-stats">
+          <div class="stat-item">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Active Learning Tracks</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Current Role & Education -->
+    <section class="timeline-section">
+      <h2 class="section-title">
+        <i class="fas fa-briefcase"></i>
+        Experience & Education
+      </h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <h3>Software Engineer</h3>
+          <div class="position">JPMorgan Chase</div>
+          <div class="date">Present</div>
+          <p>Building and maintaining scalable financial systems that process billions of transactions. Specializing in enterprise software architecture, system optimization, and AI integration for financial technology solutions.</p>
+        </div>
+        
+        <div class="timeline-item">
+          <h3>Master of Science in Computer Science</h3>
+          <div class="position">Georgia Institute of Technology (OMSCS)</div>
+          <div class="date">In Progress | AI Specialization</div>
+          <p>Deepening expertise in Artificial Intelligence, Machine Learning, and advanced computer science concepts through one of the world's leading online graduate programs.</p>
+        </div>
+        
+        <div class="timeline-item">
+          <h3>Bachelor of Science in Computer Science</h3>
+          <div class="position">Graduated 2019</div>
+          <div class="date">Foundation in Software Engineering</div>
+          <p>Built strong fundamentals in algorithms, data structures, systems design, and software engineering principles that form the backbone of my professional work.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section class="timeline-section">
+      <h2 class="section-title">
+        <i class="fas fa-lightbulb"></i>
+        Technical Expertise
+      </h2>
+      
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3><i class="fas fa-brain"></i> AI & Machine Learning</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">TensorFlow</span>
+            <span class="skill-tag">PyTorch</span>
+            <span class="skill-tag">Scikit-learn</span>
+            <span class="skill-tag">NLP</span>
+            <span class="skill-tag">Deep Learning</span>
+          </div>
+        </div>
+        
+        <div class="skill-card">
+          <h3><i class="fas fa-code"></i> Programming Languages</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">C++</span>
+            <span class="skill-tag">SQL</span>
+          </div>
+        </div>
+        
+        <div class="skill-card">
+          <h3><i class="fas fa-cube"></i> Web & Backend</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Flask</span>
+            <span class="skill-tag">Django</span>
+            <span class="skill-tag">Spring Boot</span>
+          </div>
+        </div>
+        
+        <div class="skill-card">
+          <h3><i class="fas fa-cloud"></i> Cloud & DevOps</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Docker</span>
+            <span class="skill-tag">Kubernetes</span>
+            <span class="skill-tag">CI/CD</span>
+            <span class="skill-tag">Jenkins</span>
+          </div>
+        </div>
+        
+        <div class="skill-card">
+          <h3><i class="fas fa-database"></i> Databases</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">MongoDB</span>
+            <span class="skill-tag">Redis</span>
+            <span class="skill-tag">Elasticsearch</span>
+            <span class="skill-tag">DynamoDB</span>
+          </div>
+        </div>
+        
+        <div class="skill-card">
+          <h3><i class="fas fa-chart-line"></i> Data & Analytics</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Pandas</span>
+            <span class="skill-tag">NumPy</span>
+            <span class="skill-tag">Matplotlib</span>
+            <span class="skill-tag">Statistical Analysis</span>
+            <span class="skill-tag">Visualization</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Values Section -->
+    <section class="timeline-section">
+      <h2 class="section-title">
+        <i class="fas fa-heart"></i>
+        Core Values
+      </h2>
+      
+      <div class="values-grid">
+        <div class="value-card fade-in-up">
+          <div class="value-icon">🚀</div>
+          <h3>Innovation</h3>
+          <p>Constantly exploring new technologies and approaches to solve complex problems creatively.</p>
+        </div>
+        
+        <div class="value-card fade-in-up">
+          <div class="value-icon">📚</div>
+          <h3>Continuous Learning</h3>
+          <p>Believing in the power of education and staying updated with industry trends and best practices.</p>
+        </div>
+        
+        <div class="value-card fade-in-up">
+          <div class="value-icon">🤝</div>
+          <h3>Collaboration</h3>
+          <p>Working effectively in teams, sharing knowledge, and building solutions together.</p>
+        </div>
+        
+        <div class="value-card fade-in-up">
+          <div class="value-icon">⚡</div>
+          <h3>Excellence</h3>
+          <p>Striving for high-quality code, robust systems, and impactful results in everything I do.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Fun Facts Section -->
+    <section class="fun-facts-section">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i>
+        Fun Facts
+      </h2>
+      
+      <div class="facts-grid">
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">☕</span>
+          <span class="fact-number">1000+</span>
+          <span class="fact-label">Cups of coffee consumed</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">🐛</span>
+          <span class="fact-number">∞</span>
+          <span class="fact-label">Bugs squashed</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">💻</span>
+          <span class="fact-number">10K+</span>
+          <span class="fact-label">Lines of code written</span>
+        </div>
+        <div class="fact-item fade-in-up">
+          <span class="fact-emoji">📖</span>
+          <span class="fact-number">50+</span>
+          <span class="fact-label">Tech books read</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Interests Section -->
+    <section class="interests-section timeline-section">
+      <h2 class="section-title">
+        <i class="fas fa-gamepad"></i>
+        When I'm Not Coding
+      </h2>
+      
+      <div class="interests-grid">
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🥊</span>
+          <span class="interest-name">Boxing</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🎮</span>
+          <span class="interest-name">Gaming</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">📚</span>
+          <span class="interest-name">Reading</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🎬</span>
+          <span class="interest-name">Movies</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🏋️</span>
+          <span class="interest-name">Fitness</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">✈️</span>
+          <span class="interest-name">Travel</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">🧠</span>
+          <span class="interest-name">AI Research</span>
+        </div>
+        <div class="interest-item fade-in-up">
+          <span class="interest-icon">📈</span>
+          <span class="interest-name">Investing</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Personal Philosophy -->
+    <section class="journey-card fade-in-up">
+      <h3>My Philosophy</h3>
+      <p>I believe in building technology that makes a real difference. Every line of code is an opportunity to create something meaningful, to solve a problem that matters, and to push the boundaries of what's possible. The journey from idea to impact is what drives me every day.</p>
+      <p class="author">— Martin Li</p>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Let's Work Together</h2>
+      <p>I'm always interested in discussing new projects, innovative ideas, and opportunities to create meaningful impact.</p>
+      <div class="cta-buttons">
+        <a href="mailto:simplisticmartin@gmail.com" class="cta-btn cta-btn-primary">
+          <i class="fas fa-envelope"></i>
+          Send me an Email
+        </a>
+        <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-secondary">
+          <i class="fab fa-github"></i>
+          Visit GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-secondary">
+          <i class="fab fa-linkedin"></i>
+          Connect on LinkedIn
+        </a>
+      </div>
+    </section>
     
   </div>
-</section>
-
-<article class="blog-post-content">
-  <h2 id="hello-im-martin-li-">Hello! I’m Martin Li 👋</h2>
-
-<p>I’m a <strong>Software Engineer at JPMorgan Chase</strong> passionate about building scalable financial systems and leveraging artificial intelligence to solve complex problems. I hold a Bachelor’s degree in Computer Science (2019) and am currently completing my <strong>Master’s in Computer Science with AI Specialization at Georgia Tech (OMSCS)</strong>.</p>
-
-<p><img src="/img/profile-pic.jpg" alt="Profile Picture" style="max-width: 300px; border-radius: 1rem; box-shadow: var(--shadow-xl); margin: 2rem auto; display: block;" /></p>
-
-<h3 id="what-i-do">What I Do</h3>
-
-<p>I specialize in:</p>
-<ul>
-  <li><strong>Enterprise Software Engineering</strong> - Building scalable financial systems at JPMorgan Chase</li>
-  <li><strong>Artificial Intelligence &amp; Machine Learning</strong> - Applying AI techniques to solve real-world problems</li>
-  <li><strong>Full-Stack Development</strong> - Creating robust, high-performance web applications</li>
-  <li><strong>Data Science &amp; Analytics</strong> - Leveraging data to derive insights and drive business decisions</li>
-</ul>
-
-<h3 id="my-journey">My Journey</h3>
-
-<p><strong>Current:</strong></p>
-<ul>
-  <li>💼 <strong>Software Engineer</strong> at JPMorgan Chase - Building enterprise financial systems</li>
-  <li>🎓 <strong>Graduate Student</strong> at Georgia Tech - MS in Computer Science (AI Specialization)</li>
-</ul>
-
-<p><strong>Background:</strong></p>
-<ul>
-  <li>🎓 Bachelor’s in Computer Science (2019)</li>
-  <li>💻 Professional software engineering experience in financial technology</li>
-</ul>
-
-<p>This blog serves as a platform where I:</p>
-<ul>
-  <li>Share insights from working on large-scale financial systems</li>
-  <li>Document my graduate studies in AI and machine learning</li>
-  <li>Write tutorials on software engineering and emerging technologies</li>
-  <li>Connect with the developer and AI research community</li>
-</ul>
-
-<h3 id="technologies-i-work-with">Technologies I Work With</h3>
-
-<p><strong>Languages:</strong> Python, Java, JavaScript, C++, SQL<br />
-<strong>AI/ML:</strong> TensorFlow, PyTorch, Scikit-learn, Pandas, NumPy<br />
-<strong>Frameworks:</strong> Spring Boot, Node.js, React, Flask, Django<br />
-<strong>Cloud &amp; Tools:</strong> AWS, Docker, Kubernetes, Git, Jenkins<br />
-<strong>Databases:</strong> PostgreSQL, MongoDB, Redis<br />
-<strong>Focus Areas:</strong> Artificial Intelligence, Machine Learning, Full-Stack Development, Financial Technology</p>
-
-<h3 id="lets-connect">Let’s Connect!</h3>
-
-<p>I’m always open to discussing new projects, creative ideas, or opportunities to collaborate. Feel free to reach out!</p>
-
-<ul>
-  <li><strong>GitHub:</strong> <a href="https://github.com/simplisticmartin">github.com/simplisticmartin</a></li>
-  <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/simplisticmartin">linkedin.com/in/simplisticmartin</a></li>
-  <li><strong>Email:</strong> simplisticmartin@gmail.com</li>
-</ul>
-
-<h3 id="education">Education</h3>
-
-<p><strong>Georgia Institute of Technology</strong> <em>(In Progress)</em><br />
-Master of Science in Computer Science<br />
-Specialization: Artificial Intelligence<br />
-Program: OMSCS (Online Master of Science in Computer Science)</p>
-
-<p><strong>[Your University]</strong> <em>(December 2019)</em><br />
-Bachelor of Science in Computer Science</p>
-
-<hr />
-
-<p><em>This modern portfolio and blog is built with Jekyll and hosted on GitHub Pages. Check out the <a href="/old-version/index.html">old version</a> to see how far we’ve come!</em></p>
-
-</article>
-
-  </main>
   
   <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/#projects">Projects</a>
-        <a href="/Blog.html">Blog</a>
-        <a href="/Resume.pdf">Resume</a>
-        <a href="/old-version/index.html">Old Version</a>
+  <!-- Canonical site footer — single source of truth for every page -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Martin Li</h3>
+        <p>Software Engineer at JPMorgan Chase. Building scalable systems and exploring the frontiers of AI while pursuing my Master's at Georgia Tech.</p>
+        <div class="footer-social">
+          <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="mailto:simplisticmartin@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
       </div>
-      <p class="footer-copyright">
-        &copy; 2026 Martin Li. Built with Jekyll & GitHub Pages.
-      </p>
+      <div class="footer-column">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/learning.html">Learning</a></li>
+          <li><a href="/Resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+          <li><a href="/old-version/index.html">Old Version</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="mailto:simplisticmartin@gmail.com">Email Me</a></li>
+          <li><a href="https://github.com/simplisticmartin" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
     </div>
-  </footer>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 Martin Li. All rights reserved.</p>
+      <p class="footer-made-with">Built with <span class="heart">❤</span> using Jekyll &amp; GitHub Pages</p>
+    </div>
+  </div>
+</footer>
+
+  
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
   
   <!-- Scripts -->
   <script src="/assets/js/modern.js"></script>
-  
+
+  <script>
+    // ==================== SCROLL PROGRESS BAR ====================
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      scrollProgress.style.width = scrolled + '%';
+    });
+    
+    // ==================== BACK TO TOP BUTTON ====================
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // ==================== SCROLL ANIMATIONS ====================
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 100);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // ==================== NAVBAR HIDE ON SCROLL ====================
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > lastScroll && currentScroll > 100) {
+        navbar.style.transform = 'translateY(-100%)';
+      } else {
+        navbar.style.transform = 'translateY(0)';
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
 </body>
 </html>

@@ -49,6 +49,10 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  # old-version is a static archive; don't let its nested legacy _posts
+  # leak into (and collide with) the main site's blog.
+  - old-version/_posts
+  - old-version/_drafts
 
 # Collections
 collections:
