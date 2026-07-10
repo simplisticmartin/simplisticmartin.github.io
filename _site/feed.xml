@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Martin Li</title>
-    <description>Software Engineer at JPMorgan Chase specializing in full-stack development, artificial intelligence, and data science. Currently completing Master&apos;s in Computer Science (AI Specialization) at Georgia Tech. Passionate about building scalable systems and leveraging AI to solve complex problems.
+    <description>Full-stack Software Engineer with 5+ years building enterprise financial microservices in Java, Spring, Spring Boot, React, TypeScript, and SQL Server on AWS at JPMorgan Chase. Georgia Tech M.S. in Computer Science (Artificial Intelligence) and AWS Certified Cloud Practitioner.
 </description>
     <link>https://simplisticmartin.github.io/</link>
     <atom:link href="https://simplisticmartin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 17 Jun 2026 00:01:02 -0500</pubDate>
-    <lastBuildDate>Wed, 17 Jun 2026 00:01:02 -0500</lastBuildDate>
+    <pubDate>Fri, 10 Jul 2026 02:25:40 -0500</pubDate>
+    <lastBuildDate>Fri, 10 Jul 2026 02:25:40 -0500</lastBuildDate>
     <generator>Jekyll v3.10.0</generator>
     
       <item>

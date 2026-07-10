@@ -1,10 +1,10 @@
 # Site settings
 title: "Martin Li"
-tagline: "Software Engineer @ JPMorgan Chase | Georgia Tech OMSCS (AI)"
+tagline: "Software Engineer II @ JPMorgan Chase | Georgia Tech M.S. CS (AI)"
 description: >
-  Software Engineer at JPMorgan Chase specializing in full-stack development, artificial intelligence, and data science.
-  Currently completing Master's in Computer Science (AI Specialization) at Georgia Tech.
-  Passionate about building scalable systems and leveraging AI to solve complex problems.
+  Full-stack Software Engineer with 5+ years building enterprise financial microservices in Java,
+  Spring, Spring Boot, React, TypeScript, and SQL Server on AWS at JPMorgan Chase.
+  Georgia Tech M.S. in Computer Science (Artificial Intelligence) and AWS Certified Cloud Practitioner.
 
 email: simplisticmartin@gmail.com
 author: Martin Li

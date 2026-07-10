@@ -422,6 +422,25 @@ function initReadingProgress() {
 }
 initReadingProgress();
 
+// ==================== FADE-IN-UP REVEAL ====================
+// Pages style `.fade-in-up` as opacity:0 until `.visible` is added.
+// Kept here so any page loading modern.js reveals them, even without its own observer.
+function initFadeInUp() {
+  const items = document.querySelectorAll('.fade-in-up');
+  if (!items.length) return;
+
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (!entry.isIntersecting) return;
+      setTimeout(() => entry.target.classList.add('visible'), index * 100);
+      fadeObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  items.forEach(el => fadeObserver.observe(el));
+}
+initFadeInUp();
+
 // ==================== BACK TO TOP ====================
 function initBackToTop() {
   const btn = document.getElementById('backToTop') || document.querySelector('.back-to-top');

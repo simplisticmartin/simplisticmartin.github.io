@@ -5,22 +5,40 @@
 
 const projects = [
   {
+    title: "ClearSpeak — AI Speech Coach",
+    description: "Cross-platform mobile app with an on-device LLM (llama.rn) and speech-to-text (whisper.rn) for real-time feedback — filler-word detection, live coaching, and progress analytics.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2355d6aa' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🎤%3C/text%3E%3C/svg%3E",
+    tags: ["React Native", "TypeScript", "Expo", "On-device LLM", "Zustand"],
+    github: null,
+    demo: null,
+    featured: true
+  },
+  {
+    title: "ML Model Optimization",
+    description: "Compared backpropagation, genetic algorithms, and MIMIC randomized-optimization techniques for heart-disease classification, reaching about 0.945 accuracy.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2314b8a6' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🧠%3C/text%3E%3C/svg%3E",
+    tags: ["Python", "scikit-learn", "Neural Networks", "Randomized Optimization"],
+    github: null,
+    demo: null,
+    featured: true
+  },
+  {
     title: "Massive Multiplayer Game",
     description: "A real-time multiplayer game built with modern web technologies. Features include real-time synchronization, player interactions, and dynamic game mechanics.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2355d6aa' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🎮%3C/text%3E%3C/svg%3E",
     tags: ["JavaScript", "WebSocket", "Node.js", "Real-time"],
     github: null,
     demo: null,
-    featured: true
+    featured: false
   },
   {
     title: "Clearsyn",
-    description: "An innovative application designed to streamline communication and collaboration. Built with a focus on user experience and performance.",
+    description: "A platform where users request custom web designs. Responsive front end in HTML5, CSS, JavaScript, and jQuery, with node.js-backed contact forms, deployed on Google Cloud Compute.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2357ad68' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E💬%3C/text%3E%3C/svg%3E",
-    tags: ["Web Development", "UI/UX", "Full-Stack"],
+    tags: ["JavaScript", "jQuery", "Node.js", "Google Cloud"],
     github: null,
     demo: null,
-    featured: true
+    featured: false
   },
   {
     title: "Portfolio Website",
