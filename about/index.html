@@ -1,15 +1,18 @@
 ---
 layout: none
 permalink: /about/
+og_type: profile
+seo_title: "About Martin Li — Software Engineer II @ JPMorgan Chase | Full-Stack, Cloud & AI"
+description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack, cloud, and SRE across a 30+ application portfolio. M.S. CS (AI), Georgia Tech. AWS Certified Cloud Practitioner."
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="About Martin Li - Software Engineer II at JPMorgan Chase. 5+ years building enterprise financial microservices in Java, Spring Boot, React, and TypeScript on AWS. Georgia Tech M.S. in Computer Science (AI).">
-  <title>About | Martin Li</title>
-  
+
+  {% include seo.html %}
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -885,6 +888,8 @@ permalink: /about/
   
   <!-- Navigation -->
   {% include navigation.html %}
+
+  <main id="main" tabindex="-1">
   
   <!-- Hero Section -->
   <section class="about-hero">
@@ -911,7 +916,9 @@ permalink: /about/
     <!-- Profile Section -->
     <section class="profile-section">
       <div class="profile-image">
-        <img src="/img/profile-pic.jpg" alt="Martin Li - Profile Picture">
+        <img src="/assets/images/profile-512.jpg"
+             alt="Martin Li, Software Engineer II at JPMorgan Chase"
+             width="512" height="512" fetchpriority="high" decoding="async">
       </div>
       <div class="profile-content">
         <h2>Martin Li</h2>
@@ -920,7 +927,7 @@ permalink: /about/
           Software Engineer II at JPMorgan Chase &amp; Co.
         </div>
         <p>I'm a full-stack software engineer with 5+ years building enterprise financial microservices in Java, Spring, Spring Boot, React, TypeScript, and SQL Server on AWS. My work spans fund onboarding, due-diligence and factsheet tooling, and a portfolio-management toolkit used by portfolio managers and clients.</p>
-        <p>I also own SRE, observability, and application resiliency across a 30+ application team portfolio. I'm finishing my M.S. in Computer Science (Artificial Intelligence) at Georgia Tech, and I'm an AWS Certified Cloud Practitioner.</p>
+        <p>I also own SRE, observability, and application resiliency across a 30+ application team portfolio. I hold an M.S. in Computer Science (Artificial Intelligence) from Georgia Tech, and I'm an AWS Certified Cloud Practitioner.</p>
 
         <div class="quick-stats">
           <div class="stat-item">
@@ -978,7 +985,7 @@ permalink: /about/
         <div class="timeline-item">
           <h3>M.S., Computer Science (Artificial Intelligence)</h3>
           <div class="position">Georgia Institute of Technology (OMSCS)</div>
-          <div class="date">Expected May 2026 | GPA 3.6</div>
+          <div class="date">May 2026 | GPA 3.6</div>
           <p>Coursework: Machine Learning; Artificial Intelligence; ML for Trading; Data &amp; Visual Analytics; AI, Ethics &amp; Society.</p>
         </div>
 
@@ -1255,6 +1262,8 @@ permalink: /about/
     
   </div>
   
+  </main>
+
   <!-- Footer -->
   {% include footer.html %}
   

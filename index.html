@@ -1,28 +1,35 @@
 ---
 layout: none
+seo_title: "Martin Li — Software Engineer II @ JPMorgan Chase | Java, Spring Boot, React, AWS"
+description: "Software Engineer II at JPMorgan Chase — 5+ years building enterprise financial microservices in Java, Spring Boot, React, and TypeScript on AWS. M.S. CS (AI), Georgia Tech."
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Martin Li - Software Engineer II at JPMorgan Chase. Full-stack engineer with 5+ years building enterprise financial microservices in Java, Spring Boot, React, and TypeScript on AWS. Georgia Tech M.S. in Computer Science (AI).">
-  <title>Martin Li | Software Engineer & Developer</title>
-  
+
+  {% include seo.html %}
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/assets/css/modern.css">
-  
-  <!-- Favicon -->
+
+  <!-- LCP image: hero portrait -->
+  <link rel="preload" as="image" href="/assets/images/profile-512.jpg" fetchpriority="high">
+
+  <!-- Favicon / PWA -->
   <link rel="icon" type="image/png" href="/assets/images/favicon.png">
-  
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#55d6aa">
+
   <style>
     /* ==================== ENHANCED ANIMATIONS ==================== */
     @keyframes fadeInUp {
@@ -578,6 +585,8 @@ layout: none
   
   <!-- Navigation -->
   {% include navigation.html %}
+
+  <main id="main" tabindex="-1">
   
   <!-- Page Loader -->
   <div class="page-loader">
@@ -592,19 +601,32 @@ layout: none
     <div class="hero-background" id="particlesBackground"></div>
     
     <div class="hero-content">
-      <img src="/img/profile-pic.jpg" alt="Martin Li" class="hero-image">
+      <img src="/assets/images/profile-512.jpg"
+           alt="Martin Li, Software Engineer II at JPMorgan Chase"
+           class="hero-image" width="150" height="150"
+           fetchpriority="high" decoding="async">
       
       <h1>Hi, I'm Martin Li</h1>
       <p class="tagline">Software Engineer II @ JPMorgan Chase</p>
       <p class="description">
         Full-stack software engineer with 5+ years building enterprise financial microservices in
         Java, Spring Boot, React, and TypeScript on AWS. I own SRE and application resiliency for a
-        30+ application portfolio, and I'm finishing my M.S. in Computer Science (Artificial
-        Intelligence) at Georgia Tech.
+        30+ application portfolio, and I hold an M.S. in Computer Science (Artificial Intelligence)
+        from Georgia Tech.
       </p>
       
+      <p class="hero-meta">
+        <span class="hero-pill hero-pill-open"><span class="dot"></span> Open to Software Engineer roles</span>
+        <span class="hero-pill"><i class="fas fa-location-dot"></i> Plano, TX</span>
+        <span class="hero-pill"><i class="fab fa-aws"></i> AWS Certified</span>
+        <span class="hero-pill"><i class="fas fa-graduation-cap"></i> M.S. CS (AI), Georgia Tech</span>
+      </p>
+
       <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="#experience" class="btn btn-primary">View Experience</a>
+        <a href="/Resume.pdf" class="btn btn-outline" target="_blank" rel="noopener">
+          <i class="fas fa-file-arrow-down"></i> Download Résumé
+        </a>
         <a href="#contact" class="btn btn-outline">Get In Touch</a>
       </div>
       
@@ -678,6 +700,133 @@ layout: none
     </div>
   </section>
   
+  <!-- Experience Section -->
+  <section class="section reveal" id="experience" style="background: var(--bg-secondary);">
+    <div class="section-header">
+      <h2 class="section-title fade-in-up">Experience</h2>
+      <p class="section-description fade-in-up">
+        Five-plus years shipping production systems in financial services — full-stack product work,
+        cloud modernization, and the reliability engineering that keeps it all up.
+      </p>
+    </div>
+
+    <div class="xp-list">
+      <article class="xp-item">
+        <div class="xp-head">
+          <div>
+            <h3 class="xp-role">Software Engineer II</h3>
+            <p class="xp-org">JPMorgan Chase &amp; Co. &middot; Plano, TX</p>
+          </div>
+          <span class="xp-date">Jul 2022 &ndash; Present</span>
+        </div>
+        <ul class="xp-points">
+          <li>Shipped fund-onboarding, due-diligence, and factsheet tools plus a portfolio-management toolkit used by portfolio managers and clients — React/TypeScript front ends on Java/Spring Boot microservices (Moneta Boot) over Microsoft SQL Server.</li>
+          <li>Own SRE, observability, and application resiliency for a <strong>30+ application</strong> team portfolio, authoring AutoSys schedules and alerting that catch failures before users do.</li>
+          <li>Cut deployment time <strong>up to 40%</strong> by modernizing legacy services to the latest Spring Boot and containerizing delivery on Kubernetes, Cloud Foundry, AWS, and Docker with Jenkins CI/CD.</li>
+          <li>Accelerated new-fund onboarding with Liquibase-managed schema changes and tuned SQL Server queries, cutting manual setup and configuration errors.</li>
+        </ul>
+        <div class="xp-tags">
+          <span class="xp-tag">Java</span>
+          <span class="xp-tag">Spring Boot</span>
+          <span class="xp-tag">React</span>
+          <span class="xp-tag">TypeScript</span>
+          <span class="xp-tag">SQL Server</span>
+          <span class="xp-tag">AWS</span>
+          <span class="xp-tag">Kubernetes</span>
+          <span class="xp-tag">Jenkins</span>
+          <span class="xp-tag">AutoSys</span>
+        </div>
+      </article>
+
+      <article class="xp-item">
+        <div class="xp-head">
+          <div>
+            <h3 class="xp-role">Software Engineer Consultant</h3>
+            <p class="xp-org">Ouicruit &middot; Remote</p>
+          </div>
+          <span class="xp-date">Dec 2021 &ndash; Jun 2022</span>
+        </div>
+        <ul class="xp-points">
+          <li>Modernized Java/SQL API services with OpenAPI/Swagger, stronger validation, REST improvements, CI hardening, and expanded test coverage — improving median API latency by about <strong>30%</strong>.</li>
+        </ul>
+        <div class="xp-tags">
+          <span class="xp-tag">Java</span>
+          <span class="xp-tag">REST APIs</span>
+          <span class="xp-tag">OpenAPI/Swagger</span>
+          <span class="xp-tag">SQL</span>
+          <span class="xp-tag">CI/CD</span>
+        </div>
+      </article>
+
+      <article class="xp-item">
+        <div class="xp-head">
+          <div>
+            <h3 class="xp-role">Linux Consultant</h3>
+            <p class="xp-org">Oppenheimer &amp; Co. &middot; New York, NY</p>
+          </div>
+          <span class="xp-date">Dec 2020 &ndash; Jun 2021</span>
+        </div>
+        <ul class="xp-points">
+          <li>Automated secure 6&ndash;15 GB weekly financial file transfers with Linux, Bash, GPG, and scheduled jobs — reducing transfer errors by <strong>25%</strong> and supporting <strong>99.9%</strong> data integrity.</li>
+        </ul>
+        <div class="xp-tags">
+          <span class="xp-tag">Linux</span>
+          <span class="xp-tag">Bash</span>
+          <span class="xp-tag">GPG</span>
+          <span class="xp-tag">Automation</span>
+        </div>
+      </article>
+
+      <article class="xp-item">
+        <div class="xp-head">
+          <div>
+            <h3 class="xp-role">Software Engineer Intern</h3>
+            <p class="xp-org">Federal Home Loan Bank &middot; Jersey City, NJ</p>
+          </div>
+          <span class="xp-date">2019</span>
+        </div>
+        <ul class="xp-points">
+          <li>Built a QA data-visualization dashboard that reduced outsourced reporting costs by <strong>15%</strong> and streamlined recurring reporting workflows.</li>
+        </ul>
+        <div class="xp-tags">
+          <span class="xp-tag">Data Visualization</span>
+          <span class="xp-tag">Reporting</span>
+          <span class="xp-tag">QA</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Education & Certifications -->
+  <section class="section reveal" id="education">
+    <div class="section-header">
+      <h2 class="section-title fade-in-up">Education &amp; Certifications</h2>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <h3>M.S., Computer Science</h3>
+        <p>Georgia Institute of Technology<br>Specialization: Artificial Intelligence</p>
+        <span class="edu-meta">May 2026 &middot; GPA 3.6</span>
+      </div>
+
+      <div class="edu-card">
+        <div class="edu-icon">🏛️</div>
+        <h3>B.S., Computer Science</h3>
+        <p>The City College of New York</p>
+        <span class="edu-meta">2020</span>
+      </div>
+
+      <div class="edu-card">
+        <div class="edu-icon">☁️</div>
+        <h3>AWS Certified Cloud Practitioner</h3>
+        <p>Amazon Web Services</p>
+        <span class="edu-meta">Nov 2022</span>
+      </div>
+    </div>
+  </section>
+
   <!-- Projects Section -->
   <section class="section reveal" id="projects">
     <div class="section-header">
@@ -757,6 +906,8 @@ layout: none
     </div>
   </section>
   
+  </main>
+
   <!-- Footer -->
   {% include footer.html %}
   

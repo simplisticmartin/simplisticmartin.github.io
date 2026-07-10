@@ -1,0 +1,176 @@
+<!-- Canonical SEO / social / structured-data block. Included from every page's <head>. -->
+{%- if page.layout == 'post' -%}
+  {%- assign seo_title = page.title | append: ' | ' | append: site.title -%}
+  {%- assign og_type = 'article' -%}
+{%- else -%}
+  {%- assign seo_title = page.seo_title | default: page.title | default: site.title -%}
+  {%- assign og_type = page.og_type | default: 'website' -%}
+{%- endif -%}
+{%- assign seo_desc = page.description | default: site.description | strip_newlines | strip -%}
+{%- assign seo_url = page.url | absolute_url -%}
+{%- assign seo_image = page.image | default: '/assets/images/og-card.jpg' | absolute_url -%}
+{%- assign person_image = '/assets/images/profile-512.jpg' | absolute_url -%}
+{%- assign home_url = '/' | absolute_url -%}
+
+<title>{{ seo_title }}</title>
+<meta name="description" content="{{ seo_desc | escape }}">
+<meta name="author" content="{{ site.author }}">
+<link rel="canonical" href="{{ seo_url }}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+<!-- Open Graph -->
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="{{ seo_title | escape }}">
+<meta property="og:description" content="{{ seo_desc | escape }}">
+<meta property="og:url" content="{{ seo_url }}">
+<meta property="og:image" content="{{ seo_image }}">
+{%- unless page.image %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{%- endunless %}
+<meta property="og:image:alt" content="{% if page.image %}{{ page.title | escape }}{% else %}Martin Li — Software Engineer II at JPMorgan Chase{% endif %}">
+{%- if page.layout == 'post' %}
+<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+<meta property="article:author" content="{{ site.author }}">
+{%- for cat in page.categories %}
+<meta property="article:section" content="{{ cat }}">
+{%- endfor %}
+{%- for tag in page.tags %}
+<meta property="article:tag" content="{{ tag }}">
+{%- endfor %}
+{%- endif %}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo_title | escape }}">
+<meta name="twitter:description" content="{{ seo_desc | escape }}">
+<meta name="twitter:image" content="{{ seo_image }}">
+<meta name="twitter:image:alt" content="Martin Li — Software Engineer II at JPMorgan Chase">
+
+<!-- Scroll-reveal effects hide content until JS runs. If JS is blocked
+     (corporate proxies, text browsers, some crawlers), show everything. -->
+<noscript>
+  <style>
+    .reveal, .reveal-left, .reveal-right, .reveal-scale,
+    .fade-in-up, .stagger-children > *, .page-loader {
+      opacity: 1 !important;
+      transform: none !important;
+      visibility: visible !important;
+    }
+    .page-loader { display: none !important; }
+  </style>
+</noscript>
+
+<!-- Structured data: Person / WebSite / WebPage (+ BlogPosting on articles) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": {{ home_url | append: '#person' | jsonify }},
+      "name": "Martin Li",
+      "givenName": "Martin",
+      "familyName": "Li",
+      "url": {{ home_url | jsonify }},
+      "image": {{ person_image | jsonify }},
+      "email": "mailto:{{ site.email }}",
+      "jobTitle": "Software Engineer II",
+      "description": {{ site.description | strip_newlines | strip | jsonify }},
+      "worksFor": {
+        "@type": "Organization",
+        "name": "JPMorgan Chase & Co.",
+        "url": "https://www.jpmorganchase.com"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Plano",
+        "addressRegion": "TX",
+        "addressCountry": "US"
+      },
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Georgia Institute of Technology",
+          "url": "https://www.gatech.edu"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "The City College of New York",
+          "url": "https://www.ccny.cuny.edu"
+        }
+      ],
+      "hasCredential": {
+        "@type": "EducationalOccupationalCredential",
+        "credentialCategory": "certification",
+        "name": "AWS Certified Cloud Practitioner",
+        "recognizedBy": {
+          "@type": "Organization",
+          "name": "Amazon Web Services"
+        }
+      },
+      "knowsAbout": [
+        "Software Engineering",
+        "Full-Stack Development",
+        "Java",
+        "Spring Boot",
+        "Microservices",
+        "REST APIs",
+        "React",
+        "TypeScript",
+        "AWS",
+        "Kubernetes",
+        "Docker",
+        "CI/CD",
+        "Site Reliability Engineering",
+        "Microsoft SQL Server",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Financial Technology"
+      ],
+      "sameAs": [
+        "https://github.com/{{ site.social.github }}",
+        "https://www.linkedin.com/in/{{ site.social.linkedin }}"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": {{ home_url | append: '#website' | jsonify }},
+      "url": {{ home_url | jsonify }},
+      "name": {{ site.title | jsonify }},
+      "description": {{ site.description | strip_newlines | strip | jsonify }},
+      "inLanguage": "en-US",
+      "publisher": { "@id": {{ home_url | append: '#person' | jsonify }} }
+    },
+    {
+      "@type": {% if page.url == '/about/' %}"ProfilePage"{% elsif page.layout == 'post' %}"WebPage"{% else %}"WebPage"{% endif %},
+      "@id": {{ seo_url | append: '#webpage' | jsonify }},
+      "url": {{ seo_url | jsonify }},
+      "name": {{ seo_title | jsonify }},
+      "description": {{ seo_desc | jsonify }},
+      "inLanguage": "en-US",
+      "isPartOf": { "@id": {{ home_url | append: '#website' | jsonify }} },
+      "about": { "@id": {{ home_url | append: '#person' | jsonify }} },
+      "primaryImageOfPage": { "@type": "ImageObject", "url": {{ seo_image | jsonify }} }
+    }{% if page.layout == 'post' %},
+    {
+      "@type": "BlogPosting",
+      "@id": {{ seo_url | append: '#article' | jsonify }},
+      "headline": {{ page.title | jsonify }},
+      "description": {{ seo_desc | jsonify }},
+      "image": {{ seo_image | jsonify }},
+      "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+      "dateModified": {{ page.date | date_to_xmlschema | jsonify }},
+      "url": {{ seo_url | jsonify }},
+      "mainEntityOfPage": { "@id": {{ seo_url | append: '#webpage' | jsonify }} },
+      "author": { "@id": {{ home_url | append: '#person' | jsonify }} },
+      "publisher": { "@id": {{ home_url | append: '#person' | jsonify }} },
+      "keywords": {{ page.tags | join: ', ' | jsonify }},
+      "articleSection": {{ page.categories | join: ', ' | jsonify }},
+      "inLanguage": "en-US"
+    }{% endif %}
+  ]
+}
+</script>

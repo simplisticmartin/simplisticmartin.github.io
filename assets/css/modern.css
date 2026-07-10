@@ -194,6 +194,7 @@ img {
   font-size: 1.5rem;
   font-weight: 700;
   font-family: var(--font-heading);
+  white-space: nowrap;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -233,7 +234,8 @@ img {
   width: 100%;
 }
 
-.btn-old-version {
+.btn-old-version,
+.btn-resume {
   padding: 0.5rem 1rem;
   background: var(--bg-tertiary);
   border-radius: var(--radius-full);
@@ -242,15 +244,29 @@ img {
   transition: all var(--transition-base);
 }
 
-.btn-old-version:hover {
+.btn-old-version:hover,
+.btn-resume:hover {
   background: var(--primary-color);
   color: white !important;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
-.btn-old-version::after {
+.btn-old-version::after,
+.btn-resume::after {
   display: none;
+}
+
+/* Résumé is the primary recruiter action — make it read as a button. */
+.btn-resume {
+  background: var(--gradient-primary);
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-resume:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 /* Theme Toggle Button */
@@ -753,6 +769,48 @@ img {
 }
 
 /* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Tighten spacing before the nav has to collapse. */
+@media (max-width: 1200px) {
+  .nav-links { gap: var(--spacing-md); }
+}
+
+/* The nav carries 8 links + a résumé button + theme toggle, so it needs to
+   collapse well before the 768px phone breakpoint or the logo wraps. */
+@media (max-width: 1024px) {
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-xl);
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+
+  [data-theme="dark"] .nav-links {
+    background: var(--bg-card);
+  }
+
+  .nav-links.active {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .theme-toggle {
+    margin-left: 0;
+    margin-top: var(--spacing-sm);
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
     position: fixed;
@@ -1133,6 +1191,254 @@ img {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ==================== PAGE FADE-IN (CSS only) ==================== */
+/* Always finishes at opacity 1, so a stalled `load` event can never leave
+   the page blank -- unlike the old JS implementation. */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body { animation: pageFadeIn 0.35s ease-out both; }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  padding: 0.75rem 1.25rem;
+  background: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-md) 0;
+  transform: translateY(-200%);
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==================== HERO CREDIBILITY PILLS ==================== */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-pill i { color: var(--primary-color); }
+
+.hero-pill-open {
+  background: rgba(85, 214, 170, 0.12);
+  border-color: var(--primary-color);
+  color: var(--primary-dark);
+}
+
+.hero-pill-open .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  animation: pulse 1.8s infinite;
+}
+
+/* ==================== EXPERIENCE TIMELINE ==================== */
+.xp-list {
+  max-width: 900px;
+  margin: var(--spacing-2xl) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.xp-item {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border-left: 4px solid var(--primary-color);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.xp-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.xp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.xp-role {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.xp-org {
+  margin: 0.2rem 0 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.xp-date {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.xp-points {
+  margin: 0 0 var(--spacing-md);
+  padding-left: 1.15rem;
+}
+
+.xp-points li {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 0.5rem;
+}
+
+.xp-points strong {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.xp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.xp-tag {
+  padding: 0.2rem 0.7rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ==================== EDUCATION / CERTIFICATION CARDS ==================== */
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-lg);
+  max-width: 900px;
+  margin: var(--spacing-2xl) auto 0;
+}
+
+.edu-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.edu-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.edu-icon {
+  font-size: 2.25rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.edu-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+
+.edu-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.edu-meta {
+  display: inline-block;
+  margin-top: var(--spacing-sm);
+  padding: 0.2rem 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .xp-head { flex-direction: column; }
+  .xp-date { white-space: normal; }
+}
+
+/* ==================== REDUCED MOTION ==================== */
+/* Respect users (and locked-down corporate machines) that ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html { scroll-behavior: auto; }
+
+  .cursor-trailer,
+  .hero-background { display: none !important; }
+
+  /* Never leave reveal-gated content stuck invisible. */
+  .reveal, .reveal-left, .reveal-right, .reveal-scale,
+  .fade-in-up, .stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

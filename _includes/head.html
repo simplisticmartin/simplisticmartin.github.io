@@ -1,64 +1,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  
-  <!-- SEO -->
-  <meta name="description" content="{{ page.description | default: site.description }}">
-  <meta name="author" content="{{ page.author | default: site.author }}">
-  <meta name="keywords" content="{{ page.tags | join: ', ' }}">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}">
-  <meta property="og:description" content="{{ page.description | default: site.description }}">
-  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
-  <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:image" content="{{ page.image | default: site.logo | absolute_url }}">
-  <meta property="og:site_name" content="{{ site.title }}">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}">
-  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
-  <meta name="twitter:image" content="{{ page.image | default: site.logo | absolute_url }}">
-  
-  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
-  
+
+  {% include seo.html %}
+
   <!-- Preconnect to improve performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-  
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="{{ '/assets/css/modern.css' | relative_url }}">
   {% if page.layout == 'post' %}
   <link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url }}">
   {% endif %}
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
   <link rel="apple-touch-icon" href="{{ '/assets/images/favicon.png' | relative_url }}">
-  
+  <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
+
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{{ page.url | absolute_url }}">
-  
+
   <!-- Theme Color -->
   <meta name="theme-color" content="#55d6aa">
   <meta name="msapplication-TileColor" content="#55d6aa">
-  
-  <!-- Performance: DNS Prefetch -->
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  
+
   {% if site.google_analytics %}
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
@@ -69,24 +43,4 @@
     gtag('config', '{{ site.google_analytics }}');
   </script>
   {% endif %}
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "{% if page.layout == 'post' %}BlogPosting{% else %}WebSite{% endif %}",
-    "name": "{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}",
-    "description": "{{ page.description | default: site.description }}",
-    "author": {
-      "@type": "Person",
-      "name": "{{ site.author }}"
-    },
-    "url": "{{ page.url | absolute_url }}"
-    {% if page.layout == 'post' %}
-    ,
-    "datePublished": "{{ page.date | date_to_xmlschema }}",
-    "headline": "{{ page.title }}"
-    {% endif %}
-  }
-  </script>
 </head>

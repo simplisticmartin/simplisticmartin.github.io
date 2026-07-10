@@ -249,21 +249,22 @@ document.querySelectorAll('a[target="_blank"]').forEach(link => {
 // ==================== PAGE LOADER ====================
 function initPageLoader() {
   const loader = document.querySelector('.page-loader');
-  if (loader) {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        loader.classList.add('hidden');
-      }, 500);
-    });
-  }
+  if (!loader) return;
+
+  const hide = () => loader.classList.add('hidden');
+  window.addEventListener('load', () => setTimeout(hide, 500));
+  // Safety net: never trap the visitor behind the loader if `load` never fires
+  // (a stalled font, image, or third-party CDN should not hide the whole page).
+  setTimeout(hide, 3000);
 }
 initPageLoader();
 
 // ==================== CURSOR TRAILER ====================
 function initCursorTrailer() {
-  // Only on desktop
+  // Only on desktop, and never when the user asks for reduced motion.
   if (window.innerWidth < 768) return;
-  
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const trailer = document.createElement('div');
   trailer.className = 'cursor-trailer';
   document.body.appendChild(trailer);
@@ -349,33 +350,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ==================== SMOOTH PAGE TRANSITIONS ====================
-function initPageTransitions() {
-  // Add fade-in class to body
-  document.body.style.opacity = '0';
-  document.body.style.transition = 'opacity 0.3s ease';
-  
-  window.addEventListener('load', () => {
-    document.body.style.opacity = '1';
-  });
-  
-  // Handle internal link clicks
-  document.querySelectorAll('a[href^="/"], a[href^="./"]').forEach(link => {
-    // Skip external links and anchor links
-    if (link.target === '_blank' || link.getAttribute('href').startsWith('#')) return;
-    
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      e.preventDefault();
-      
-      document.body.style.opacity = '0';
-      setTimeout(() => {
-        window.location.href = href;
-      }, 300);
-    });
-  });
-}
-initPageTransitions();
+// ==================== PAGE FADE-IN ====================
+// The page fade-in is done purely in CSS (see `pageFadeIn` in modern.css).
+// It used to be JS: body opacity was set to 0 and only restored on `load`,
+// which left the page blank if `load` never fired, and every internal link
+// was intercepted with a 300ms delay -- that also broke Ctrl/Cmd/middle-click
+// "open in new tab". Both are gone on purpose; navigation is now instant.
 
 // ==================== KONAMI CODE EASTER EGG ====================
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];

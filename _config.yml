@@ -21,10 +21,11 @@ social:
 markdown: kramdown
 
 # Jekyll plugins
+# NOTE: jekyll-sitemap is intentionally NOT used. It auto-listed ~250 URLs
+# (legacy demos, vendored dc.js docs, internal dev docs, stale resumes).
+# A curated sitemap.xml is maintained at the repo root instead.
 plugins:
   - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-sitemap
   - jekyll-paginate
   - jekyll-gist
   - jemoji
@@ -53,6 +54,44 @@ exclude:
   # leak into (and collide with) the main site's blog.
   - old-version/_posts
   - old-version/_drafts
+
+  # Stale resumes — only /Resume.pdf should be public and indexable.
+  - Resume-1.pdf
+  - Martin-Resume.pdf
+  - resumes/
+
+  # Internal authoring tools / scripts — not part of the published site.
+  - blog-post-creator.html
+  - blog-post-creator.py
+  - update_progress.py
+  - launch-blog-creator.bat
+  - launch-blog-creator.sh
+  - __pycache__/
+
+  # Internal dev docs — these were being published as public pages.
+  - BLOG_CREATOR_FEATURES.md
+  - BLOG_CREATOR_README.md
+  - BLOG_QUICK_REFERENCE.md
+  - BLOG_SYSTEM_OVERVIEW.md
+  - CHANGELOG.md
+  - COLOR_SCHEME.md
+  - DEPLOYMENT_CHECKLIST.md
+  - DEPLOY_TO_GITHUB.md
+  - FEATURES.md
+  - FIGHT_DATA_UPGRADE.md
+  - FIXES_APPLIED.md
+  - GETTING_STARTED.md
+  - GITHUB_PAGES_FIX.md
+  - HOW_TO_BLOG.md
+  - LEARNING_TRACKER_README.md
+  - NEW_POST_WORKFLOW.md
+  - PROFESSIONAL_UPDATE.md
+  - PROGRESS_UPDATE_GUIDE.md
+  - README_NEW.md
+  - START_HERE.md
+  - THEME_TOGGLE.md
+  - UPGRADE_SUMMARY.md
+  - brokenstreak.md
 
 # Collections
 collections:
@@ -108,7 +147,8 @@ defaults:
 # Site logo and images
 logo: "/assets/images/favicon.png"
 cover: "/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
-author_image: "/img/profile-pic.jpg"
+author_image: "/assets/images/profile-512.jpg"
+og_image: "/assets/images/og-card.jpg"
 
 # Comments (using giscus - modern alternative to disqus)
 comments:

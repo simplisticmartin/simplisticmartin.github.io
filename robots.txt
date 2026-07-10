@@ -1,9 +1,17 @@
 # www.robotstxt.org/
-# Allow crawling of all content
 
 User-agent: *
-Disallow: /old-version/
 Allow: /
+
+# Legacy archive — kept online for nostalgia, not for search.
+Disallow: /old-version/
+
+# Vendored third-party library docs & examples (dc.js) — not my work.
+Disallow: /Projects/dash/dependency/
+
+# Old project archives that would otherwise dilute search results.
+Disallow: /Projects/old-2017/
+Disallow: /Projects/oldwebAPI/
 
 # Sitemap
 Sitemap: https://simplisticmartin.github.io/sitemap.xml
