@@ -19,6 +19,9 @@
 
   <!-- Scripts -->
   <script src="{{ '/assets/js/modern.js' | relative_url }}"></script>
+  {% if page.script %}
+  <script src="{{ page.script | relative_url }}" defer></script>
+  {% endif %}
 
 </body>
 </html>

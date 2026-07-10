@@ -1,0 +1,435 @@
+---
+layout: default
+permalink: /interactive-resume/
+stylesheet: /assets/css/interactive-resume.css
+script: /assets/js/interactive-resume.js
+seo_title: "Interactive Résumé — Martin Li | Software Engineer II @ JPMorgan Chase"
+description: "Play through Martin Li's career as an eight-level side-scroller: Java, Spring Boot, React, TypeScript, AWS and SRE at JPMorgan Chase. M.S. CS (AI), Georgia Tech."
+---
+
+<div class="ir" id="ir">
+
+  <!-- ===== HUD (fixed) ===== -->
+  <div class="ir-hud" id="irHud">
+    <span class="ir-hud-block">
+      <span class="ir-hud-key">Level</span>
+      <span class="ir-hud-val"><b id="irLevelNum">1</b><span class="ir-hud-sep">/</span>8</span>
+    </span>
+    <span class="ir-hud-block ir-hud-name" id="irLevelName">Boot</span>
+    <span class="ir-hud-block">
+      <span class="ir-coin-face ir-coin-face--hud" aria-hidden="true"></span>
+      <span class="ir-hud-val"><b id="irCoins">0</b><span class="ir-hud-sep">/</span><span id="irCoinsTotal">0</span></span>
+    </span>
+  </div>
+  <p class="visually-hidden" aria-live="polite" id="irAnnounce"></p>
+
+  <!-- ===== Level rail (fixed) ===== -->
+  <nav class="ir-rail" aria-label="Jump to level">
+    <ol>
+      <li><a href="#level-1" data-jump="1"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Boot</span></a></li>
+      <li><a href="#level-2" data-jump="2"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Stack</span></a></li>
+      <li><a href="#level-3" data-jump="3"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Pipeline</span></a></li>
+      <li><a href="#level-4" data-jump="4"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Impact</span></a></li>
+      <li><a href="#level-5" data-jump="5"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Builds</span></a></li>
+      <li><a href="#level-6" data-jump="6"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Credentials</span></a></li>
+      <li><a href="#level-7" data-jump="7"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Trophies</span></a></li>
+      <li><a href="#level-8" data-jump="8"><span class="ir-dot" aria-hidden="true"></span><span class="ir-rail-label">Ship it</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ===== The rail the player rides (drawn by JS) ===== -->
+  <svg class="ir-spine" id="irSpine" aria-hidden="true" focusable="false">
+    <path class="ir-spine-bg" id="irSpineBg" />
+    <path class="ir-spine-fg" id="irSpineFg" />
+  </svg>
+
+  <!-- ===== The player ===== -->
+  <div class="ir-player" id="irPlayer" aria-hidden="true">
+    <svg viewBox="0 0 12 16" shape-rendering="crispEdges" width="36" height="48">
+      <!-- hair -->
+      <rect x="3" y="0" width="6" height="1" fill="#1f2937"/>
+      <rect x="2" y="1" width="8" height="2" fill="#1f2937"/>
+      <!-- face -->
+      <rect x="3" y="3" width="6" height="3" fill="#f6d4b4"/>
+      <rect x="4" y="4" width="1" height="1" fill="#1f2937"/>
+      <rect x="7" y="4" width="1" height="1" fill="#1f2937"/>
+      <rect x="5" y="5" width="2" height="1" fill="#c98f6a"/>
+      <!-- shirt -->
+      <rect x="2" y="6" width="8" height="5" fill="#55d6aa"/>
+      <rect x="5" y="6" width="2" height="5" fill="#3db896"/>
+      <!-- arms -->
+      <rect x="1" y="7" width="1" height="3" fill="#f6d4b4"/>
+      <rect x="10" y="7" width="1" height="3" fill="#f6d4b4"/>
+      <!-- legs -->
+      <rect x="3" y="11" width="2" height="3" fill="#1f2937"/>
+      <rect x="7" y="11" width="2" height="3" fill="#1f2937"/>
+      <!-- shoes -->
+      <rect x="2" y="14" width="3" height="2" fill="#0f172a"/>
+      <rect x="7" y="14" width="3" height="2" fill="#0f172a"/>
+    </svg>
+  </div>
+
+  <!-- ============================ LEVEL 1 ============================ -->
+  <section class="ir-level" id="level-1" data-level="1" data-name="Boot">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-star" style="--x:12%; --y:18%"></span>
+      <span class="ir-star" style="--x:28%; --y:34%"></span>
+      <span class="ir-star" style="--x:72%; --y:22%"></span>
+      <span class="ir-star" style="--x:86%; --y:44%"></span>
+      <span class="ir-star" style="--x:56%; --y:12%"></span>
+      <span class="ir-cloud ir-far" style="--x:8%;  --y:60%"></span>
+      <span class="ir-cloud ir-near" style="--x:74%; --y:70%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 1 — Boot</p>
+      <h1 class="ir-title">Martin&nbsp;Li</h1>
+      <p class="ir-subtitle">Software Engineer II @ JPMorgan Chase</p>
+      <p class="ir-lede">
+        Full-stack engineer with 5+ years building enterprise financial microservices in
+        Java, Spring Boot, React, and TypeScript on AWS — plus SRE and application resiliency
+        for a 30+ application portfolio. M.S. in Computer Science (AI) from Georgia Tech.
+      </p>
+      <div class="ir-cta">
+        <a class="ir-btn ir-btn-primary" href="#level-2">Press start <span aria-hidden="true">▾</span></a>
+        <a class="ir-btn" href="{{ '/resume/' | relative_url }}">Plain résumé</a>
+        <a class="ir-btn" href="{{ '/Resume.pdf' | relative_url }}" target="_blank" rel="noopener">Download PDF</a>
+      </div>
+      <p class="ir-hint"><span aria-hidden="true">↓</span> Scroll to play</p>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 2 ============================ -->
+  <section class="ir-level" id="level-2" data-level="2" data-name="Stack">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-cloud ir-far"  style="--x:16%; --y:20%"></span>
+      <span class="ir-cloud ir-near" style="--x:68%; --y:32%"></span>
+      <span class="ir-hill ir-far"   style="--x:70%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 2 — Stack</p>
+      <h2 class="ir-heading">Collect the coins</h2>
+      <p class="ir-lede">Every tool below is one I've shipped with in production or in graduate coursework.</p>
+
+      <div class="ir-stack">
+        <div class="ir-stack-group">
+          <h3>Languages</h3>
+          <ul class="ir-coins">
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Java</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Python</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>TypeScript</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>JavaScript</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>SQL</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Bash</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>HTML/CSS</li>
+          </ul>
+        </div>
+
+        <div class="ir-stack-group">
+          <h3>Backend</h3>
+          <ul class="ir-coins">
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Spring</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Spring Boot</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Moneta Boot</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Microservices</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>REST APIs</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>OpenAPI/Swagger</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>JUnit</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Mockito</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Liquibase</li>
+          </ul>
+        </div>
+
+        <div class="ir-stack-group">
+          <h3>Frontend</h3>
+          <ul class="ir-coins">
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>React</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Redux</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Redux-Saga</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>React Query</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Jest</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>React Testing Library</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>ag-Grid</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>styled-components</li>
+          </ul>
+        </div>
+
+        <div class="ir-stack-group">
+          <h3>Cloud &amp; SRE</h3>
+          <ul class="ir-coins">
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>AWS</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Kubernetes</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Cloud Foundry</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Docker</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>CI/CD</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>AutoSys</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Linux</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Monitoring &amp; Alerting</li>
+          </ul>
+        </div>
+
+        <div class="ir-stack-group">
+          <h3>Data &amp; AI</h3>
+          <ul class="ir-coins">
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>MS SQL Server</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Oracle SQL</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>MongoDB</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Spark</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>scikit-learn</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Jupyter</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>Machine Learning</li>
+            <li class="ir-coin"><span class="ir-coin-face" aria-hidden="true"></span>LLMs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 3 ============================ -->
+  <section class="ir-level" id="level-3" data-level="3" data-name="Pipeline">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-cloud ir-far"  style="--x:10%; --y:16%"></span>
+      <span class="ir-cloud ir-near" style="--x:80%; --y:26%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 3 — Pipeline</p>
+      <h2 class="ir-heading">Where I've shipped</h2>
+
+      <ol class="ir-jobs">
+        <li class="ir-job">
+          <div class="ir-job-head">
+            <h3>Software Engineer II</h3>
+            <span class="ir-job-when">Jul 2022 – Present</span>
+          </div>
+          <p class="ir-job-org">JPMorgan Chase &amp; Co. · Plano, TX</p>
+          <ul class="ir-job-points">
+            <li>Shipped fund-onboarding, due-diligence, and factsheet tools plus a portfolio-management toolkit used by portfolio managers and clients — React/TypeScript on Java/Spring Boot microservices over Microsoft SQL Server.</li>
+            <li>Own SRE, observability, and application resiliency for a <b>30+ application</b> portfolio, authoring AutoSys schedules and alerting that catch failures before users do.</li>
+            <li>Cut deployment time <b>up to 40%</b> by modernizing legacy services and containerizing delivery on Kubernetes, Cloud Foundry, AWS, and Docker with Jenkins CI/CD.</li>
+          </ul>
+          <p class="ir-job-tags"><span>Java</span><span>Spring Boot</span><span>React</span><span>TypeScript</span><span>AWS</span><span>Kubernetes</span></p>
+        </li>
+
+        <li class="ir-job">
+          <div class="ir-job-head">
+            <h3>Software Engineer Consultant</h3>
+            <span class="ir-job-when">Dec 2021 – Jun 2022</span>
+          </div>
+          <p class="ir-job-org">Ouicruit · Remote</p>
+          <ul class="ir-job-points">
+            <li>Modernized Java/SQL API services with OpenAPI/Swagger, stronger validation, CI hardening, and expanded test coverage — improving median API latency by about <b>30%</b>.</li>
+          </ul>
+          <p class="ir-job-tags"><span>Java</span><span>REST APIs</span><span>OpenAPI</span><span>CI/CD</span></p>
+        </li>
+
+        <li class="ir-job">
+          <div class="ir-job-head">
+            <h3>Linux Consultant</h3>
+            <span class="ir-job-when">Dec 2020 – Jun 2021</span>
+          </div>
+          <p class="ir-job-org">Oppenheimer &amp; Co. · New York, NY</p>
+          <ul class="ir-job-points">
+            <li>Automated secure 6–15 GB weekly financial file transfers with Linux, Bash, GPG, and scheduled jobs — cutting transfer errors by <b>25%</b> and supporting <b>99.9%</b> data integrity.</li>
+          </ul>
+          <p class="ir-job-tags"><span>Linux</span><span>Bash</span><span>GPG</span><span>Automation</span></p>
+        </li>
+
+        <li class="ir-job">
+          <div class="ir-job-head">
+            <h3>Software Engineer Intern</h3>
+            <span class="ir-job-when">2019</span>
+          </div>
+          <p class="ir-job-org">Federal Home Loan Bank · Jersey City, NJ</p>
+          <ul class="ir-job-points">
+            <li>Built a QA data-visualization dashboard that reduced outsourced reporting costs by <b>15%</b> and streamlined recurring reporting workflows.</li>
+          </ul>
+          <p class="ir-job-tags"><span>Data Visualization</span><span>Reporting</span><span>QA</span></p>
+        </li>
+      </ol>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 4 ============================ -->
+  <section class="ir-level" id="level-4" data-level="4" data-name="Impact">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-star" style="--x:20%; --y:24%"></span>
+      <span class="ir-star" style="--x:80%; --y:18%"></span>
+      <span class="ir-cloud ir-near" style="--x:14%; --y:70%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 4 — Impact</p>
+      <h2 class="ir-heading">High score</h2>
+
+      <div class="ir-scores">
+        <div class="ir-score">
+          <span class="ir-num" data-count="40" data-suffix="%">40%</span>
+          <span class="ir-score-label">Faster deployments</span>
+          <span class="ir-score-sub">Spring Boot modernization &amp; containerization</span>
+        </div>
+        <div class="ir-score">
+          <span class="ir-num" data-count="30" data-suffix="%">30%</span>
+          <span class="ir-score-label">Lower API latency</span>
+          <span class="ir-score-sub">Median, after service modernization</span>
+        </div>
+        <div class="ir-score">
+          <span class="ir-num" data-count="30" data-suffix="+">30+</span>
+          <span class="ir-score-label">Apps under SRE ownership</span>
+          <span class="ir-score-sub">Observability, alerting, resiliency</span>
+        </div>
+        <div class="ir-score">
+          <span class="ir-num" data-count="99.9" data-decimals="1" data-suffix="%">99.9%</span>
+          <span class="ir-score-label">Data integrity</span>
+          <span class="ir-score-sub">Automated secure financial transfers</span>
+        </div>
+      </div>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 5 ============================ -->
+  <section class="ir-level" id="level-5" data-level="5" data-name="Builds">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-cloud ir-far"  style="--x:18%; --y:22%"></span>
+      <span class="ir-hill ir-near"  style="--x:20%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 5 — Builds</p>
+      <h2 class="ir-heading">Side quests</h2>
+
+      <div class="ir-cards">
+        <article class="ir-card">
+          <span class="ir-card-icon" aria-hidden="true">🎤</span>
+          <h3>ClearSpeak — AI Speech Coach</h3>
+          <p>Cross-platform mobile app with an on-device LLM (llama.rn) and speech-to-text (whisper.rn) for real-time feedback — filler-word detection, live coaching, and progress analytics.</p>
+          <p class="ir-job-tags"><span>React Native</span><span>TypeScript</span><span>Expo</span><span>On-device LLM</span><span>Zustand</span></p>
+        </article>
+
+        <article class="ir-card">
+          <span class="ir-card-icon" aria-hidden="true">🧠</span>
+          <h3>ML Model Optimization</h3>
+          <p>Compared backpropagation, genetic algorithms, and MIMIC randomized optimization for heart-disease classification, reaching about <b>0.945 accuracy</b>.</p>
+          <p class="ir-job-tags"><span>Python</span><span>scikit-learn</span><span>Neural Networks</span><span>Randomized Optimization</span></p>
+        </article>
+      </div>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 6 ============================ -->
+  <section class="ir-level" id="level-6" data-level="6" data-name="Credentials">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-cloud ir-near" style="--x:76%; --y:20%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 6 — Credentials</p>
+      <h2 class="ir-heading">Power-ups earned</h2>
+
+      <div class="ir-cards ir-cards-3">
+        <article class="ir-card">
+          <span class="ir-card-icon" aria-hidden="true">🎓</span>
+          <h3>M.S., Computer Science</h3>
+          <p>Georgia Institute of Technology — specialization in Artificial Intelligence.</p>
+          <p class="ir-card-meta">May 2026 · GPA 3.6</p>
+          <p class="ir-card-fine">Machine Learning · Artificial Intelligence · ML for Trading · Data &amp; Visual Analytics · AI, Ethics &amp; Society</p>
+        </article>
+
+        <article class="ir-card">
+          <span class="ir-card-icon" aria-hidden="true">🏛️</span>
+          <h3>B.S., Computer Science</h3>
+          <p>The City College of New York.</p>
+          <p class="ir-card-meta">2020</p>
+        </article>
+
+        <article class="ir-card">
+          <span class="ir-card-icon" aria-hidden="true">☁️</span>
+          <h3>AWS Certified Cloud Practitioner</h3>
+          <p>Amazon Web Services.</p>
+          <p class="ir-card-meta">Nov 2022</p>
+        </article>
+      </div>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 7 ============================ -->
+  <section class="ir-level" id="level-7" data-level="7" data-name="Trophies">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-star" style="--x:24%; --y:20%"></span>
+      <span class="ir-star" style="--x:66%; --y:30%"></span>
+      <span class="ir-star" style="--x:88%; --y:16%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 7 — Trophies</p>
+      <h2 class="ir-heading">Boss fights won</h2>
+
+      <div class="ir-cards ir-cards-3">
+        <article class="ir-card ir-card-trophy">
+          <span class="ir-card-icon" aria-hidden="true">🥇</span>
+          <h3>1st Place</h3>
+          <p>Cornell University Data Science Hackathon</p>
+        </article>
+        <article class="ir-card ir-card-trophy">
+          <span class="ir-card-icon" aria-hidden="true">🥇</span>
+          <h3>1st Place</h3>
+          <p>Heroes vs Hackers Hackathon</p>
+        </article>
+        <article class="ir-card ir-card-trophy">
+          <span class="ir-card-icon" aria-hidden="true">🏆</span>
+          <h3>Best Website Hack</h3>
+          <p>Columbia Health Hacks</p>
+        </article>
+      </div>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ LEVEL 8 ============================ -->
+  <section class="ir-level" id="level-8" data-level="8" data-name="Ship it">
+    <div class="ir-scene" aria-hidden="true">
+      <span class="ir-star" style="--x:16%; --y:22%"></span>
+      <span class="ir-star" style="--x:48%; --y:14%"></span>
+      <span class="ir-star" style="--x:82%; --y:28%"></span>
+      <span class="ir-cloud ir-far" style="--x:70%; --y:62%"></span>
+    </div>
+
+    <div class="ir-content">
+      <p class="ir-sign">Level 8 — Ship it</p>
+      <h2 class="ir-heading">Game complete</h2>
+      <p class="ir-lede">
+        Open to Software Engineer roles — full-stack, backend, cloud &amp; SRE, or AI/ML.
+        Based in Plano, TX.
+      </p>
+
+      <div class="ir-cta">
+        <a class="ir-btn ir-btn-primary" href="mailto:simplisticmartin@gmail.com">
+          <i class="fas fa-envelope" aria-hidden="true"></i> Email me
+        </a>
+        <button type="button" class="ir-btn copy-email" data-email="simplisticmartin@gmail.com" data-label="Copy email">
+          <i class="fas fa-copy" aria-hidden="true"></i> Copy email
+        </button>
+        <a class="ir-btn" href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn
+        </a>
+        <a class="ir-btn" href="https://github.com/simplisticmartin" target="_blank" rel="noopener">
+          <i class="fab fa-github" aria-hidden="true"></i> GitHub
+        </a>
+      </div>
+
+      <p class="ir-outro">
+        Prefer the boring version? <a href="{{ '/resume/' | relative_url }}">Read the plain résumé</a>
+        or <a href="{{ '/Resume.pdf' | relative_url }}" target="_blank" rel="noopener">download the PDF</a>.
+      </p>
+    </div>
+    <div class="ir-ground" aria-hidden="true"></div>
+  </section>
+
+</div>

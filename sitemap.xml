@@ -41,6 +41,12 @@ sitemap: false
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>{{ '/interactive-resume/' | absolute_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>{{ '/Resume.pdf' | absolute_url }}</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>
