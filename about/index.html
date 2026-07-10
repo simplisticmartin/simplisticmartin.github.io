@@ -110,7 +110,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
       width: 50px;
       height: 50px;
       background: var(--gradient-primary);
-      color: white;
+      color: var(--on-primary);
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -140,7 +140,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     /* ==================== ABOUT PAGE STYLES ==================== */
     
     .about-hero {
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), #8b5cf6);
+      background: var(--gradient-banner);
       background-size: 200% 200%;
       animation: gradientShift 8s ease infinite;
       padding: var(--spacing-3xl) var(--spacing-lg);
@@ -244,7 +244,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     
     .profile-content .role {
       font-size: 1.2rem;
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-weight: 700;
       margin-bottom: var(--spacing-md);
       display: flex;
@@ -284,7 +284,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     .stat-number {
       font-size: 1.8rem;
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary-text);
     }
     
     .stat-label {
@@ -311,7 +311,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     }
     
     .section-title i {
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-size: 1.8rem;
     }
     
@@ -362,7 +362,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     }
     
     .timeline-item .position {
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-weight: 600;
       font-size: 1.05rem;
       margin-bottom: var(--spacing-xs);
@@ -419,7 +419,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     }
     
     .skill-card i {
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-size: 1.5rem;
       min-width: 30px;
     }
@@ -448,7 +448,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     
     .skill-tag:hover {
       background: var(--primary-color);
-      color: white;
+      color: var(--on-primary);
       border-color: var(--primary-color);
       transform: scale(1.05);
     }
@@ -508,7 +508,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     /* ==================== CTA SECTION ==================== */
     
     .cta-section {
-      background: var(--gradient-primary);
+      background: var(--gradient-banner-teal);
       color: var(--text-light);
       padding: var(--spacing-3xl) var(--spacing-lg);
       border-radius: var(--radius-lg);
@@ -553,7 +553,8 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     
     .cta-btn-primary {
       background: white;
-      color: var(--primary-color);
+      /* pill is white in BOTH themes, so the label needs a fixed dark teal */
+      color: #0f766e;
     }
     
     .cta-btn-primary:hover {
@@ -617,7 +618,7 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     .fact-number {
       font-size: 2rem;
       font-weight: 800;
-      color: var(--primary-color);
+      color: var(--primary-text);
       display: block;
     }
     
@@ -718,100 +719,10 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
       opacity: 0.8;
     }
     
-    /* ==================== ENHANCED FOOTER ==================== */
-    
-    .about-footer {
-      background: var(--bg-dark);
-      color: var(--text-light);
-      padding: var(--spacing-2xl) var(--spacing-lg);
-      margin-top: var(--spacing-xl);
-    }
-    
-    .footer-grid {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: var(--spacing-xl);
-    }
-    
-    .footer-brand h3 {
-      font-size: 1.5rem;
-      margin-bottom: var(--spacing-sm);
-      color: var(--primary-color);
-    }
-    
-    .footer-brand p {
-      opacity: 0.8;
-      line-height: 1.7;
-      font-size: 0.95rem;
-    }
-    
-    .footer-column h4 {
-      font-size: 1.1rem;
-      margin-bottom: var(--spacing-md);
-      color: var(--primary-color);
-    }
-    
-    .footer-column ul {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .footer-column ul li {
-      margin-bottom: var(--spacing-sm);
-    }
-    
-    .footer-column ul li a {
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      transition: color var(--transition-fast);
-    }
-    
-    .footer-column ul li a:hover {
-      color: var(--primary-color);
-    }
-    
-    .footer-social {
-      display: flex;
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-md);
-    }
-    
-    .footer-social a {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      transition: all var(--transition-base);
-    }
-    
-    .footer-social a:hover {
-      background: var(--primary-color);
-      transform: translateY(-3px);
-    }
-    
-    .footer-bottom {
-      max-width: 1100px;
-      margin: var(--spacing-xl) auto 0;
-      padding-top: var(--spacing-lg);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: var(--spacing-md);
-    }
-    
-    .footer-bottom p {
-      opacity: 0.7;
-      font-size: 0.9rem;
-    }
-    
+    /* Footer styling now lives in modern.css (shared _includes/footer.html).
+       The old .about-footer rules here were written for a dark footer and made
+       the links white on a light background -- removed on purpose. */
+
     /* ==================== RESPONSIVE ==================== */
     
     @media (max-width: 768px) {
@@ -896,16 +807,16 @@ description: "Software Engineer II at JPMorgan Chase in Plano, TX — full-stack
     <h1>👋 About Me</h1>
     <p class="subtitle">Software Engineer II — Full-Stack, Cloud, and AI</p>
     <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+      <span style="background: rgba(255,255,255,0.12); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
         <i class="fas fa-briefcase"></i> JPMorgan Chase
       </span>
-      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+      <span style="background: rgba(255,255,255,0.12); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
         <i class="fas fa-graduation-cap"></i> Georgia Tech M.S. (AI)
       </span>
-      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+      <span style="background: rgba(255,255,255,0.12); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
         <i class="fab fa-aws"></i> AWS Certified
       </span>
-      <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+      <span style="background: rgba(255,255,255,0.12); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
         <i class="fas fa-location-dot"></i> Plano, TX
       </span>
     </div>

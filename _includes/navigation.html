@@ -17,7 +17,7 @@
       <li><a href="{{ '/learning.html' | relative_url }}"{% if page.url contains 'learning' %} class="active"{% endif %}>Learning</a></li>
       <li><a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="active"{% endif %}>About</a></li>
       <li><a href="{% if page.url == '/' %}#contact{% else %}{{ '/#contact' | relative_url }}{% endif %}">Contact</a></li>
-      <li><a href="{{ '/Resume.pdf' | relative_url }}" class="btn-resume" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down" aria-hidden="true"></i> Résumé</a></li>
+      <li><a href="{{ '/resume/' | relative_url }}" class="btn-resume{% if page.url contains '/resume' %} active{% endif %}"><i class="fas fa-file-lines" aria-hidden="true"></i> Résumé</a></li>
       <li>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
           <i class="fas fa-moon"></i>

@@ -10,7 +10,7 @@ description: "An in-depth analysis of the epic heavyweight boxing rematch betwee
 image: /assets/article_images/2020-02-22-Tyson-Fury-versus-Wilder/FuryWilder.jpg
 ---
 
-# This is Boxing
+## This is Boxing
 
 Professionally and typically, hobbies and what you love shouldn't be part of what is professional but there is an element of boxing that is applicable to being professional in my opinion. Right now, I am talking about two of boxing's elite's Deontay Wilder, the champion of the WBC championship belt and the lineal champion, Tyson Fury. These guys are special with something that most do not have. I am not talking about them being 6 foot 7 and 6 foot 9 but what they have. They are special characters with a special aura of charisma, willing to put everything on the line for the sake of entertainment and a stake to claim to be the best on the planet. 
 

@@ -20,6 +20,9 @@
   {% if page.layout == 'post' %}
   <link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url }}">
   {% endif %}
+  {% if page.stylesheet %}
+  <link rel="stylesheet" href="{{ page.stylesheet | relative_url }}">
+  {% endif %}
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">

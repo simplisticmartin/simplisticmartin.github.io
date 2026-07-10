@@ -11,6 +11,17 @@
   --primary-light: #6ee0b8;
   --secondary-color: #57ad68;
   --accent-color: #14b8a6;
+
+  /* Text-safe teal. The brand teal is only ~1.8:1 against white, which fails
+     WCAG AA for text. Use --primary-text whenever teal is the TEXT colour
+     (links, tags, emphasis); keep --primary-color for fills, borders, icons. */
+  --primary-text: #0f766e;        /* 5.47:1 on white */
+  --primary-text-hover: #0b5a54;
+
+  /* Text/icons drawn ON TOP of a teal fill. White only reaches 1.8:1 on
+     #55d6aa; this near-black teal is 7.4:1 on the mint end of the gradient
+     and 4.8:1 on the green end, so it passes AA across the whole ramp. */
+  --on-primary: #14342c;
   
   /* Backgrounds */
   --bg-primary: #ffffff;
@@ -19,11 +30,15 @@
   --bg-dark: #263238;
   --bg-card: #ffffff;
   
-  /* Text Colors */
+  /* Text Colors.
+     NOTE: tertiary/muted carry real content (dates, copyright, meta), so they
+     must clear 4.5:1. The old #94a3b8 was 2.56:1 on white and 2.29:1 on the
+     footer's --bg-tertiary. #5a6a7d is 5.56:1 / 4.90:1. The dark theme keeps
+     the lighter grey, which is already 6.4:1 against its dark surfaces. */
   --text-primary: #263238;
   --text-secondary: #475569;
-  --text-tertiary: #94a3b8;
-  --text-muted: #94a3b8;
+  --text-tertiary: #5a6a7d;
+  --text-muted: #5a6a7d;
   --text-light: #ffffff;
 
   /* Borders */
@@ -33,6 +48,16 @@
   --gradient-primary: linear-gradient(135deg, #55d6aa 0%, #57ad68 100%);
   --gradient-secondary: linear-gradient(135deg, #14b8a6 0%, #55d6aa 100%);
   --gradient-hero: linear-gradient(135deg, rgba(85, 214, 170, 0.1) 0%, rgba(87, 173, 104, 0.1) 100%);
+
+  /* Banner surfaces that carry WHITE text (hero + CTA bands).
+     The brand gradient is far too light for white (1.8:1); these deep variants
+     keep the same hue family while clearing 5.4:1 at every stop. */
+  --gradient-banner: linear-gradient(135deg, #0f766e 0%, #0e7490 55%, #5b21b6 100%);
+  --gradient-banner-teal: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
+
+  /* Gradient used as TEXT fill (logo, hero headline, section titles).
+     The mint gradient is 1.8:1 on white -- unreadable. Both stops here clear 5.3:1. */
+  --gradient-text: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -76,14 +101,22 @@
   --bg-dark: #0f1419;
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --text-muted: #94a3b8;
+  /* #94a3b8 was only 4.33:1 on the dark footer surface; #a3b1c2 is 5.06:1. */
+  --text-tertiary: #a3b1c2;
+  --text-muted: #a3b1c2;
   --border-color: #334155;
 
   /* Teal colors stay vibrant in dark mode */
   --primary-color: #55d6aa;
   --primary-dark: #3db896;
   --primary-light: #6ee0b8;
+
+  /* On dark surfaces the light teal is the readable one (8.2:1). */
+  --primary-text: #6ee0b8;
+  --primary-text-hover: #a7f3d0;
+  /* On dark surfaces the text gradient must be the bright one. */
+  --gradient-text: linear-gradient(135deg, #6ee0b8 0%, #55d6aa 100%);
+
 }
 
 /* Auto dark mode (respects system preference if no manual selection) */
@@ -96,8 +129,15 @@
     --bg-dark: #0f1419;
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
-    --text-tertiary: #94a3b8;
-  }
+    --text-tertiary: #a3b1c2;
+    --text-muted: #a3b1c2;
+    --border-color: #334155;
+    --primary-text: #6ee0b8;
+    --primary-text-hover: #a7f3d0;
+ 
+    /* On dark surfaces the text gradient must be the bright one. */
+    --gradient-text: linear-gradient(135deg, #6ee0b8 0%, #55d6aa 100%);
+ }
 }
 
 /* ==================== RESET & BASE ==================== */
@@ -140,13 +180,13 @@ p {
 }
 
 a {
-  color: var(--primary-color);
+  color: var(--primary-text);
   text-decoration: none;
   transition: color var(--transition-base);
 }
 
 a:hover {
-  color: var(--primary-dark);
+  color: var(--primary-text-hover);
 }
 
 img {
@@ -195,7 +235,7 @@ img {
   font-weight: 700;
   font-family: var(--font-heading);
   white-space: nowrap;
-  background: var(--gradient-primary);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -216,7 +256,7 @@ img {
 }
 
 .nav-links a:hover {
-  color: var(--primary-color);
+  color: var(--primary-text);
 }
 
 .nav-links a::after {
@@ -247,7 +287,7 @@ img {
 .btn-old-version:hover,
 .btn-resume:hover {
   background: var(--primary-color);
-  color: white !important;
+  color: var(--on-primary) !important;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -260,7 +300,7 @@ img {
 /* Résumé is the primary recruiter action — make it read as a button. */
 .btn-resume {
   background: var(--gradient-primary);
-  color: #fff !important;
+  color: var(--on-primary) !important;
   font-weight: 600;
   box-shadow: var(--shadow-sm);
 }
@@ -288,7 +328,7 @@ img {
 
 .theme-toggle:hover {
   background: var(--primary-color);
-  color: white;
+  color: var(--on-primary);
   transform: scale(1.1) rotate(15deg);
   box-shadow: var(--shadow-md);
 }
@@ -372,7 +412,7 @@ img {
 
 .hero h1 {
   margin-bottom: var(--spacing-sm);
-  background: var(--gradient-primary);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -418,7 +458,7 @@ img {
 
 .btn-primary {
   background: var(--gradient-primary);
-  color: white;
+  color: var(--on-primary);
   box-shadow: var(--shadow-md);
 }
 
@@ -429,13 +469,13 @@ img {
 
 .btn-outline {
   background: transparent;
-  color: var(--primary-color);
+  color: var(--primary-text);
   border: 2px solid var(--primary-color);
 }
 
 .btn-outline:hover {
   background: var(--primary-color);
-  color: white;
+  color: var(--on-primary);
   transform: translateY(-2px);
 }
 
@@ -464,7 +504,7 @@ img {
   transform: translateY(-5px);
   box-shadow: var(--shadow-xl);
   background: var(--gradient-primary);
-  color: white;
+  color: var(--on-primary);
 }
 
 /* ==================== SECTIONS ==================== */
@@ -588,7 +628,7 @@ img {
 
 .project-link:hover {
   background: var(--primary-color);
-  color: white;
+  color: var(--on-primary);
   transform: translateY(-2px);
 }
 
@@ -656,7 +696,7 @@ img {
 
 .footer-social a:hover {
   background: var(--primary-color);
-  color: white;
+  color: var(--on-primary);
   transform: translateY(-3px);
 }
 
@@ -686,7 +726,7 @@ img {
 }
 
 .footer-column a:hover {
-  color: var(--primary-color);
+  color: var(--primary-text);
 }
 
 .footer-bottom {
@@ -760,7 +800,7 @@ img {
 
 /* Active nav link (current page) */
 .nav-links a.active {
-  color: var(--primary-color);
+  color: var(--primary-text);
   font-weight: 600;
 }
 
@@ -874,7 +914,7 @@ img {
 /* ==================== UTILITY CLASSES ==================== */
 .text-center { text-align: center; }
 .text-gradient {
-  background: var(--gradient-primary);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -919,7 +959,7 @@ img {
 }
 
 .loader-text {
-  color: var(--primary-color);
+  color: var(--primary-text);
   font-weight: 600;
   font-size: 1.1rem;
 }
@@ -1009,7 +1049,7 @@ img {
 
 .skill-tag:hover {
   background: var(--primary-color);
-  color: white;
+  color: var(--on-primary);
   transform: translateY(-2px) scale(1.05);
 }
 
@@ -1032,7 +1072,7 @@ img {
   bottom: 100px;
   right: 30px;
   background: var(--gradient-primary);
-  color: white;
+  color: var(--on-primary);
   padding: 0.75rem 1.25rem;
   border-radius: var(--radius-full);
   font-weight: 600;
@@ -1214,7 +1254,7 @@ img {
   z-index: 10000;
   padding: 0.75rem 1.25rem;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--on-primary);
   font-weight: 600;
   border-radius: 0 0 var(--radius-md) 0;
   transform: translateY(-200%);
@@ -1265,12 +1305,12 @@ img {
   box-shadow: var(--shadow-sm);
 }
 
-.hero-pill i { color: var(--primary-color); }
+.hero-pill i { color: var(--primary-text); }
 
 .hero-pill-open {
   background: rgba(85, 214, 170, 0.12);
   border-color: var(--primary-color);
-  color: var(--primary-dark);
+  color: var(--primary-text);
 }
 
 .hero-pill-open .dot {
@@ -1279,6 +1319,145 @@ img {
   border-radius: 50%;
   background: var(--primary-color);
   animation: pulse 1.8s infinite;
+}
+
+/* ==================== IMPACT METRICS BAND ==================== */
+/* Dark surface on purpose: white/teal text on the light brand gradient only
+   reaches ~1.8:1 contrast, which fails WCAG AA. On --bg-dark it's 13:1. */
+.impact-band {
+  position: relative;
+  background: var(--bg-dark);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  overflow: hidden;
+}
+
+.impact-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 0%, rgba(85, 214, 170, 0.16) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.impact-band::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+.impact-grid {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  text-align: center;
+}
+
+.impact-number {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: #6ee0b8;          /* 8.2:1 on --bg-dark */
+  line-height: 1.1;
+}
+
+.impact-label {
+  color: #ffffff;          /* 13:1 on --bg-dark */
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 0.35rem;
+}
+
+.impact-sub {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  margin-top: 0.15rem;
+}
+
+/* ==================== ROLE FIT CARDS ==================== */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-lg);
+  max-width: 1100px;
+  margin: var(--spacing-2xl) auto 0;
+}
+
+.role-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.role-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-xl);
+}
+
+.role-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--primary-text);
+  font-size: 1.15rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.role-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.role-card p {
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.7;
+  margin-bottom: var(--spacing-md);
+}
+
+.role-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.role-stack span {
+  padding: 0.15rem 0.6rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+/* ==================== COPY-EMAIL BUTTON ==================== */
+/* It's a <button> sitting next to <a> siblings, so it must be told to match:
+   buttons don't inherit font-family/size from the body. */
+.copy-email {
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.copy-email.copied {
+  background: var(--primary-color);
+  color: var(--on-primary);
+  border-color: var(--primary-color);
 }
 
 /* ==================== EXPERIENCE TIMELINE ==================== */
@@ -1343,7 +1522,7 @@ img {
 }
 
 .xp-points strong {
-  color: var(--primary-dark);
+  color: var(--primary-text);
   font-weight: 700;
 }
 
@@ -1409,7 +1588,7 @@ img {
   border-radius: var(--radius-full);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: var(--primary-text);
 }
 
 @media (max-width: 768px) {
@@ -1462,7 +1641,7 @@ img {
   width: 50px;
   height: 50px;
   background: var(--gradient-primary);
-  color: white;
+  color: var(--on-primary);
   border: none;
   border-radius: 50%;
   cursor: pointer;

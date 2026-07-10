@@ -1,0 +1,196 @@
+---
+layout: default
+permalink: /resume/
+stylesheet: /assets/css/resume.css
+og_type: profile
+seo_title: "Résumé — Martin Li | Software Engineer II (Java, Spring Boot, React, AWS)"
+description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. Java, Spring Boot, React, TypeScript, SQL Server, AWS, Kubernetes, SRE. M.S. CS (AI), Georgia Tech."
+---
+
+<article class="resume" itemscope itemtype="https://schema.org/Person">
+  <header class="resume-header">
+    <h1 itemprop="name">Martin Li</h1>
+    <p class="resume-title" itemprop="jobTitle">
+      Software Engineer II &middot; Full-Stack &middot; Java &middot; Spring Boot &middot; React &middot; AWS &middot; AI/ML
+    </p>
+
+    <p class="resume-contact">
+      <span><i class="fas fa-location-dot" aria-hidden="true"></i>Plano, TX</span>
+      <span><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:simplisticmartin@gmail.com" itemprop="email">simplisticmartin@gmail.com</a></span>
+      <span><i class="fas fa-globe" aria-hidden="true"></i><a href="https://simplisticmartin.github.io">simplisticmartin.github.io</a></span>
+      <span><i class="fab fa-linkedin" aria-hidden="true"></i><a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener">linkedin.com/in/simplisticmartin</a></span>
+      <span><i class="fab fa-github" aria-hidden="true"></i><a href="https://github.com/simplisticmartin" target="_blank" rel="noopener">github.com/simplisticmartin</a></span>
+    </p>
+
+    <div class="resume-actions">
+      <a href="{{ '/Resume.pdf' | relative_url }}" class="btn btn-primary" target="_blank" rel="noopener">
+        <i class="fas fa-file-arrow-down" aria-hidden="true"></i> Download PDF
+      </a>
+      <button type="button" class="btn btn-outline" onclick="window.print()">
+        <i class="fas fa-print" aria-hidden="true"></i> Print
+      </button>
+      <a href="mailto:simplisticmartin@gmail.com" class="btn btn-outline">
+        <i class="fas fa-envelope" aria-hidden="true"></i> Email Me
+      </a>
+    </div>
+  </header>
+
+  <section class="resume-section">
+    <h2>Summary</h2>
+    <p class="resume-summary" itemprop="description">
+      Full-stack Software Engineer with 5+ years building enterprise financial microservices in Java,
+      Spring, Spring Boot, React, TypeScript, and SQL Server on AWS. Strong across the full software
+      development life cycle, Agile, CI/CD, application resiliency, and security, with a track record in
+      modernization, fund and portfolio tooling, and SRE monitoring. Georgia Tech M.S. in Computer Science
+      (Artificial Intelligence), AWS Certified Cloud Practitioner, and a policy-aware user of AI coding
+      assistants (GitHub Copilot, Claude Code, Cursor).
+    </p>
+  </section>
+
+  <section class="resume-section">
+    <h2>Skills</h2>
+    <dl class="resume-skills">
+      <div class="resume-skill-row">
+        <dt>Languages</dt>
+        <dd>Java, Python, TypeScript, JavaScript, SQL, Bash, HTML/CSS</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>Backend</dt>
+        <dd>Java, Spring, Spring Boot, Moneta Boot, Microservices, REST APIs, OpenAPI/Swagger, JUnit, Mockito, Liquibase</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>Frontend</dt>
+        <dd>React, Redux, Redux-Saga, React Query, Jest, React Testing Library, ag-Grid, styled-components</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>Cloud &amp; SRE</dt>
+        <dd>AWS, Kubernetes, Cloud Foundry, Docker, CI/CD, AutoSys, Linux, monitoring &amp; alerting</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>Data &amp; AI</dt>
+        <dd>MS SQL Server, Oracle SQL, MongoDB, Spark, scikit-learn, Jupyter, machine learning, LLMs (llama.rn)</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>Practices</dt>
+        <dd>Agile/Scrum, CI/CD (Jenkins), application resiliency, application security, automated testing, responsible AI use</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="resume-section">
+    <h2>Experience</h2>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>JPMorgan Chase &amp; Co. &mdash; Software Engineer II</h3>
+        <span class="resume-entry-meta">Jul 2022 &ndash; Present</span>
+      </div>
+      <p class="resume-entry-sub">Plano, TX</p>
+      <ul>
+        <li>Shipped fund-onboarding, due-diligence, and factsheet tools plus a portfolio-management toolkit used by portfolio managers and clients, built full-stack in React/TypeScript and Java/Spring Boot microservices (Moneta Boot) on Microsoft SQL Server.</li>
+        <li>Own SRE, observability, and application resiliency for a <strong>30+ application</strong> team portfolio, authoring AutoSys schedules and alerting that catch failures before users and safeguard release reliability across production workflows.</li>
+        <li>Cut deployment time <strong>up to 40%</strong> by modernizing legacy services to the latest Spring Boot/Moneta Boot and containerizing delivery on Kubernetes, Cloud Foundry, AWS, and Docker with Jenkins CI/CD.</li>
+        <li>Gave portfolio managers self-service access to fund initialization, restriction, and reporting workflows by building REST APIs, fund-data dashboards, and internal web tools.</li>
+        <li>Accelerated onboarding of new funds with Liquibase-managed schema changes and tuned SQL Server queries, cutting manual setup and configuration errors.</li>
+        <li>Built reusable React components and data grids (Redux/Redux-Saga, React Query, ag-Grid) with Jest, RTL, JUnit, and Mockito coverage; use AI coding assistants (Copilot, Claude Code, Cursor) within firm policy to speed refactoring, testing, and review.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Ouicruit &mdash; Software Engineer Consultant</h3>
+        <span class="resume-entry-meta">Dec 2021 &ndash; Jun 2022</span>
+      </div>
+      <p class="resume-entry-sub">Remote</p>
+      <ul>
+        <li>Modernized Java/SQL API services with OpenAPI/Swagger, stronger validation, REST improvements, CI hardening, and expanded test coverage; improved median API latency by about <strong>30%</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Oppenheimer &amp; Co. &mdash; Linux Consultant</h3>
+        <span class="resume-entry-meta">Dec 2020 &ndash; Jun 2021</span>
+      </div>
+      <p class="resume-entry-sub">New York, NY</p>
+      <ul>
+        <li>Automated secure 6&ndash;15 GB weekly financial file transfers using Linux, Bash, GPG, and scheduled jobs, reducing transfer errors by <strong>25%</strong> and supporting <strong>99.9%</strong> data integrity.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Federal Home Loan Bank &mdash; Software Engineer Intern</h3>
+        <span class="resume-entry-meta">2019</span>
+      </div>
+      <p class="resume-entry-sub">Jersey City, NJ</p>
+      <ul>
+        <li>Built a QA data-visualization dashboard that reduced outsourced reporting costs by <strong>15%</strong> and streamlined recurring reporting workflows.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="resume-section">
+    <h2>Projects</h2>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>ClearSpeak &mdash; AI Speech Coach (React Native)</h3>
+      </div>
+      <ul>
+        <li>Cross-platform mobile app with an on-device LLM (llama.rn) and speech-to-text (whisper.rn) for real-time feedback &mdash; filler detection, live coaching, and progress analytics; TypeScript, Expo, Zustand.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>ML Model Optimization</h3>
+      </div>
+      <ul>
+        <li>Python, scikit-learn, neural networks, and randomized optimization; compared backpropagation, genetic algorithms, and MIMIC for heart-disease classification, reaching about <strong>0.945 accuracy</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="resume-section">
+    <h2>Education, Certifications &amp; Awards</h2>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Georgia Institute of Technology &mdash; M.S., Computer Science (Artificial Intelligence)</h3>
+        <span class="resume-entry-meta">May 2026 &middot; GPA 3.6</span>
+      </div>
+      <p class="resume-entry-sub">Coursework: Machine Learning; Artificial Intelligence; ML for Trading; Data &amp; Visual Analytics; AI, Ethics &amp; Society</p>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>The City College of New York &mdash; B.S., Computer Science</h3>
+        <span class="resume-entry-meta">2020</span>
+      </div>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>AWS Certified Cloud Practitioner</h3>
+        <span class="resume-entry-meta">Nov 2022</span>
+      </div>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Awards</h3>
+      </div>
+      <ul class="resume-inline-list">
+        <li>1st Place &mdash; Cornell University Data Science Hackathon</li>
+        <li>1st Place &mdash; Heroes vs Hackers Hackathon</li>
+        <li>Best Website Hack &mdash; Columbia Health Hacks</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="resume-note">
+    Prefer a file? <a href="{{ '/Resume.pdf' | relative_url }}" target="_blank" rel="noopener">Download the one-page PDF</a>.
+    Phone number available on request or in the PDF.
+  </p>
+</article>

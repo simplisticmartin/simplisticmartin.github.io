@@ -98,7 +98,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
       width: 50px;
       height: 50px;
       background: var(--gradient-primary);
-      color: white;
+      color: var(--on-primary);
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -135,7 +135,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
       content: '|';
       animation: blink 1s step-end infinite;
       margin-left: 4px;
-      color: var(--primary-color);
+      color: var(--primary-text);
     }
     
     .fade-in-up {
@@ -157,7 +157,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     }
     
     .hero-content h1 {
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--primary-light));
+      background: var(--gradient-text);
       background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -202,7 +202,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     .stat-number {
       font-size: 2.5rem;
       font-weight: 800;
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-family: var(--font-heading);
     }
     
@@ -311,7 +311,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     
     .contact-btn-primary {
       background: var(--gradient-primary);
-      color: white;
+      color: var(--on-primary);
     }
     
     .contact-btn-primary:hover {
@@ -328,7 +328,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     
     .contact-btn-secondary:hover {
       background: var(--primary-color);
-      color: white;
+      color: var(--on-primary);
     }
     
     /* ==================== QUICK LINKS SECTION ==================== */
@@ -396,7 +396,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     }
     
     .quick-link-arrow {
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-weight: 600;
       display: inline-flex;
       align-items: center;
@@ -473,7 +473,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     
     .footer-social a:hover {
       background: var(--primary-color);
-      color: white;
+      color: var(--on-primary);
       transform: translateY(-3px);
     }
     
@@ -503,7 +503,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     }
     
     .footer-column a:hover {
-      color: var(--primary-color);
+      color: var(--primary-text);
     }
     
     .footer-bottom {
@@ -624,8 +624,8 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
 
       <div class="hero-cta">
         <a href="#experience" class="btn btn-primary">View Experience</a>
-        <a href="/Resume.pdf" class="btn btn-outline" target="_blank" rel="noopener">
-          <i class="fas fa-file-arrow-down"></i> Download Résumé
+        <a href="/resume/" class="btn btn-outline">
+          <i class="fas fa-file-lines" aria-hidden="true"></i> View Résumé
         </a>
         <a href="#contact" class="btn btn-outline">Get In Touch</a>
       </div>
@@ -659,6 +659,81 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     </div>
   </section>
   
+  <!-- Impact Band -->
+  <section class="impact-band" aria-label="Impact by the numbers">
+    <div class="impact-grid">
+      <div>
+        <div class="impact-number">40%</div>
+        <div class="impact-label">Faster deployments</div>
+        <div class="impact-sub">Spring Boot modernization &amp; containerization</div>
+      </div>
+      <div>
+        <div class="impact-number">30%</div>
+        <div class="impact-label">Lower API latency</div>
+        <div class="impact-sub">Median, after service modernization</div>
+      </div>
+      <div>
+        <div class="impact-number">30+</div>
+        <div class="impact-label">Apps under SRE ownership</div>
+        <div class="impact-sub">Observability, alerting, resiliency</div>
+      </div>
+      <div>
+        <div class="impact-number">99.9%</div>
+        <div class="impact-label">Data integrity</div>
+        <div class="impact-sub">Automated secure financial transfers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Role Fit -->
+  <section class="section reveal" id="roles">
+    <div class="section-header">
+      <h2 class="section-title fade-in-up">Where I Fit</h2>
+      <p class="section-description fade-in-up">
+        I work across the whole stack, so I map onto several roles. Here's the honest breakdown of
+        what I've actually shipped in each.
+      </p>
+    </div>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+        <h3>Full-Stack Engineer</h3>
+        <p>React/TypeScript front ends on Java/Spring Boot microservices — fund onboarding, due diligence, factsheets, and a portfolio-management toolkit used by portfolio managers and clients.</p>
+        <div class="role-stack">
+          <span>React</span><span>TypeScript</span><span>Java</span><span>Spring Boot</span><span>SQL Server</span>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-server" aria-hidden="true"></i></div>
+        <h3>Backend / Platform Engineer</h3>
+        <p>Microservices and REST APIs with OpenAPI contracts, Liquibase-managed schema changes, and tuned SQL. Improved median API latency by about 30% on a modernization engagement.</p>
+        <div class="role-stack">
+          <span>Java</span><span>Spring</span><span>REST APIs</span><span>OpenAPI</span><span>Liquibase</span><span>JUnit</span>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-cloud" aria-hidden="true"></i></div>
+        <h3>Cloud &amp; Site Reliability</h3>
+        <p>Own SRE, observability, and application resiliency for a 30+ application portfolio. Containerized delivery on Kubernetes, Cloud Foundry, and AWS with Jenkins CI/CD and AutoSys scheduling.</p>
+        <div class="role-stack">
+          <span>AWS</span><span>Kubernetes</span><span>Docker</span><span>Jenkins</span><span>AutoSys</span><span>Linux</span>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-icon"><i class="fas fa-brain" aria-hidden="true"></i></div>
+        <h3>AI / Machine Learning</h3>
+        <p>M.S. specialization in Artificial Intelligence. Built a mobile speech coach around an on-device LLM, and benchmarked backpropagation against genetic algorithms and MIMIC for classification.</p>
+        <div class="role-stack">
+          <span>Python</span><span>scikit-learn</span><span>LLMs</span><span>Spark</span><span>Jupyter</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Skills Section -->
   <section class="skills-section reveal">
     <div class="section-header" style="max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-lg);">
@@ -853,16 +928,25 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building enter
     
     <div class="contact-cta fade-in-up">
       <a href="mailto:simplisticmartin@gmail.com" class="contact-btn contact-btn-primary">
-        <i class="fas fa-envelope"></i>
+        <i class="fas fa-envelope" aria-hidden="true"></i>
         Send me an Email
       </a>
-      <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" class="contact-btn contact-btn-secondary">
-        <i class="fab fa-github"></i>
-        GitHub
+      <button type="button" class="contact-btn contact-btn-secondary copy-email"
+              data-email="simplisticmartin@gmail.com" data-label="Copy Email">
+        <i class="fas fa-copy" aria-hidden="true"></i>
+        Copy Email
+      </button>
+      <a href="/resume/" class="contact-btn contact-btn-secondary">
+        <i class="fas fa-file-lines" aria-hidden="true"></i>
+        Résumé
       </a>
       <a href="https://www.linkedin.com/in/simplisticmartin" target="_blank" rel="noopener" class="contact-btn contact-btn-secondary">
-        <i class="fab fa-linkedin"></i>
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
         LinkedIn
+      </a>
+      <a href="https://github.com/simplisticmartin" target="_blank" rel="noopener" class="contact-btn contact-btn-secondary">
+        <i class="fab fa-github" aria-hidden="true"></i>
+        GitHub
       </a>
     </div>
     

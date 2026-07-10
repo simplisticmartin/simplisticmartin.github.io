@@ -17,7 +17,7 @@ sitemap: false
       <a href="{{ '/' | relative_url }}" class="btn btn-primary">
         <i class="fas fa-home"></i> Go Home
       </a>
-      <a href="{{ '/blog' | relative_url }}" class="btn btn-outline">
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn-outline">
         <i class="fas fa-blog"></i> Visit Blog
       </a>
     </div>
@@ -27,11 +27,13 @@ sitemap: false
         Looking for something specific? Try these popular pages:
       </p>
       <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
-        <a href="{{ '/#projects' | relative_url }}" style="color: var(--primary-color);">Projects</a>
+        <a href="{{ '/#experience' | relative_url }}" style="color: var(--primary-text);">Experience</a>
         <span style="color: var(--text-tertiary);">•</span>
-        <a href="{{ '/about' | relative_url }}" style="color: var(--primary-color);">About</a>
+        <a href="{{ '/#projects' | relative_url }}" style="color: var(--primary-text);">Projects</a>
         <span style="color: var(--text-tertiary);">•</span>
-        <a href="{{ '/Resume.pdf' | relative_url }}" style="color: var(--primary-color);">Resume</a>
+        <a href="{{ '/about/' | relative_url }}" style="color: var(--primary-text);">About</a>
+        <span style="color: var(--text-tertiary);">•</span>
+        <a href="{{ '/resume/' | relative_url }}" style="color: var(--primary-text);">Résumé</a>
       </div>
     </div>
   </div>

@@ -421,6 +421,53 @@ function initFadeInUp() {
 }
 initFadeInUp();
 
+// ==================== COPY EMAIL ====================
+function initCopyEmail() {
+  const buttons = document.querySelectorAll('.copy-email');
+  if (!buttons.length) return;
+
+  // navigator.clipboard is only available on https / localhost.
+  async function copy(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+
+  buttons.forEach(btn => {
+    const email = btn.dataset.email;
+    const label = btn.dataset.label || btn.textContent.trim();
+
+    btn.addEventListener('click', async () => {
+      try {
+        await copy(email);
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Copied!';
+        showToast(`${email} copied to clipboard`, 'success', 2500);
+      } catch (err) {
+        // Clipboard can be denied (unfocused document, permissions policy, http).
+        // Surface the address instead of yanking the visitor into a mail client.
+        showToast(`Copy blocked — email me at ${email}`, 'error', 5000);
+        return;
+      }
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<i class="fas fa-copy" aria-hidden="true"></i> ${label}`;
+      }, 2200);
+    });
+  });
+}
+initCopyEmail();
+
 // ==================== BACK TO TOP ====================
 function initBackToTop() {
   const btn = document.getElementById('backToTop') || document.querySelector('.back-to-top');

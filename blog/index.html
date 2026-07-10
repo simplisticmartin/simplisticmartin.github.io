@@ -92,7 +92,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       width: 50px;
       height: 50px;
       background: var(--gradient-primary);
-      color: white;
+      color: var(--on-primary);
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -124,7 +124,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       position: relative;
       padding: 120px 0 80px;
       text-align: center;
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), #8b5cf6);
+      background: var(--gradient-banner);
       background-size: 200% 200%;
       animation: gradientShift 8s ease infinite;
       overflow: hidden;
@@ -159,6 +159,10 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     .blog-hero h1 {
       font-size: clamp(2.5rem, 5vw, 4rem);
+      /* cancel blog.css's gradient text-clip: this hero is a dark banner,
+         and the clip also renders the emoji as a transparent ghost */
+      background: none;
+      -webkit-text-fill-color: #fff;
       color: white;
       margin-bottom: var(--spacing-md);
       text-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -242,7 +246,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     /* Section Improvements */
     .section-title {
-      background: var(--gradient-primary);
+      background: var(--gradient-text);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -289,7 +293,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     .filter-btn:hover,
     .filter-btn.active {
-      color: white;
+      color: var(--on-primary);
       border-color: transparent;
     }
     
@@ -336,7 +340,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       display: inline-flex;
       align-items: center;
       gap: var(--spacing-xs);
-      color: var(--primary-color);
+      color: var(--primary-text);
       font-weight: 600;
       transition: all 0.3s ease;
     }
@@ -377,7 +381,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       left: 20px;
       font-size: 300px;
       font-family: Georgia, serif;
-      color: var(--primary-color);
+      color: var(--primary-text);
       opacity: 0.05;
       line-height: 1;
       pointer-events: none;
@@ -445,7 +449,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     .quote-icon {
       font-size: 3rem;
-      color: var(--primary-color);
+      color: var(--primary-text);
       opacity: 0.3;
       margin-bottom: var(--spacing-md);
     }
@@ -512,7 +516,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     .quote-nav-btn:hover {
       background: var(--primary-color);
       border-color: var(--primary-color);
-      color: white;
+      color: var(--on-primary);
       transform: scale(1.1);
     }
     
@@ -556,7 +560,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       padding: var(--spacing-sm) var(--spacing-lg);
       background: transparent;
       border: 2px solid var(--primary-color);
-      color: var(--primary-color);
+      color: var(--primary-text);
       border-radius: var(--radius-full);
       font-weight: 600;
       text-decoration: none;
@@ -565,7 +569,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     .view-all-quotes:hover {
       background: var(--primary-color);
-      color: white;
+      color: var(--on-primary);
     }
     
     @media (max-width: 768px) {
@@ -584,7 +588,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     /* Newsletter Section Enhancement */
     .newsletter-section {
-      background: var(--gradient-primary);
+      background: var(--gradient-banner-teal);
       padding: var(--spacing-3xl) var(--spacing-xl);
       border-radius: var(--radius-xl);
       text-align: center;
@@ -629,7 +633,8 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     
     .newsletter-section .social-link {
       background: white !important;
-      color: var(--primary-color) !important;
+      /* white in both themes -> fixed dark teal icon */
+      color: #0f766e !important;
       transition: all 0.3s ease;
     }
     
@@ -644,7 +649,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
       gap: var(--spacing-sm);
       padding: var(--spacing-md) var(--spacing-xl);
       background: white;
-      color: var(--primary-color);
+      color: var(--primary-text);
       border-radius: var(--radius-full);
       font-weight: 600;
       margin-top: var(--spacing-lg);
@@ -729,57 +734,19 @@ description: "Essays by Martin Li on AI and machine learning, building software 
         <h2 class="section-title">Explore Topics</h2>
         <p class="section-description">Dive into different areas of my expertise and interests.</p>
       </div>
+      <!-- Categories come from `blog_categories` in _config.yml (single source of truth).
+           Each card carries the id its own href targets, so /blog/#ai deep-links work
+           even before blog-categories.js takes over the filtering. -->
       <div class="category-grid">
-        
-        <a href="#career" class="category-card" data-category="career">
-          <div class="category-icon">💼</div>
-          <h3 class="category-title">Career</h3>
-          <p class="category-description">Software engineering career insights from JPMorgan Chase</p>
-          <span class="category-count" id="count-career">0 posts</span>
+        {% for cat in site.blog_categories %}
+        <a href="#{{ cat.slug }}" id="{{ cat.slug }}" class="category-card" data-category="{{ cat.slug }}">
+          <div class="category-icon" aria-hidden="true">{{ cat.icon }}</div>
+          <h3 class="category-title">{{ cat.name }}</h3>
+          <p class="category-description">{{ cat.description }}</p>
+          <span class="category-count" id="count-{{ cat.slug }}">0 posts</span>
         </a>
-        
-        <a href="#ai" class="category-card" data-category="ai">
-          <div class="category-icon">🤖</div>
-          <h3 class="category-title">AI & Machine Learning</h3>
-          <p class="category-description">AI research and lessons from Georgia Tech</p>
-          <span class="category-count" id="count-ai">0 posts</span>
-        </a>
-        
-        <a href="#quant-finance" class="category-card" data-category="quant-finance">
-          <div class="category-icon">📈</div>
-          <h3 class="category-title">Quant Finance</h3>
-          <p class="category-description">Quantitative finance and algorithmic trading</p>
-          <span class="category-count" id="count-quant-finance">0 posts</span>
-        </a>
-        
-        <a href="#learning" class="category-card" data-category="learning">
-          <div class="category-icon">📚</div>
-          <h3 class="category-title">Learning</h3>
-          <p class="category-description">Study tips, course reviews, and learning journey</p>
-          <span class="category-count" id="count-learning">0 posts</span>
-        </a>
-        
-        <a href="#public-speaking" class="category-card" data-category="public-speaking">
-          <div class="category-icon">🎤</div>
-          <h3 class="category-title">Public Speaking</h3>
-          <p class="category-description">Presentations and professional communication</p>
-          <span class="category-count" id="count-public-speaking">0 posts</span>
-        </a>
-        
-        <a href="#youtube" class="category-card" data-category="youtube">
-          <div class="category-icon">🎥</div>
-          <h3 class="category-title">YouTube</h3>
-          <p class="category-description">Video content and tech tutorials</p>
-          <span class="category-count" id="count-youtube">0 posts</span>
-        </a>
-        
-        <a href="#nonsense" class="category-card" data-category="nonsense">
-          <div class="category-icon">🎲</div>
-          <h3 class="category-title">Nonsense</h3>
-          <p class="category-description">Random thoughts and fun stuff</p>
-          <span class="category-count" id="count-nonsense">0 posts</span>
-        </a>
-        
+        {% endfor %}
+
       </div>
     </div>
   </section>
@@ -789,15 +756,11 @@ description: "Essays by Martin Li on AI and machine learning, building software 
     <div class="container">
       <div class="section-header">
         <h2 class="section-title fade-in-up">All Posts</h2>
-        <div class="blog-filters fade-in-up">
+        <div class="blog-filters fade-in-up" role="group" aria-label="Filter posts by category">
           <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="career">💼 Career</button>
-          <button class="filter-btn" data-filter="ai">🤖 AI</button>
-          <button class="filter-btn" data-filter="quant-finance">📈 Quant Finance</button>
-          <button class="filter-btn" data-filter="learning">📚 Learning</button>
-          <button class="filter-btn" data-filter="public-speaking">🎤 Speaking</button>
-          <button class="filter-btn" data-filter="youtube">🎥 YouTube</button>
-          <button class="filter-btn" data-filter="nonsense">🎲 Nonsense</button>
+          {% for cat in site.blog_categories %}
+          <button class="filter-btn" data-filter="{{ cat.slug }}"><span aria-hidden="true">{{ cat.icon }}</span> {{ cat.name }}</button>
+          {% endfor %}
         </div>
       </div>
       
@@ -839,7 +802,7 @@ description: "Essays by Martin Li on AI and machine learning, building software 
         <!-- Coming Soon Card -->
         <article class="blog-card blog-card-placeholder">
           <div class="blog-image" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center;">
-            <i class="fas fa-pen-fancy" style="font-size: 3rem; color: white; opacity: 0.5;"></i>
+            <i class="fas fa-pen-fancy" style="font-size: 3rem; color: var(--on-primary); opacity: 0.5;"></i>
           </div>
           <div class="blog-content">
             <div class="blog-date">
@@ -924,10 +887,6 @@ description: "Essays by Martin Li on AI and machine learning, building software 
             <i class="fas fa-envelope"></i>
           </a>
         </div>
-        <a href="{{ '/blog-post-creator.html' | relative_url }}" class="write-post-cta">
-          <i class="fas fa-pen"></i>
-          Write a New Post
-        </a>
       </div>
     </div>
   </section>
