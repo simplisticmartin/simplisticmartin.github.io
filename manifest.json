@@ -1,7 +1,7 @@
 {
   "name": "Martin Li - Portfolio & Blog",
   "short_name": "Martin Li",
-  "description": "Software Engineer II at JPMorgan Chase. Full-stack engineer building enterprise financial microservices in Java, Spring Boot, React, and TypeScript on AWS.",
+  "description": "Software Engineer II at JPMorgan Chase. Building and operating enterprise financial systems in Java, Spring Boot, React, and SQL Server on AWS, with SRE across a 30+ app portfolio.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
