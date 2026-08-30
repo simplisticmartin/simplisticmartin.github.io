@@ -3,15 +3,15 @@ layout: default
 permalink: /resume/
 stylesheet: /assets/css/resume.css
 og_type: profile
-seo_title: "Résumé — Martin Li | Software Engineer II (Java, Spring Boot, React, AWS)"
-description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. Java, Spring Boot, React, TypeScript, SQL Server, AWS, Kubernetes, SRE. M.S. CS (AI/ML), Georgia Tech."
+seo_title: "Résumé | Martin Li, Software Engineer II (Java, Python, Spring Boot, React, AWS)"
+description: "Résumé of Martin Li, Software Engineer II at JPMorgan Chase. Java, Python, Spring Boot, React, TypeScript, SQL Server, AWS, Kubernetes, and the reliability work underneath. M.S. CS (AI/ML), Georgia Tech."
 ---
 
 <article class="resume" itemscope itemtype="https://schema.org/Person">
   <header class="resume-header">
     <h1 itemprop="name">Martin Li</h1>
     <p class="resume-title" itemprop="jobTitle">
-      Software Engineer II &middot; Full-Stack &amp; SRE &middot; Java &middot; Spring Boot &middot; React &middot; AWS &middot; AI/ML
+      Software Engineer II &middot; Java &middot; Python &middot; React &middot; AWS &middot; AI/ML
     </p>
 
     <p class="resume-contact">
@@ -41,10 +41,13 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
   <section class="resume-section">
     <h2>Summary</h2>
     <p class="resume-summary" itemprop="description">
-      Software Engineer with 5+ years building and operating enterprise financial systems at JPMorgan Chase
-      in Java, Spring, Spring Boot, microservices, React, and SQL Server on AWS. Blends full-stack delivery
-      with SRE, application resiliency, and CI/CD to ship reliable, high-impact tools for portfolio managers
-      and clients. Georgia Tech M.S. in Computer Science (AI/ML) and AWS Certified Cloud Practitioner.
+      Software engineer with 5+ years of experience, four of them at JPMorgan Chase, building Java, Python,
+      and React/TypeScript systems for enterprise financial platforms: REST APIs, microservices, and the
+      cloud infrastructure underneath them. I like the work that sits between shipping a feature and keeping
+      it alive, which is why the same résumé holds a fund platform used by portfolio managers, a migration
+      across 35+ microservices, and the monitoring that emails the team every morning. I also build GenAI
+      systems on my own time. Georgia Tech M.S. in Computer Science (AI/ML concentration) and AWS Certified
+      Cloud Practitioner.
     </p>
   </section>
 
@@ -57,23 +60,27 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
       </div>
       <div class="resume-skill-row">
         <dt>Backend</dt>
-        <dd>Java, Spring, Spring Boot, Moneta Boot, Microservices, REST APIs, OpenAPI/Swagger, JUnit, Mockito, Liquibase</dd>
+        <dd>Spring Boot, FastAPI, microservices, REST APIs, concurrent programming, Hibernate/JPA, OpenAPI/Swagger, JUnit, Mockito, pytest, Liquibase</dd>
       </div>
       <div class="resume-skill-row">
         <dt>Frontend</dt>
-        <dd>React, Redux, Redux-Saga, React Query, Jest, React Testing Library, ag-Grid, styled-components</dd>
+        <dd>React, React Native, Redux, React Query, Jest, React Testing Library, ag-Grid, Expo</dd>
       </div>
       <div class="resume-skill-row">
-        <dt>Cloud &amp; SRE</dt>
-        <dd>AWS, Kubernetes/GKP, Cloud Foundry/GAP, Docker, CI/CD, Jenkins, AutoSys, Linux, Bash, monitoring &amp; alerting</dd>
+        <dt>Cloud &amp; Reliability</dt>
+        <dd>AWS, Kubernetes, Docker, CI/CD, Jenkins, Dynatrace, Splunk, AutoSys, Linux, Bash, monitoring &amp; alerting</dd>
       </div>
       <div class="resume-skill-row">
-        <dt>Data &amp; AI</dt>
-        <dd>MS SQL Server, Oracle SQL, MongoDB, Spark, scikit-learn, Jupyter, GitHub Copilot, Claude Code, Cursor</dd>
+        <dt>Data</dt>
+        <dd>MS SQL Server, Oracle SQL, PostgreSQL, MongoDB, Redis</dd>
+      </div>
+      <div class="resume-skill-row">
+        <dt>AI &amp; GenAI</dt>
+        <dd>On-device LLMs, LangGraph, prompt engineering, scikit-learn, AI-assisted development (Copilot, Claude Code, Cursor)</dd>
       </div>
       <div class="resume-skill-row">
         <dt>Practices</dt>
-        <dd>Agile/Scrum, application resiliency, application security, automated testing, responsible AI use</dd>
+        <dd>Agile/Scrum, application resiliency, release engineering, automated testing, business process improvement, documentation as a habit</dd>
       </div>
     </dl>
   </section>
@@ -83,50 +90,51 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>JPMorgan Chase &amp; Co. &mdash; Software Engineer II</h3>
+        <h3>JPMorgan Chase &amp; Co. &middot; Software Engineer II</h3>
         <span class="resume-entry-meta">Jul 2022 &ndash; Present</span>
       </div>
       <p class="resume-entry-sub">Plano, TX</p>
       <ul>
-        <li>Delivered full-stack fund-onboarding, due-diligence, factsheet, and portfolio-management tools in React, TypeScript, Java, Spring Boot, and SQL Server, giving <strong>25+ portfolio managers</strong> and clients a consolidated platform for critical fund workflows.</li>
-        <li>Own SRE, observability, and application resiliency for a portfolio of <strong>30+ applications</strong>, implementing AutoSys monitoring and proactive alerts that detect production failures before user impact and sustain <strong>99.9% uptime</strong>.</li>
-        <li>Cut deployment time <strong>up to 40%</strong> by modernizing legacy services to the latest Spring Boot/Moneta Boot and containerizing delivery on Kubernetes/GKP, Cloud Foundry/GAP, AWS, and Docker with Jenkins CI/CD.</li>
-        <li>Enabled portfolio managers to independently initialize funds, manage restrictions, and access reporting by delivering REST APIs, fund-data dashboards, and internal web applications.</li>
-        <li>Automated fund-database setup for <strong>10+ funds</strong> through Liquibase-managed schema changes and optimized SQL Server queries, cutting setup time by roughly <strong>70&ndash;80%</strong> and preventing recurring onboarding errors.</li>
-        <li>Developed reusable React and ag-Grid components with automated frontend and backend testing (Jest, RTL, JUnit, Mockito), reducing duplicated work and improving confidence in production releases.</li>
+        <li>Shipped the fund platform <strong>25+ portfolio managers</strong> and internal teams rely on for onboarding, due diligence, factsheets, and portfolio management, full-stack in React/TypeScript with Java and Spring Boot REST APIs on SQL Server.</li>
+        <li><strong>Co-led a Spring Boot and Jakarta migration across 35+ microservices</strong>, building the tracking system that surfaced the nine repositories with blocking merge conflicts and writing the team's incremental upgrade methodology.</li>
+        <li><strong>Sole-authored a full-stack compliance tool</strong> in Java, SQL, and React that turned a multi-day manual database process into self-service, removing engineering from the critical path for routine business operations.</li>
+        <li>Built and own the <strong>Python automation</strong> that monitors 35+ services for uptime and audits CI/CD compliance across 35+ repositories, reporting status to the team daily.</li>
+        <li><strong>Release-engineered compliance-gated production deployments</strong> of 13+ services per release across on-prem Kubernetes and AWS EKS, plus a 22-service observability audit spanning four platforms.</li>
+        <li>Cut deployment time <strong>up to 40%</strong> by modernizing services to Spring Boot microservices and containerizing delivery on Kubernetes and Docker with Jenkins CI/CD, sustaining <strong>99.9% uptime</strong> across 30+ applications.</li>
+        <li>Cut fund and database setup <strong>70&ndash;80%</strong> by automating onboarding for <strong>10+ funds</strong> with Liquibase-managed schema changes and tuned SQL Server queries.</li>
       </ul>
     </div>
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>Ouicruit &mdash; Software Engineer Consultant</h3>
+        <h3>Ouicruit &middot; Software Engineer Consultant</h3>
         <span class="resume-entry-meta">Dec 2021 &ndash; Jun 2022</span>
       </div>
       <p class="resume-entry-sub">Remote</p>
       <ul>
-        <li>Modernized Java/SQL API services with OpenAPI/Swagger, stronger validation, REST improvements, CI hardening, and expanded test coverage; improved median API latency by about <strong>30%</strong>.</li>
+        <li>Modernized Java and SQL API services with OpenAPI/Swagger, stronger validation, CI hardening, and expanded test coverage, improving median API latency by about <strong>30%</strong>.</li>
       </ul>
     </div>
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>Oppenheimer &amp; Co. &mdash; Linux Consultant</h3>
+        <h3>Oppenheimer &amp; Co. &middot; Linux Consultant</h3>
         <span class="resume-entry-meta">Dec 2020 &ndash; Jun 2021</span>
       </div>
       <p class="resume-entry-sub">New York, NY</p>
       <ul>
-        <li>Automated secure 6&ndash;15 GB weekly financial file transfers using Linux, Bash, GPG, and scheduled jobs, reducing transfer errors by <strong>25%</strong> and supporting <strong>99.9%</strong> data integrity.</li>
+        <li>Automated secure 6&ndash;15 GB weekly financial file transfers with Linux, Bash, GPG, and scheduled jobs, cutting transfer errors by <strong>25%</strong> and holding <strong>99.9%</strong> data integrity.</li>
       </ul>
     </div>
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>Federal Home Loan Bank &mdash; Software Engineer Intern</h3>
+        <h3>Federal Home Loan Bank &middot; Software Engineer Intern</h3>
         <span class="resume-entry-meta">2019</span>
       </div>
       <p class="resume-entry-sub">Jersey City, NJ</p>
       <ul>
-        <li>Built a QA data-visualization dashboard that reduced outsourced reporting costs by <strong>15%</strong> and streamlined recurring reporting workflows.</li>
+        <li>Built a QA data-visualization dashboard that cut outsourced reporting costs by <strong>15%</strong> and took the tedium out of a recurring reporting workflow.</li>
       </ul>
     </div>
   </section>
@@ -136,19 +144,38 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>ClearSpeak &mdash; AI Speech Coach (React Native)</h3>
+        <h3>Gauntlet &middot; Adaptive Interview Platform</h3>
       </div>
       <ul>
-        <li>Cross-platform mobile app with an on-device LLM (llama.rn) and speech-to-text (whisper.rn) for real-time feedback &mdash; filler detection, live coaching, and progress analytics; TypeScript, Expo, Zustand.</li>
+        <li>FastAPI and LangGraph platform running adaptive technical interviews as a resumable, checkpointed state machine: <strong>21 REST endpoints</strong>, <strong>194 automated tests</strong>, and a CI-gated benchmark that measures the grader's own accuracy.</li>
+        <li>Drew a hard line on where model judgment is allowed: deterministic code computes the facts and enforces the constraints, and the model handles only genuine judgment calls. Built and deployed solo on PostgreSQL and Redis with a React front end.</li>
       </ul>
     </div>
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>ML Model Optimization</h3>
+        <h3>ClearSpeak &middot; AI Speech Coach (React Native)</h3>
       </div>
       <ul>
-        <li>Python, scikit-learn, neural networks, and randomized optimization; compared backpropagation, genetic algorithms, and MIMIC for heart-disease classification, reaching about <strong>0.945 accuracy</strong>.</li>
+        <li>Mobile speech coach giving real-time feedback on filler words, pacing, and progress, with the LLM (llama.rn) and speech-to-text (whisper.rn) both running on-device so nothing recorded leaves the phone. TypeScript and Expo, built and shipped solo.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>PressurePoint &middot; Accountability App (React Native)</h3>
+      </div>
+      <ul>
+        <li>Local-first React Native and Expo app built on one idea: the hard part is <strong>starting</strong> a task, not finishing it, so nothing in the app punishes a miss. Research-grounded behavioral UX, <strong>WCAG AAA</strong> accessibility (7:1 contrast, large targets, text-to-speech, haptics, undo), and a <strong>155-assertion</strong> suite that guards the design rules alongside the logic.</li>
+      </ul>
+    </div>
+
+    <div class="resume-entry">
+      <div class="resume-entry-head">
+        <h3>Randomized Optimization vs. Backpropagation</h3>
+      </div>
+      <ul>
+        <li>Graduate study in Python and scikit-learn comparing backpropagation, genetic algorithms, and MIMIC for heart-disease classification, reaching about <strong>0.945 accuracy</strong> and mapping where each method stops improving.</li>
       </ul>
     </div>
   </section>
@@ -158,15 +185,15 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>Georgia Institute of Technology &mdash; M.S., Computer Science (AI/ML)</h3>
+        <h3>Georgia Institute of Technology &middot; M.S., Computer Science (AI/ML)</h3>
         <span class="resume-entry-meta">2026 &middot; GPA 3.6</span>
       </div>
-      <p class="resume-entry-sub">Coursework: Machine Learning; Artificial Intelligence; ML for Trading; Data &amp; Visual Analytics; AI, Ethics &amp; Society</p>
+      <p class="resume-entry-sub">Taken part time while working full time. Coursework: Machine Learning; Artificial Intelligence; ML for Trading; Data &amp; Visual Analytics; AI, Ethics &amp; Society</p>
     </div>
 
     <div class="resume-entry">
       <div class="resume-entry-head">
-        <h3>The City College of New York &mdash; B.S., Computer Science</h3>
+        <h3>The City College of New York &middot; B.S., Computer Science</h3>
         <span class="resume-entry-meta">2020</span>
       </div>
     </div>
@@ -183,9 +210,9 @@ description: "Résumé of Martin Li — Software Engineer II at JPMorgan Chase. 
         <h3>Awards</h3>
       </div>
       <ul class="resume-inline-list">
-        <li>1st Place &mdash; Cornell University Data Science Hackathon</li>
-        <li>1st Place &mdash; Heroes vs Hackers Hackathon</li>
-        <li>Best Website Hack &mdash; Columbia Health Hacks</li>
+        <li>1st Place, Cornell University Data Science Hackathon</li>
+        <li>1st Place, Heroes vs Hackers Hackathon</li>
+        <li>Best Website Hack, Columbia Health Hacks</li>
       </ul>
     </div>
   </section>

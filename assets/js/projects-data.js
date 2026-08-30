@@ -5,8 +5,17 @@
 
 const projects = [
   {
-    title: "ClearSpeak — AI Speech Coach",
-    description: "Cross-platform mobile app with an on-device LLM (llama.rn) and speech-to-text (whisper.rn) for real-time feedback — filler-word detection, live coaching, and progress analytics.",
+    title: "Gauntlet: an interview engine that grades its own grader",
+    description: "A FastAPI and LangGraph platform that runs adaptive technical interviews. The hard part was never the LLM call, it was deciding what the model is allowed to judge: deterministic code computes the facts and enforces the constraints, and the model only handles genuine judgment. 21 REST endpoints, 194 automated tests, and a CI-gated benchmark that measures the grader's own accuracy.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23279d7f' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E⚔️%3C/text%3E%3C/svg%3E",
+    tags: ["Python", "FastAPI", "LangGraph", "PostgreSQL", "Redis", "React"],
+    github: null,
+    demo: null,
+    featured: true
+  },
+  {
+    title: "ClearSpeak: an AI speech coach that never phones home",
+    description: "A mobile coach that listens while you practice and gives feedback in real time: filler words, pacing, progress over sessions. The LLM (llama.rn) and speech-to-text (whisper.rn) both run on the device, so the recording of you stumbling through a rehearsal never leaves your phone. Built and shipped solo.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2355d6aa' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🎤%3C/text%3E%3C/svg%3E",
     tags: ["React Native", "TypeScript", "Expo", "On-device LLM", "Zustand"],
     github: null,
@@ -14,8 +23,17 @@ const projects = [
     featured: true
   },
   {
-    title: "ML Model Optimization",
-    description: "Compared backpropagation, genetic algorithms, and MIMIC randomized-optimization techniques for heart-disease classification, reaching about 0.945 accuracy.",
+    title: "PressurePoint: accountability without the shame",
+    description: "A local-first app for executive dysfunction, built on one idea: the hard part is starting, not finishing, so nothing in the app punishes a miss. The behavioral UX is grounded in the research, the accessibility targets WCAG AAA, and 155 assertions test the design rules themselves so a future refactor cannot quietly undo them.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%233db896' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🎯%3C/text%3E%3C/svg%3E",
+    tags: ["React Native", "Expo", "TypeScript", "Accessibility (AAA)", "Behavioral UX"],
+    github: null,
+    demo: null,
+    featured: true
+  },
+  {
+    title: "Randomized Optimization vs. Backpropagation",
+    description: "A graduate study putting backpropagation head to head with genetic algorithms and MIMIC on heart-disease classification, reaching about 0.945 accuracy. The interesting result was not the winner but where each method stopped improving, and why.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%2314b8a6' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🧠%3C/text%3E%3C/svg%3E",
     tags: ["Python", "scikit-learn", "Neural Networks", "Randomized Optimization"],
     github: null,
@@ -41,8 +59,8 @@ const projects = [
     featured: false
   },
   {
-    title: "Portfolio Website",
-    description: "A modern, responsive portfolio and blog built with Jekyll and GitHub Pages. Features include smooth animations, dark mode support, and optimized performance.",
+    title: "This Site",
+    description: "A Jekyll portfolio and blog on GitHub Pages, hand-built rather than themed. Dark mode, an interactive resume you scroll through like a side-scroller, and a deliberate effort to keep it fast on a phone. The source is public if you want to see how it is put together.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2355d6aa;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2357ad68;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad)' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E🌐%3C/text%3E%3C/svg%3E",
     tags: ["Jekyll", "HTML", "CSS", "JavaScript"],
     github: "https://github.com/simplisticmartin/simplisticmartin.github.io",

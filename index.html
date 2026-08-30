@@ -1,7 +1,7 @@
 ---
 layout: none
-seo_title: "Martin Li — Software Engineer II @ JPMorgan Chase | Java, Spring Boot, React, AWS"
-description: "Software Engineer II at JPMorgan Chase — 5+ years building and operating enterprise financial systems in Java, Spring Boot, React, and SQL Server on AWS, with SRE across a 30+ app portfolio. M.S. CS (AI/ML), Georgia Tech."
+seo_title: "Martin Li | Software Engineer II @ JPMorgan Chase | Java, Python, React, AWS"
+description: "Software Engineer II at JPMorgan Chase. 5+ years building and operating enterprise financial systems in Java, Python, React, and SQL Server on AWS: 35+ microservices, 99.9% uptime, and the reliability work underneath. M.S. CS (AI/ML), Georgia Tech."
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -185,6 +185,126 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       left: 100%;
     }
     
+    /* ==================== HOW I WORK ==================== */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-xl);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+    }
+
+    .principle {
+      position: relative;
+      padding-left: 3.25rem;
+    }
+
+    .principle-num {
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      font-family: var(--font-heading, inherit);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      border-radius: 6px;
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.85;
+    }
+
+    .principle h3 {
+      font-size: 1.1rem;
+      margin: 0.3rem 0 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .principle p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0;
+      font-size: 0.97rem;
+    }
+
+    /* ==================== SELECTED WORK ==================== */
+    .case-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: var(--spacing-lg);
+      max-width: 1200px;
+      margin: var(--spacing-2xl) auto 0;
+      padding: 0 var(--spacing-lg);
+    }
+
+    .case {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    }
+
+    .case:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary-color);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .case-kicker {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 0.15rem 0.6rem;
+      background: var(--bg-tertiary);
+      color: var(--primary-text);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .case h3 {
+      font-size: 1.12rem;
+      line-height: 1.35;
+      margin-bottom: 0.6rem;
+    }
+
+    .case p {
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.75;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .case-result {
+      margin-top: auto;
+      padding-top: var(--spacing-sm);
+      border-top: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 0.89rem;
+      line-height: 1.6;
+    }
+
+    .case-result b {
+      color: var(--primary-text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
     /* ==================== STATS BAR ==================== */
     .stats-bar {
       display: flex;
@@ -609,10 +729,11 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       <h1>Hi, I'm Martin Li</h1>
       <p class="tagline">Software Engineer II @ JPMorgan Chase</p>
       <p class="description">
-        Software engineer with 5+ years <strong>building and operating</strong> enterprise financial
-        systems at JPMorgan Chase in Java, Spring Boot, React, and SQL Server on AWS. I blend full-stack
-        delivery with <strong>SRE</strong> and application resiliency across a 30+ application portfolio,
-        and I hold an M.S. in Computer Science (AI/ML) from Georgia Tech.
+        I build the systems people depend on, and then I look after them. For the past four years that has
+        meant <strong>Java, Python, and React</strong> at JPMorgan Chase: the fund platform portfolio managers
+        open every morning, and the quieter work underneath it that keeps the lights on. I am finishing an
+        <strong>M.S. in Computer Science</strong> at Georgia Tech, and most evenings I am building something
+        of my own.
       </p>
       
       <p class="hero-meta">
@@ -648,8 +769,8 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <div class="stat-label">Years Experience</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">30+</div>
-          <div class="stat-label">Apps Supported (SRE)</div>
+          <div class="stat-number">35+</div>
+          <div class="stat-label">Services I Help Run</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">3.6</div>
@@ -663,24 +784,24 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
   <section class="impact-band" aria-label="Impact by the numbers">
     <div class="impact-grid">
       <div>
-        <div class="impact-number">40%</div>
-        <div class="impact-label">Faster deployments</div>
-        <div class="impact-sub">Spring Boot modernization &amp; containerization</div>
+        <div class="impact-number">35+</div>
+        <div class="impact-label">Microservices migrated</div>
+        <div class="impact-sub">Spring Boot and Jakarta upgrade, co-led</div>
       </div>
       <div>
         <div class="impact-number">99.9%</div>
-        <div class="impact-label">Uptime</div>
-        <div class="impact-sub">SRE monitoring &amp; proactive alerts</div>
+        <div class="impact-label">Uptime held</div>
+        <div class="impact-sub">Across a 30+ application portfolio</div>
       </div>
       <div>
-        <div class="impact-number">30+</div>
-        <div class="impact-label">Apps under SRE ownership</div>
-        <div class="impact-sub">Observability, alerting, resiliency</div>
+        <div class="impact-number">40%</div>
+        <div class="impact-label">Faster deployments</div>
+        <div class="impact-sub">Containerized delivery and CI/CD</div>
       </div>
       <div>
         <div class="impact-number">25+</div>
-        <div class="impact-label">Portfolio managers served</div>
-        <div class="impact-sub">Consolidated fund-workflow platform</div>
+        <div class="impact-label">People using what I built</div>
+        <div class="impact-sub">Portfolio managers and internal teams</div>
       </div>
     </div>
   </section>
@@ -690,8 +811,8 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
     <div class="section-header">
       <h2 class="section-title fade-in-up">Where I Fit</h2>
       <p class="section-description fade-in-up">
-        I work across the whole stack, so I map onto several roles. Here's the honest breakdown of
-        what I've actually shipped in each.
+        I work across the whole stack, so I map onto a few different job titles. Here is the honest
+        version of what I have actually shipped in each, so you can decide for yourself.
       </p>
     </div>
 
@@ -699,7 +820,9 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       <div class="role-card">
         <div class="role-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
         <h3>Full-Stack Engineer</h3>
-        <p>React/TypeScript front ends on Java/Spring Boot microservices — fund onboarding, due diligence, factsheets, and a portfolio-management toolkit used by portfolio managers and clients.</p>
+        <p>React and TypeScript front ends on Java and Spring Boot microservices. The fund platform I work on
+        handles onboarding, due diligence, factsheets, and portfolio management for 25+ portfolio managers and
+        internal teams. I have also sole-authored a compliance tool end to end, from the SQL up to the screen.</p>
         <div class="role-stack">
           <span>React</span><span>TypeScript</span><span>Java</span><span>Spring Boot</span><span>SQL Server</span>
         </div>
@@ -708,28 +831,87 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       <div class="role-card">
         <div class="role-icon"><i class="fas fa-server" aria-hidden="true"></i></div>
         <h3>Backend / Platform Engineer</h3>
-        <p>Microservices and REST APIs with OpenAPI contracts, Liquibase-managed schema changes, and tuned SQL. Improved median API latency by about 30% on a modernization engagement.</p>
+        <p>Microservices and REST APIs with OpenAPI contracts, Liquibase-managed schema changes, and tuned SQL.
+        I co-led a Spring Boot and Jakarta migration across 35+ services and wrote the team's incremental upgrade
+        guide after watching too many version jumps go badly.</p>
         <div class="role-stack">
-          <span>Java</span><span>Spring</span><span>REST APIs</span><span>OpenAPI</span><span>Liquibase</span><span>JUnit</span>
+          <span>Java</span><span>Spring Boot</span><span>REST APIs</span><span>OpenAPI</span><span>Liquibase</span><span>Concurrency</span>
         </div>
       </div>
 
       <div class="role-card">
         <div class="role-icon"><i class="fas fa-cloud" aria-hidden="true"></i></div>
         <h3>Cloud &amp; Site Reliability</h3>
-        <p>Own SRE, observability, and application resiliency for a 30+ application portfolio. Containerized delivery on Kubernetes, Cloud Foundry, and AWS with Jenkins CI/CD and AutoSys scheduling.</p>
+        <p>Observability and resiliency across a 30+ application portfolio, on both on-prem Kubernetes and AWS.
+        I run compliance-gated production releases, built the Python monitoring that emails the team every
+        morning, and audited 22 services across four platforms so nobody hunts for a log index mid-incident.</p>
         <div class="role-stack">
-          <span>AWS</span><span>Kubernetes</span><span>Docker</span><span>Jenkins</span><span>AutoSys</span><span>Linux</span>
+          <span>AWS</span><span>Kubernetes</span><span>Docker</span><span>Jenkins</span><span>Python</span><span>Linux</span>
         </div>
       </div>
 
       <div class="role-card">
         <div class="role-icon"><i class="fas fa-brain" aria-hidden="true"></i></div>
         <h3>AI / Machine Learning</h3>
-        <p>M.S. specialization in AI/ML. Built a mobile speech coach around an on-device LLM, and benchmarked backpropagation against genetic algorithms and MIMIC for classification.</p>
+        <p>My M.S. concentration, and the thing I keep building on my own time. Gauntlet is a LangGraph
+        interview engine with a benchmark that grades its own grader. ClearSpeak runs an LLM entirely on your
+        phone, so nothing you say leaves the device.</p>
         <div class="role-stack">
-          <span>Python</span><span>scikit-learn</span><span>LLMs</span><span>Spark</span><span>Jupyter</span>
+          <span>Python</span><span>FastAPI</span><span>LangGraph</span><span>On-device LLMs</span><span>scikit-learn</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How I Work -->
+  <section class="section reveal" id="how-i-work">
+    <div class="section-header">
+      <h2 class="section-title fade-in-up">How I Work</h2>
+      <p class="section-description fade-in-up">
+        Four habits that show up in almost everything I ship. None of them are original. They are just
+        the things I learned the slow way and now refuse to skip.
+      </p>
+    </div>
+
+    <div class="principles-grid stagger-children">
+      <div class="principle">
+        <span class="principle-num" aria-hidden="true">01</span>
+        <h3>Write the runbook, not just the code</h3>
+        <p>
+          I try to write the page I would want to find at 2am during an incident: the exact command, the
+          exact error, the fix, and why. Twenty-two of those pages exist because of a rollout, a migration,
+          or an outage I did not want anyone to have to rediscover.
+        </p>
+      </div>
+
+      <div class="principle">
+        <span class="principle-num" aria-hidden="true">02</span>
+        <h3>Leave the decision visible</h3>
+        <p>
+          My interview platform withholds per-question scores until the interview ends, because a running
+          score changes how people answer the next question and destroys the measurement. Its architecture
+          notes have a section called "things deliberately not done" so those read as choices, not oversights.
+        </p>
+      </div>
+
+      <div class="principle">
+        <span class="principle-num" aria-hidden="true">03</span>
+        <h3>Fix it even when it is not yours</h3>
+        <p>
+          An audit turned up services deployed to cluster pairs that were not actually in separate
+          availability zones, which quietly defeats the point of having two. I did not own those services.
+          I wrote up the rule, raised the pull requests, and asked the owners to review.
+        </p>
+      </div>
+
+      <div class="principle">
+        <span class="principle-num" aria-hidden="true">04</span>
+        <h3>Get it wrong in private, twice if needed</h3>
+        <p>
+          My first two passes at a script meant to run across 35 repositories were subtly broken in ways that
+          would have been harmless on one repo and destructive on thirty-five. Scale turns a small bug into a
+          large one, so I test the blast radius before I widen it.
+        </p>
       </div>
     </div>
   </section>
@@ -744,7 +926,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
         <div class="skill-icon">☕</div>
         <div class="skill-name">Java</div>
       </div>
-      <div class="skill-item" data-tooltip="Microservices & REST APIs (Spring, Moneta Boot)">
+      <div class="skill-item" data-tooltip="Microservices and REST APIs across 35+ services">
         <div class="skill-icon">🍃</div>
         <div class="skill-name">Spring Boot</div>
       </div>
@@ -756,7 +938,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
         <div class="skill-icon">🔷</div>
         <div class="skill-name">TypeScript</div>
       </div>
-      <div class="skill-item" data-tooltip="ML, data analysis, and automation">
+      <div class="skill-item" data-tooltip="SRE automation, FastAPI services, and ML coursework">
         <div class="skill-icon">🐍</div>
         <div class="skill-name">Python</div>
       </div>
@@ -764,11 +946,11 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
         <div class="skill-icon">☁️</div>
         <div class="skill-name">AWS</div>
       </div>
-      <div class="skill-item" data-tooltip="Containerized delivery on Kubernetes & Cloud Foundry">
+      <div class="skill-item" data-tooltip="Containerized delivery on Kubernetes, on-prem and on AWS">
         <div class="skill-icon">🐳</div>
         <div class="skill-name">Docker</div>
       </div>
-      <div class="skill-item" data-tooltip="M.S. specialization in AI/ML">
+      <div class="skill-item" data-tooltip="M.S. concentration, plus LangGraph and on-device LLM builds">
         <div class="skill-icon">🧠</div>
         <div class="skill-name">AI/ML</div>
       </div>
@@ -780,8 +962,8 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
     <div class="section-header">
       <h2 class="section-title fade-in-up">Experience</h2>
       <p class="section-description fade-in-up">
-        Five-plus years shipping production systems in financial services — full-stack product work,
-        cloud modernization, and the reliability engineering that keeps it all up.
+        Five-plus years shipping production systems in financial services: full-stack product work, platform
+        migrations, and the reliability engineering that keeps all of it standing up on a Monday morning.
       </p>
     </div>
 
@@ -795,21 +977,25 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <span class="xp-date">Jul 2022 &ndash; Present</span>
         </div>
         <ul class="xp-points">
-          <li>Delivered full-stack fund-onboarding, due-diligence, factsheet, and portfolio-management tools (React/TypeScript on Java/Spring Boot microservices over SQL Server), giving <strong>25+ portfolio managers</strong> and clients a consolidated platform for critical fund workflows.</li>
-          <li>Own SRE, observability, and application resiliency for a <strong>30+ application</strong> portfolio, implementing AutoSys monitoring and proactive alerts that catch production failures before user impact and sustain <strong>99.9% uptime</strong>.</li>
-          <li>Cut deployment time <strong>up to 40%</strong> by modernizing legacy services to the latest Spring Boot and containerizing delivery on Kubernetes, Cloud Foundry, AWS, and Docker with Jenkins CI/CD.</li>
-          <li>Automated fund-database setup for <strong>10+ funds</strong> with Liquibase-managed schema changes and tuned SQL Server queries, cutting setup time <strong>~70&ndash;80%</strong> and preventing recurring onboarding errors.</li>
+          <li>Shipped the fund platform <strong>25+ portfolio managers</strong> and internal teams rely on for onboarding, due diligence, and portfolio management. React and TypeScript on the front, Java and Spring Boot REST APIs over SQL Server behind it.</li>
+          <li><strong>Co-led a Spring Boot and Jakarta migration across 35+ microservices</strong>, building the tracker that surfaced the nine repositories with blocking merge conflicts and writing the team's incremental upgrade guide.</li>
+          <li>Sole-authored a <strong>full-stack compliance tool</strong> in Java, SQL, and React that turned a multi-day manual database process into self-service, taking engineers out of the critical path for routine business operations.</li>
+          <li>Built and own the <strong>Python automation</strong> that monitors 35+ services for uptime and audits CI/CD compliance across 35+ repositories, emailing the team a status table every morning.</li>
+          <li>Release-engineered compliance-gated production deployments of <strong>13+ services</strong> at a time across on-prem Kubernetes and AWS EKS, plus a <strong>22-service observability audit</strong> spanning four platforms.</li>
+          <li>Cut deployment time <strong>up to 40%</strong> by modernizing services to Spring Boot and containerizing delivery on Kubernetes and Docker with Jenkins CI/CD, holding <strong>99.9% uptime</strong> across 30+ applications.</li>
+          <li>Cut fund and database setup <strong>70&ndash;80%</strong> by automating onboarding for <strong>10+ funds</strong> with Liquibase-managed schema changes and tuned SQL Server queries.</li>
         </ul>
         <div class="xp-tags">
           <span class="xp-tag">Java</span>
           <span class="xp-tag">Spring Boot</span>
+          <span class="xp-tag">Python</span>
           <span class="xp-tag">React</span>
           <span class="xp-tag">TypeScript</span>
           <span class="xp-tag">SQL Server</span>
           <span class="xp-tag">AWS</span>
           <span class="xp-tag">Kubernetes</span>
+          <span class="xp-tag">Docker</span>
           <span class="xp-tag">Jenkins</span>
-          <span class="xp-tag">AutoSys</span>
         </div>
       </article>
 
@@ -822,7 +1008,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <span class="xp-date">Dec 2021 &ndash; Jun 2022</span>
         </div>
         <ul class="xp-points">
-          <li>Modernized Java/SQL API services with OpenAPI/Swagger, stronger validation, REST improvements, CI hardening, and expanded test coverage — improving median API latency by about <strong>30%</strong>.</li>
+          <li>Modernized Java and SQL API services with OpenAPI/Swagger, stronger validation, CI hardening, and expanded test coverage, improving median API latency by about <strong>30%</strong>.</li>
         </ul>
         <div class="xp-tags">
           <span class="xp-tag">Java</span>
@@ -842,7 +1028,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <span class="xp-date">Dec 2020 &ndash; Jun 2021</span>
         </div>
         <ul class="xp-points">
-          <li>Automated secure 6&ndash;15 GB weekly financial file transfers with Linux, Bash, GPG, and scheduled jobs — reducing transfer errors by <strong>25%</strong> and supporting <strong>99.9%</strong> data integrity.</li>
+          <li>Automated secure 6&ndash;15 GB weekly financial file transfers with Linux, Bash, GPG, and scheduled jobs, cutting transfer errors by <strong>25%</strong> and holding <strong>99.9%</strong> data integrity.</li>
         </ul>
         <div class="xp-tags">
           <span class="xp-tag">Linux</span>
@@ -861,7 +1047,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <span class="xp-date">2019</span>
         </div>
         <ul class="xp-points">
-          <li>Built a QA data-visualization dashboard that reduced outsourced reporting costs by <strong>15%</strong> and streamlined recurring reporting workflows.</li>
+          <li>Built a QA data-visualization dashboard that cut outsourced reporting costs by <strong>15%</strong> and took the tedium out of a recurring reporting workflow.</li>
         </ul>
         <div class="xp-tags">
           <span class="xp-tag">Data Visualization</span>
@@ -869,6 +1055,190 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
           <span class="xp-tag">QA</span>
         </div>
       </article>
+    </div>
+  </section>
+
+  <!-- Selected Work -->
+  <section class="section reveal" id="selected-work">
+    <div class="section-header">
+      <h2 class="section-title fade-in-up">Selected Work</h2>
+      <p class="section-description fade-in-up">
+        A résumé gives you one line each for these. Here is what actually happened, including the parts I got
+        wrong first. Details are generalized, because the specifics belong to my employer.
+      </p>
+    </div>
+
+    <div class="case-list stagger-children">
+
+      <article class="case">
+        <span class="case-kicker">Platform migration</span>
+        <h3>Migrating 35+ microservices, one version at a time</h3>
+        <p>
+          The platform ran 35+ services on an aging major version of Spring Boot, and every one sat a
+          different distance from the target: different gaps between the production branch, the mainline, and
+          the upgrade branch. I co-owned the tracking and the method. Two pages held the truth, a three-way
+          branch comparison for the reporting services and a merge-status board for all 35. That board
+          surfaced nine repositories with conflicts blocking the upgrade, four where the mainline already
+          contained the change, and one abandoned service with no active certificate and no commits in a
+          year, which I cut from scope entirely. I also wrote the team's upgrade guide, because I had watched
+          engineers try to jump several major versions at once and hit cascading breakage they could not
+          isolate: step one version at a time, run the automated namespace migration at each step, let the
+          dependency BOM manage versions instead of hardcoding them, and run a full build and test pass
+          before moving on.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          One source of truth for 35 parallel efforts, with blockers visible before the release window
+          instead of during it.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Observability</span>
+        <h3>Knowing your dependencies are up, not just your service</h3>
+        <p>
+          The platform had grown to 22 services across four deployment targets, and during an incident
+          engineers were losing time hunting for the right log index or APM process group. I audited all 22,
+          confirmed every log index was live and every process group reporting, and put every link in one
+          place. The audit turned up real gaps: services missing the network egress rule their APM collector
+          needed, and one scheduled job that is not a long-running deployment at all, so APM does not apply
+          and only log search does. Then I went a layer down, because knowing our services are up is not the
+          same as knowing their dependencies are. I wrote a custom Spring Boot health indicator that checks
+          20+ downstream dependencies in parallel with <code>CompletableFuture</code> and reports
+          per-dependency status and response time on its own endpoint, separate from the framework's, plus a
+          Python job that calls it across the fleet and mails a per-service table.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          One bookmark instead of a scavenger hunt, and dependency-level visibility the team did not have
+          before.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Automation at scale</span>
+        <h3>One config change, 35 repositories</h3>
+        <p>
+          A platform mandate meant removing a legacy block from the deployment config of roughly 35
+          repositories. Thirty-five hand-written pull requests is a poor use of a week, so I scripted it as a
+          batch change across all of them at once. Getting it right took three attempts, and the wrong ones
+          are the interesting part. The first had a malformed pattern that appended without respecting YAML
+          nesting. The second used a range delete, which is fragile: it removes everything between two
+          markers and will happily swallow an unrelated section. The third used <code>awk</code> to flag on
+          the key and stop at the next non-indented line, identifying the block by indentation and staying
+          correct regardless of how many lines it ran to. Alongside it I ran a Python audit across 38
+          repositories for deprecated cluster references. It hit an authentication wall, and rather than drop
+          it I moved to token-based API access, which is now how I do all programmatic repository work.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          All 35 updated by automated pull request in days rather than weeks. Eight violations found, six
+          real and fixed, two false positives already commented out.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Environment provisioning</span>
+        <h3>Five services, five completely different failures</h3>
+        <p>
+          I was asked to make a five-service stack work in a development environment where it never had.
+          Every service was broken for a different reason, which is the honest lesson of distributed systems.
+          The front end had no dedicated auth client for that environment at all. The gateway had four
+          separate problems stacked on each other: a wrong database hostname, a missing network egress rule,
+          a service account never provisioned in that database, and an audit table that simply did not exist,
+          which I created by hand. One service was still pointed at a decommissioned cluster and needed new
+          ingress addresses ordered. One had a connection timeout that needed both an egress fix and an
+          access request. The method was unglamorous: read the actual error out of each pod instead of
+          guessing, then fix them one at a time. I did it again later for an eight-service environment wired
+          to a database refreshed nightly from production, which catches data-shaped bugs a static test
+          dataset never will.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          All services healthy, all seven screens validated, and the investigation written up so nobody
+          starts from zero next time.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Release engineering</span>
+        <h3>Compliance-gated releases, 13 services at a time</h3>
+        <p>
+          I have served as release engineer across two very different ecosystems, one on on-prem Kubernetes
+          and one on AWS. The largest release I ran covered 13 services under a single change request. The
+          gates are real and none of them are optional: code coverage above threshold on new code and
+          overall, security scans with no unresolved critical or high findings, a change request carrying
+          every signed-off ticket and scan link, then approval from the deployment control platform before
+          the pipeline will run in production at all. After that it is notification, deploy from the release
+          branches, sanity-check the screens that matter, confirm, then merge back and tag. A separate
+          release carried ten tickets at once, well above the usual batch of two to four, which meant
+          justifying the size on the grounds that all ten had been validated together in the same sprint.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          Clean releases with no post-release incidents, and a written SOP the team still follows.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Tooling for operations</span>
+        <h3>A bulk-update tool built for whoever cleans up after it</h3>
+        <p>
+          Corporate actions like stock splits used to mean an engineer hand-running SQL across four tables. I
+          built the wizard that replaced that, and most of the design went into what happens when it goes
+          wrong. The interface works in human-readable instrument identifiers and resolves them to internal
+          keys server-side, so a request can never carry an arbitrary key that touches the wrong security. It
+          shows a small sample of rows before and after, enough for the operations team to sanity-check
+          without dumping the dataset. It names the instrument on a confirmation screen before anything
+          irreversible runs. On a related onboarding tool I mapped all 35 input fields before writing a line
+          of code, which is how I noticed one selection could derive three others and take the form from 35
+          inputs down to 32.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          A multi-day, engineer-dependent process became self-service for the team that actually owns it.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Security</span>
+        <h3>Certificates, and making them boring on purpose</h3>
+        <p>
+          I owned the full lifecycle of the mutual TLS certificates behind a managed file-transfer
+          integration: requesting them, installing them, rotating them, and testing them. Certificate work is
+          easy the first time and painful every time after, because whoever does it next is usually doing it
+          under pressure with an expiry date behind them. So I wrote it down as a nine-step SOP with the
+          exact commands, including the keystore format conversions the authentication flow needs, plus a
+          companion guide for exercising certificate auth from an API client before trusting it in a running
+          service.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          A rotation that used to be an investigation is now a checklist.
+        </p>
+      </article>
+
+      <article class="case">
+        <span class="case-kicker">Reliability</span>
+        <h3>Two clusters, one datacenter, zero redundancy</h3>
+        <p>
+          Services on the platform are meant to deploy to a pair of clusters sharing a base identifier but
+          sitting in separate availability zones, so losing one zone leaves the other serving. Auditing the
+          deployment config of every service against the load-balancer and cluster dashboards, I found pairs
+          built from mismatched bases, and one service spread across three clusters on three different bases,
+          which means inconsistent patch levels and maintenance windows on top of the redundancy problem. I
+          did not own those services. I documented the pairing rule, ordered the replacement ingress
+          addresses, raised the pull requests myself, and asked the owners to review. I also kept the cluster
+          rebuild SOP, recording each service's release branch and pipeline before a repave so the platform
+          could be brought back in minutes.
+        </p>
+        <p class="case-result">
+          <b>Result</b>
+          Correctly paired across availability zones, with the rule written down so the next person checks
+          it before it becomes an incident.
+        </p>
+      </article>
+
     </div>
   </section>
 
@@ -907,8 +1277,8 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
     <div class="section-header">
       <h2 class="section-title fade-in-up">Featured Projects</h2>
       <p class="section-description fade-in-up">
-        A selection of projects showcasing my skills in artificial intelligence, 
-        full-stack development, and software engineering.
+        These are the things I build when nobody is asking me to. They are where I make every architectural
+        call myself, get them wrong in private, and learn the most.
       </p>
     </div>
     
@@ -922,7 +1292,9 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
     <div class="section-header">
       <h2 class="section-title fade-in-up">Let's Connect</h2>
       <p class="section-description fade-in-up">
-        I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+        I am open to Software Engineer roles across full-stack, backend, platform and reliability, or AI/ML,
+        and I am based in Plano, TX. If you are hiring, or you just want to compare notes on a migration that
+        went sideways, I would genuinely like to hear from you.
       </p>
     </div>
     
@@ -972,7 +1344,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       <a href="/blog/" class="quick-link-card">
         <div class="quick-link-icon">📝</div>
         <h3>Read My Blog</h3>
-        <p>Insights on AI, software engineering, and lessons from JPMorgan Chase & Georgia Tech.</p>
+        <p>Notes on AI, software engineering, and what I keep learning between JPMorgan Chase and Georgia Tech.</p>
         <span class="quick-link-arrow">Browse Posts <i class="fas fa-arrow-right"></i></span>
       </a>
       <a href="/learning.html" class="quick-link-card">
@@ -984,7 +1356,7 @@ description: "Software Engineer II at JPMorgan Chase — 5+ years building and o
       <a href="/about/" class="quick-link-card">
         <div class="quick-link-icon">👨‍💻</div>
         <h3>About Me</h3>
-        <p>Learn about my background, experience, and what drives me as a software engineer.</p>
+        <p>Where I came from, what I have worked on, and what actually keeps me interested in this job.</p>
         <span class="quick-link-arrow">Get to Know Me <i class="fas fa-arrow-right"></i></span>
       </a>
     </div>
