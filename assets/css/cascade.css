@@ -18,6 +18,11 @@
   color: #a7c0c4;
 }
 
+.cascade-body .nav-logo {
+  background: none;
+  -webkit-text-fill-color: #66e5e2;
+}
+
 .cascade-body .nav-links a:hover,
 .cascade-body .nav-links a.active {
   color: #66e5e2;
@@ -31,6 +36,23 @@
 
 .cascade-body .nav-links .btn-resume {
   color: #062027 !important;
+}
+
+.cascade-body .site-footer {
+  background: #040a10;
+  color: #a7c0c4;
+}
+
+.cascade-body .site-footer .footer-brand h3,
+.cascade-body .site-footer .footer-column h4 {
+  color: #e6f4f5;
+}
+
+.cascade-body .site-footer .footer-brand p,
+.cascade-body .site-footer .footer-column a,
+.cascade-body .site-footer .footer-copyright,
+.cascade-body .site-footer .footer-made-with {
+  color: #6f8a90;
 }
 
 .cascade-page {
@@ -751,6 +773,11 @@
 
 @media (max-width: 760px) {
   .cascade-hero { min-height: auto; padding-top: 7rem; padding-bottom: 4rem; }
+  .cascade-home-inner { grid-template-columns: 1fr; }
+  .cascade-home-telemetry { min-height: 320px; }
+  .cascade-home-terminal-body { min-height: 245px; }
+  .cascade-home-building { transform: scale(0.82); transform-origin: center; }
+
   .cascade-hero h1 { font-size: clamp(4.2rem, 22vw, 7rem); }
   .cascade-hero-map { min-height: 400px; }
   .cascade-map-node { transform: scale(0.8); }

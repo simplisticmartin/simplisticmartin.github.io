@@ -384,6 +384,7 @@
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = 1200 * ratio;
     canvas.height = 680 * ratio;
+    canvas.style.aspectRatio = '1200 / 680';
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
@@ -587,13 +588,17 @@
   function init() {
     document.body.classList.add('cascade-body');
     const querySeed = new URLSearchParams(window.location.search).get('seed');
-    if (querySeed) $('#cascadeSeed').value = normalizeSeed(querySeed);
     resizeCanvas();
     setupWorker();
     bindEvents();
     renderTelemetry();
     selectService('gateway', false);
     animate();
+    if (querySeed) {
+      const seed = normalizeSeed(querySeed);
+      $('#cascadeSeed').value = seed;
+      window.setTimeout(() => start('recruiter', seed), 260);
+    }
   }
 
   init();
