@@ -2,14 +2,14 @@
 'use strict';
 
 const SERVICE_DEFINITIONS = [
-  { id: 'gateway', name: 'API Gateway', short: 'GATEWAY', role: 'edge', dependencies: ['orders', 'auth', 'pricing'], base: { health: 98, cpu: 31, memory: 44, latency: 120, errors: 0.2, queue: 12, replicas: 3, traffic: 920 } },
-  { id: 'orders', name: 'Orders', short: 'ORDERS', role: 'service', dependencies: ['pricing', 'inventory'], base: { health: 98, cpu: 38, memory: 51, latency: 160, errors: 0.3, queue: 8, replicas: 3, traffic: 640 } },
-  { id: 'auth', name: 'Auth', short: 'AUTH', role: 'service', dependencies: ['redis'], base: { health: 99, cpu: 21, memory: 34, latency: 80, errors: 0.1, queue: 4, replicas: 2, traffic: 520 } },
-  { id: 'pricing', name: 'Pricing', short: 'PRICING', role: 'service', dependencies: ['postgres', 'cache'], base: { health: 98, cpu: 33, memory: 49, latency: 140, errors: 0.4, queue: 12, replicas: 3, traffic: 580 } },
-  { id: 'inventory', name: 'Inventory', short: 'INVENTORY', role: 'service', dependencies: ['postgres', 'cache'], base: { health: 98, cpu: 29, memory: 42, latency: 150, errors: 0.2, queue: 8, replicas: 2, traffic: 490 } },
-  { id: 'cache', name: 'Redis Cache', short: 'REDIS', role: 'data', dependencies: ['redis'], base: { health: 99, cpu: 18, memory: 63, latency: 16, errors: 0.1, queue: 2, replicas: 3, traffic: 780 } },
-  { id: 'postgres', name: 'PostgreSQL', short: 'POSTGRES', role: 'data', dependencies: [], base: { health: 98, cpu: 46, memory: 58, latency: 22, errors: 0.2, queue: 24, replicas: 3, traffic: 1200 } },
-  { id: 'redis', name: 'Redis Primary', short: 'REDIS DB', role: 'data', dependencies: [], base: { health: 99, cpu: 24, memory: 47, latency: 9, errors: 0.1, queue: 4, replicas: 3, traffic: 850 } }
+  { id: 'gateway', name: 'API Gateway', short: 'GATEWAY', role: 'edge', dependencies: ['orders', 'auth', 'pricing'], base: { health: 98, cpu: 31, memory: 44, latency: 120, errors: 0.2, queue: 12, replicas: 3, traffic: 920, connectionUtilization: 31 } },
+  { id: 'orders', name: 'Orders', short: 'ORDERS', role: 'service', dependencies: ['pricing', 'inventory'], base: { health: 98, cpu: 38, memory: 51, latency: 160, errors: 0.3, queue: 8, replicas: 3, traffic: 640, connectionUtilization: 38 } },
+  { id: 'auth', name: 'Auth', short: 'AUTH', role: 'service', dependencies: ['redis'], base: { health: 99, cpu: 21, memory: 34, latency: 80, errors: 0.1, queue: 4, replicas: 2, traffic: 520, connectionUtilization: 21 } },
+  { id: 'pricing', name: 'Pricing', short: 'PRICING', role: 'service', dependencies: ['postgres', 'cache'], base: { health: 98, cpu: 33, memory: 49, latency: 140, errors: 0.4, queue: 12, replicas: 3, traffic: 580, connectionUtilization: 33 } },
+  { id: 'inventory', name: 'Inventory', short: 'INVENTORY', role: 'service', dependencies: ['postgres', 'cache'], base: { health: 98, cpu: 29, memory: 42, latency: 150, errors: 0.2, queue: 8, replicas: 2, traffic: 490, connectionUtilization: 29 } },
+  { id: 'cache', name: 'Redis Cache', short: 'REDIS', role: 'data', dependencies: ['redis'], base: { health: 99, cpu: 18, memory: 63, latency: 16, errors: 0.1, queue: 2, replicas: 3, traffic: 780, connectionUtilization: 18 } },
+  { id: 'postgres', name: 'PostgreSQL', short: 'POSTGRES', role: 'data', dependencies: [], base: { health: 98, cpu: 46, memory: 58, latency: 22, errors: 0.2, queue: 24, replicas: 3, traffic: 1200, connectionUtilization: 74 } },
+  { id: 'redis', name: 'Redis Primary', short: 'REDIS DB', role: 'data', dependencies: [], base: { health: 99, cpu: 24, memory: 47, latency: 9, errors: 0.1, queue: 4, replicas: 3, traffic: 850, connectionUtilization: 24 } }
 ];
 
 const SCENARIOS = [
@@ -21,7 +21,6 @@ const SCENARIOS = [
     symptom: 'checkout p95 · 8,412 ms',
     root: 'pricing',
     rootCause: 'PostgreSQL connection exhaustion',
-    correctAction: 'circuit',
     alternate: { action: 'failover', target: 'postgres' },
     failureText: 'Pricing latency keeps climbing; Orders is retrying the slow call.'
   },
@@ -33,7 +32,6 @@ const SCENARIOS = [
     symptom: 'gateway queue · 1,942',
     root: 'gateway',
     rootCause: 'Unplanned traffic surge',
-    correctAction: 'scale',
     failureText: 'The edge queue is overflowing; downstream services are receiving retries.'
   },
   {
@@ -44,7 +42,6 @@ const SCENARIOS = [
     symptom: 'orders errors · 38.0%',
     root: 'orders',
     rootCause: 'Retry regression in release 2026.09.09',
-    correctAction: 'rollback',
     failureText: 'Orders is retrying Pricing into saturation; customer impact is spreading.'
   }
 ];
@@ -57,7 +54,15 @@ const RUNBOOK_CARDS = [
     label: 'CONTAINMENT',
     description: 'Install a hard boundary between callers and a sick dependency.',
     benefit: 'Dependency pressure propagates 32% slower.',
-    tradeoff: 'Some isolated requests fail fast while the wall is up.'
+    tradeoff: 'Some isolated requests fail fast while the wall is up.',
+    targets: ['service', 'dependency-edge'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Reduce dependency-pressure propagation.',
+    sideEffects: 'Isolated requests fail fast while containment is active.',
+    prerequisites: []
   },
   {
     id: 'adaptive-scaling',
@@ -65,7 +70,15 @@ const RUNBOOK_CARDS = [
     label: 'CAPACITY',
     description: 'Let the platform add a replica when a service crosses its saturation line.',
     benefit: 'Services above 80% CPU can self-scale once per incident.',
-    tradeoff: 'New capacity costs time and operational budget.'
+    tradeoff: 'New capacity costs time and operational budget.',
+    targets: ['service'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Add one replica automatically above the saturation line.',
+    sideEffects: 'Capacity takes time and operational budget to come online.',
+    prerequisites: []
   },
   {
     id: 'trace-sampling',
@@ -73,7 +86,15 @@ const RUNBOOK_CARDS = [
     label: 'OBSERVABILITY',
     description: 'Keep enough distributed traces to find the first domino quickly.',
     benefit: 'Inspection cooldown is cut in half and traces surface more clearly.',
-    tradeoff: 'Sampling still shows symptoms if you stop at the edge.'
+    tradeoff: 'Sampling still shows symptoms if you stop at the edge.',
+    targets: ['telemetry'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Shorten inspection cooldowns.',
+    sideEffects: 'More evidence does not guarantee a correct diagnosis.',
+    prerequisites: []
   },
   {
     id: 'chaos-tested',
@@ -81,7 +102,15 @@ const RUNBOOK_CARDS = [
     label: 'RESILIENCE',
     description: 'Exercise the secondary path before production asks for it.',
     benefit: 'Failover is stronger and recovery completes sooner.',
-    tradeoff: 'The secondary cluster remains capacity-constrained.'
+    tradeoff: 'The secondary cluster remains capacity-constrained.',
+    targets: ['service', 'secondary-cluster'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Improve failover and recovery margins.',
+    sideEffects: 'Secondary capacity can still saturate.',
+    prerequisites: []
   },
   {
     id: 'conservative-deployments',
@@ -89,7 +118,15 @@ const RUNBOOK_CARDS = [
     label: 'RELEASE SAFETY',
     description: 'Prefer a known-good release when a rollout changes behavior.',
     benefit: 'Rollbacks restore more health and latency margin.',
-    tradeoff: 'You give up the newest release while the incident is active.'
+    tradeoff: 'You give up the newest release while the incident is active.',
+    targets: ['release'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Increase rollback recovery margin.',
+    sideEffects: 'The newest release remains disabled during the incident.',
+    prerequisites: []
   },
   {
     id: 'aggressive-retry',
@@ -97,7 +134,15 @@ const RUNBOOK_CARDS = [
     label: 'HIGH VARIANCE',
     description: 'Keep trying when a dependency is healthy and available.',
     benefit: 'Healthy paths recover small transient blips faster.',
-    tradeoff: 'A sick dependency receives even more retry traffic.'
+    tradeoff: 'A sick dependency receives even more retry traffic.',
+    targets: ['service', 'dependency-edge'],
+    cost: 1,
+    charges: 1,
+    cooldown: 0,
+    duration: 'run',
+    effect: 'Recover healthy paths from small transient blips faster.',
+    sideEffects: 'A sick dependency receives more retry traffic.',
+    prerequisites: []
   }
 ];
 
