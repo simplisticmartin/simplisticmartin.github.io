@@ -120,6 +120,15 @@ function normalizeSeed(value) {
   return (cleaned + hashSeed(cleaned || '8F31A').toString(16).toUpperCase()).slice(0, 6);
 }
 
+function normalizeBuild(value) {
+  const values = Array.isArray(value) ? value : String(value || '').split(/[,.|]/);
+  const valid = RUNBOOK_CARDS.map((card) => card.id);
+  return values
+    .map((cardId) => String(cardId || '').trim())
+    .filter((cardId, index, list) => valid.includes(cardId) && list.indexOf(cardId) === index)
+    .slice(0, TOTAL_STAGES - 1);
+}
+
 function clamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
 }
@@ -139,20 +148,20 @@ function hasCard(cardId) {
   return Boolean(run && run.build.includes(cardId));
 }
 
-function normalizeBuild(value) {
-  const values = Array.isArray(value) ? value : String(value || '').split(',');
-  const valid = RUNBOOK_CARDS.map((card) => card.id);
-  return values
-    .map((cardId) => String(cardId || '').trim())
-    .filter((cardId, index, list) => valid.includes(cardId) && list.indexOf(cardId) === index);
+function cardMetadata(cardIds) {
+  return cardIds
+    .map((cardId) => RUNBOOK_CARDS.find((card) => card.id === cardId))
+    .filter(Boolean)
+    .map((card) => ({ ...card }));
 }
 
-function cardMetadata(cardIds) {
-  return cardIds.map((cardId) => RUNBOOK_CARDS.find((card) => card.id === cardId)).filter(Boolean).map((card) => ({ ...card }));
+function scenarioFor(seed, stage) {
+  const scenarioHash = stage === 1 ? hashSeed(seed) : hashSeed(`${seed}|incident|${stage}`);
+  return SCENARIOS[scenarioHash % SCENARIOS.length];
 }
 
 function upgradeOptions() {
-  if (!run || run.replayBuild) return [];
+  if (!run || !run.awaitingUpgrade || run.replayBuild || run.stage >= TOTAL_STAGES) return [];
   return RUNBOOK_CARDS
     .filter((card) => !run.build.includes(card.id))
     .map((card) => ({
@@ -170,7 +179,7 @@ function serviceById(id) {
 
 function emitEvent(text, level = 'info') {
   if (!run) return;
-  const event = { time: round(run.time, 1), text, level };
+  const event = { time: round(run.time, 1), stage: run.stage, text, level };
   run.events += 1;
   postMessage({ type: 'event', event, count: run.events });
 }
@@ -198,7 +207,9 @@ function snapshot() {
   const gateway = services.find((service) => service.id === 'gateway');
   const impact = clamp(((100 - averageHealth) * 0.55) + ((100 - gateway.health) * 0.45) + (gateway.errors * 1.8), 0, 100);
   const blastRadius = services.filter((service) => service.status !== 'healthy').length;
-  const phase = run.complete ? (run.success ? 'STABILIZED' : 'OUTAGE') : (run.resolved ? 'RECOVERING' : (impact > 42 ? 'CRITICAL' : (impact > 14 ? 'DEGRADING' : (run.time > 0 ? 'INVESTIGATING' : 'STANDBY'))));
+  const phase = run.complete
+    ? (run.success ? 'STABILIZED' : 'OUTAGE')
+    : (run.resolved ? 'RECOVERING' : (impact > 42 ? 'CRITICAL' : (impact > 14 ? 'DEGRADING' : (run.time > 0 ? 'INVESTIGATING' : 'STANDBY'))));
   return {
     seed: run.seed,
     mode: run.mode,
@@ -211,15 +222,19 @@ function snapshot() {
     phase,
     resolved: run.resolved,
     complete: run.complete,
+    incidentComplete: run.complete,
     runComplete: run.runComplete,
     awaitingUpgrade: run.awaitingUpgrade,
     replayBuild: run.replayBuild,
     success: run.success,
+    runSuccess: run.runComplete ? run.success : null,
     scenario: { id: run.scenario.id, code: run.scenario.code, title: run.scenario.title, description: run.scenario.description, symptom: run.scenario.symptom, root: run.scenario.root, rootCause: run.scenario.rootCause },
     build: run.build.slice(),
     buildCards: cardMetadata(run.build),
-    upgradeOptions: run.awaitingUpgrade ? upgradeOptions() : [],
-    unnecessaryChanges: run.unnecessaryChanges,
+    upgradeOptions: upgradeOptions(),
+    stagesCompleted: run.runComplete ? TOTAL_STAGES : Math.max(0, run.stage - 1),
+    unnecessaryChanges: run.stageUnnecessaryChanges,
+    totalUnnecessaryChanges: run.totalUnnecessaryChanges,
     diagnosed: run.diagnosed
   };
 }
@@ -252,42 +267,62 @@ function initialiseServices(seedHash) {
       traffic: Math.max(1, definition.base.traffic + jitter * 12),
       loadBoost: 0,
       circuitOpen: false,
-      failover: false
+      failover: false,
+      autoScaled: false
     };
     service.status = statusFor(service.health);
     return service;
   });
 }
 
-function start(seed, mode, build) {
+function resetIncident() {
+  const topologyHash = hashSeed(`${run.seed}|topology|${run.stage}|${run.build.join(':')}`);
+  run.scenario = scenarioFor(run.seed, run.stage);
+  run.services = initialiseServices(topologyHash);
+  run.time = 0;
+  run.maxTime = run.mode === 'freeplay' ? 120 : 90;
+  run.stageUnnecessaryChanges = 0;
+  run.diagnosed = false;
+  run.resolved = false;
+  run.complete = false;
+  run.success = false;
+  run.awaitingUpgrade = false;
+  run.recoveryTime = 0;
+  run.actionCooldown = 0;
+  run.history = [];
+}
+
+function start(seed, mode, build, replayBuild) {
   if (intervalId) clearInterval(intervalId);
   const normalized = normalizeSeed(seed);
-  const seedHash = hashSeed(normalized);
   const selectedBuild = normalizeBuild(build);
   run = {
     seed: normalized,
     mode: mode === 'freeplay' ? 'freeplay' : 'recruiter',
-    scenario: SCENARIOS[seedHash % SCENARIOS.length],
-    services: initialiseServices(seedHash),
-    time: 0,
-    maxTime: mode === 'freeplay' ? 120 : 90,
-    stage: Math.min(TOTAL_STAGES, selectedBuild.length + 1),
+    stage: 1,
     build: selectedBuild,
-    replayBuild: selectedBuild.length > 0,
+    replayBuild: Boolean(replayBuild),
     runComplete: false,
-    awaitingUpgrade: false,
     events: 0,
-    unnecessaryChanges: 0,
+    totalUnnecessaryChanges: 0,
+    scenario: null,
+    services: [],
+    time: 0,
+    maxTime: 90,
+    stageUnnecessaryChanges: 0,
     diagnosed: false,
     resolved: false,
     complete: false,
     success: false,
+    awaitingUpgrade: false,
+    runSuccess: null,
     recoveryTime: 0,
     actionCooldown: 0,
     history: []
   };
-  emitEvent(`Pager alert: ${run.scenario.title}. Customer impact is increasing.`, 'warning');
-  emitEvent(`Seed ${run.seed} initialized. Trace the graph before changing capacity.`, 'info');
+  resetIncident();
+  emitEvent(`Incident ${run.stage}/${TOTAL_STAGES}: ${run.scenario.title}. Customer impact is increasing.`, 'warning');
+  emitEvent(run.build.length ? `Build online: ${run.build.join(' · ')}.` : `Seed ${run.seed} initialized. Trace the graph before changing capacity.`, 'info');
   const initial = recordSnapshot();
   postMessage({ type: 'started', snapshot: initial, maxTime: run.maxTime });
   intervalId = setInterval(tick, 100);
@@ -322,21 +357,24 @@ function applyDependencyStress(next, previousById) {
     return total + (dependency ? Math.max(0, (88 - dependency.health) / 88) : 0);
   }, 0);
   if (!dependencyStress) return;
+  const propagationFactor = hasCard('bulkhead') ? 0.68 : 1;
+  const retryFactor = hasCard('aggressive-retry') ? 1.12 : 1;
   next.latency += dependencyStress * 8;
   next.errors += dependencyStress * 2.2;
   next.queue += dependencyStress * 2.8;
   next.cpu += dependencyStress * 1.1;
-  next.health -= dependencyStress * 0.52 * (hasCard('bulkhead') ? 0.68 : 1);
-  next.traffic += dependencyStress * 12 * (hasCard('aggressive-retry') ? 1.12 : 1);
+  next.health -= dependencyStress * 0.52 * propagationFactor;
+  next.traffic += dependencyStress * 12 * retryFactor;
 }
 
 function applyIncidentPressure(next) {
   const scenario = run.scenario;
-  if (hasCard('adaptive-scaling') && !run.resolved && next.cpu > 80 && next.replicas < 8 && Math.round(run.time * 10) % 30 === 0) {
+  if (hasCard('adaptive-scaling') && !run.resolved && next.cpu > 80 && next.replicas < 8 && !next.autoScaled) {
+    next.autoScaled = true;
     next.replicas += 1;
     next.cpu = Math.max(10, next.cpu - 13);
     next.queue = Math.max(0, next.queue - 9);
-    emitEvent(`Adaptive Autoscaling added a ${next.name} replica at ${Math.round(next.cpu)}% CPU.`, 'info');
+    emitEvent(`Adaptive Autoscaling added a ${next.name} replica at the saturation line.`, 'info');
   }
   if (run.resolved && next.id === scenario.root) {
     next.health += (100 - next.health) * 0.045;
@@ -420,20 +458,48 @@ function finish(success) {
   if (!run || run.complete) return;
   run.complete = true;
   run.success = success;
+  run.awaitingUpgrade = Boolean(success && run.stage < TOTAL_STAGES);
+  run.runComplete = Boolean(!success || run.stage >= TOTAL_STAGES);
   if (intervalId) clearInterval(intervalId);
   intervalId = null;
-  emitEvent(success ? 'Incident stabilized. The city is healthy enough to hand back to daylight.' : run.scenario.failureText, success ? 'info' : 'critical');
+  emitEvent(success
+    ? `Incident ${run.stage}/${TOTAL_STAGES} stabilized. The city is healthy enough to hand back to daylight.`
+    : run.scenario.failureText, success ? 'info' : 'critical');
+  if (run.runComplete) {
+    run.runSuccess = success;
+    emitEvent(success ? `Run complete. Final build: ${run.build.length ? run.build.join(' · ') : 'baseline operations'}.` : 'Run ended. Re-run the build and change less, earlier.', success ? 'info' : 'critical');
+  } else {
+    emitEvent(`Choose one runbook before incident ${run.stage + 1}.`, 'info');
+  }
   const finalSnapshot = snapshot();
   run.history.push(finalSnapshot);
   postMessage({ type: 'snapshot', snapshot: finalSnapshot });
   postMessage({ type: 'complete', snapshot: finalSnapshot, history: run.history, maxTime: run.maxTime });
 }
 
+function continueAfterIncident(cardId) {
+  if (!run || !run.complete || !run.awaitingUpgrade || run.runComplete) return;
+  if (!run.replayBuild) {
+    const selected = RUNBOOK_CARDS.find((card) => card.id === cardId);
+    if (!selected || run.build.includes(selected.id) || !upgradeOptions().some((card) => card.id === selected.id)) return;
+    run.build.push(selected.id);
+    emitEvent(`Runbook installed: ${selected.name}. ${selected.benefit}`, 'info');
+  } else {
+    emitEvent(`Replaying the installed build: ${run.build.length ? run.build.join(' · ') : 'baseline operations'}.`, 'info');
+  }
+  run.stage += 1;
+  resetIncident();
+  emitEvent(`Incident ${run.stage}/${TOTAL_STAGES}: ${run.scenario.title}. New telemetry window open.`, 'warning');
+  const initial = recordSnapshot();
+  postMessage({ type: 'started', snapshot: initial, maxTime: run.maxTime });
+  intervalId = setInterval(tick, 100);
+}
+
 function action(actionId, targetId) {
   if (!run || run.complete || run.actionCooldown > 0) return;
   const target = serviceById(targetId);
   if (!target) return;
-  run.actionCooldown = 1.1;
+  run.actionCooldown = hasCard('trace-sampling') ? 0.55 : 1.1;
 
   if (actionId === 'inspect') {
     if (target.id === run.scenario.root) {
@@ -458,7 +524,7 @@ function action(actionId, targetId) {
       emitEvent(`Circuit opened on ${target.name}. Retries are no longer feeding the failure.`, 'info');
     } else if (actionId === 'failover') {
       target.failover = true;
-      target.health = Math.min(100, target.health + 24);
+      target.health = Math.min(100, target.health + (hasCard('chaos-tested') ? 32 : 24));
       emitEvent(`Traffic failed over from ${target.name} to the secondary cluster.`, 'info');
     } else if (actionId === 'scale') {
       target.replicas += 2;
@@ -467,13 +533,15 @@ function action(actionId, targetId) {
       target.health = Math.min(100, target.health + 18);
       emitEvent(`Two ${target.name} replicas are online. The edge queue is draining.`, 'info');
     } else if (actionId === 'rollback') {
-      target.health = Math.min(100, target.health + 30);
-      target.errors = Math.max(target.base.errors, target.errors * 0.38);
-      target.latency = Math.max(target.base.latency, target.latency * 0.42);
+      const rollbackStrength = hasCard('conservative-deployments') ? 1.25 : 1;
+      target.health = Math.min(100, target.health + (30 * rollbackStrength));
+      target.errors = Math.max(target.base.errors, target.errors * (hasCard('conservative-deployments') ? 0.26 : 0.38));
+      target.latency = Math.max(target.base.latency, target.latency * (hasCard('conservative-deployments') ? 0.3 : 0.42));
       emitEvent(`${target.name} rolled back to the last known-good release.`, 'info');
     }
   } else {
-    run.unnecessaryChanges += 1;
+    run.stageUnnecessaryChanges += 1;
+    run.totalUnnecessaryChanges += 1;
     if (actionId === 'restart') {
       target.health = Math.min(100, target.health + 13);
       target.errors *= 0.62;
@@ -509,8 +577,9 @@ function action(actionId, targetId) {
 
 self.onmessage = (message) => {
   const payload = message.data || {};
-  if (payload.type === 'start') start(payload.seed, payload.mode);
+  if (payload.type === 'start') start(payload.seed, payload.mode, payload.build, payload.replayBuild);
   if (payload.type === 'action') action(payload.action, payload.target);
+  if ((payload.type === 'upgrade' || payload.type === 'continue') && run) continueAfterIncident(payload.cardId);
   if (payload.type === 'replay' && run && run.history.length) {
     const index = clamp(Number(payload.index) || 0, 0, run.history.length - 1);
     postMessage({ type: 'replay', snapshot: run.history[index], index, total: run.history.length });

@@ -82,6 +82,8 @@ sitemap: true
           </label>
           <button class="cascade-small-button" type="button" id="cascadeNewSeed">New seed</button>
           <button class="cascade-small-button" type="button" id="cascadeShare" disabled>Share run</button>
+          <span class="cascade-render-budget" id="cascadeRenderBudget" aria-live="polite">RENDER / 60 FPS</span>
+          <button class="cascade-small-button cascade-presentation-toggle" type="button" id="cascadePresentationToggle" aria-pressed="false" title="Use a stable 30 FPS render budget and reduced visual effects">Presentation mode</button>
         </div>
       </div>
 
@@ -97,6 +99,30 @@ sitemap: true
           <span><small>INCIDENT</small><b id="cascadeStage">01 / 04</b></span>
         </div>
       </div>
+
+      <section class="cascade-onboarding" id="cascadeOnboarding" hidden aria-labelledby="cascade-onboarding-title" aria-live="polite">
+        <div class="cascade-onboarding-head">
+          <div class="cascade-onboarding-title-wrap">
+            <span class="cascade-panel-index">GUIDE</span>
+            <div>
+              <p class="cascade-section-kicker">90-SECOND ONBOARDING</p>
+              <h3 id="cascade-onboarding-title">Read the pager</h3>
+            </div>
+          </div>
+          <div class="cascade-onboarding-tools">
+            <span id="cascadeOnboardingClock">00:00 / 01:30</span>
+            <button class="cascade-small-button" type="button" id="cascadeOnboardingSkip">Skip guide</button>
+          </div>
+        </div>
+        <p class="cascade-onboarding-instruction" id="cascadeOnboardingInstruction">Start with the incident card. It tells you what customers feel before you touch the graph.</p>
+        <div class="cascade-onboarding-progress" role="progressbar" aria-label="90-second onboarding progress" aria-valuemin="0" aria-valuemax="90" aria-valuenow="0">
+          <span id="cascadeOnboardingProgressBar"></span>
+        </div>
+        <div class="cascade-onboarding-footer">
+          <span id="cascadeOnboardingStep">01 / 04 · ORIENT</span>
+          <span id="cascadeOnboardingTip">Observe first. The loudest building is not always the cause.</span>
+        </div>
+      </section>
 
       <section class="cascade-build-panel" aria-labelledby="cascade-build-title">
         <div class="cascade-build-heading">
@@ -114,7 +140,7 @@ sitemap: true
             <div><span class="cascade-panel-index">A</span><h3 id="cascade-city-title">Service topology</h3></div>
             <span class="cascade-panel-note"><i class="cascade-legend-dot cascade-legend-healthy"></i> healthy <i class="cascade-legend-dot cascade-legend-warning"></i> degrading <i class="cascade-legend-dot cascade-legend-critical"></i> failing</span>
           </div>
-          <div class="cascade-canvas-wrap">
+          <div class="cascade-canvas-wrap" id="cascadeCanvasWrap">
             <canvas id="cascadeCanvas" width="1200" height="680" tabindex="0" aria-label="Interactive service topology. Select a service to inspect it."></canvas>
             <div class="cascade-canvas-overlay" id="cascadeCanvasOverlay">
               <span class="cascade-overlay-icon" aria-hidden="true">◌</span>
@@ -131,12 +157,12 @@ sitemap: true
         </section>
 
         <aside class="cascade-ops-panel" aria-labelledby="cascade-ops-title">
-          <div class="cascade-panel-heading">
+          <div class="cascade-panel-heading" id="cascadeOpsHeading">
             <div><span class="cascade-panel-index">B</span><h3 id="cascade-ops-title">Operator console</h3></div>
             <span class="cascade-pulse-label"><i></i> telemetry / 10hz</span>
           </div>
 
-          <article class="cascade-incident-card">
+          <article class="cascade-incident-card" id="cascadeIncidentCard">
             <div class="cascade-incident-topline"><span id="cascadeIncidentSeverity">PAGER ALERT</span><span id="cascadeIncidentCode">INC—----</span></div>
             <h4 id="cascadeIncidentTitle">Awaiting an incident</h4>
             <p id="cascadeIncidentDescription">A seeded shift gives you the same failure every time. Use that to learn the graph, then send the link to someone else.</p>
@@ -175,7 +201,7 @@ sitemap: true
             </div>
           </section>
 
-          <div class="cascade-telemetry-card">
+          <div class="cascade-telemetry-card" id="cascadeTelemetryCard">
             <div class="cascade-card-title"><span>SELECTED SERVICE</span><strong id="cascadeSelectedService">—</strong></div>
             <div class="cascade-telemetry-grid">
               <div><span>HEALTH</span><strong id="telemetryHealth">—</strong></div>
@@ -188,8 +214,13 @@ sitemap: true
             <div class="cascade-dependencies"><span>DEPENDENCIES</span><div id="cascadeDependencies">Select a building to trace its calls.</div></div>
           </div>
 
-          <div class="cascade-actions-card">
+          <div class="cascade-actions-card" id="cascadeActionsCard">
             <div class="cascade-card-title"><span>RUNBOOK ACTIONS</span><small id="cascadeActionHint">Select a service first</small></div>
+            <div class="cascade-first-action" id="cascadeFirstAction" hidden role="status" aria-live="polite">
+              <span>FIRST MOVE</span>
+              <strong id="cascadeFirstActionTitle">Inspect the highlighted service</strong>
+              <small id="cascadeFirstActionDetail">Confirm the failing dependency before changing capacity.</small>
+            </div>
             <div class="cascade-action-grid">
               <button class="cascade-action-button" type="button" data-action="inspect" disabled><span>⌕</span><b>Inspect</b><small>trace dependency</small></button>
               <button class="cascade-action-button" type="button" data-action="restart" disabled><span>↻</span><b>Restart</b><small>reset process</small></button>
