@@ -3,6 +3,7 @@ layout: default
 permalink: /cascade/
 stylesheet: /assets/css/cascade.css
 script: /assets/js/cascade.js
+nova_script: /assets/js/cascade-nova.js
 seo_title: "CASCADE | A distributed-systems roguelite — Martin Li"
 description: "Play CASCADE, a seeded browser incident simulator where every service is a building and every fix has a blast radius."
 og_type: game
@@ -93,8 +94,19 @@ sitemap: true
           <span><small>TIME</small><b id="cascadeTimer">00:00</b></span>
           <span><small>CUSTOMER IMPACT</small><b id="cascadeImpact">0.0%</b></span>
           <span><small>BLAST RADIUS</small><b id="cascadeBlastRadius">0 services</b></span>
+          <span><small>INCIDENT</small><b id="cascadeStage">01 / 04</b></span>
         </div>
       </div>
+
+      <section class="cascade-build-panel" aria-labelledby="cascade-build-title">
+        <div class="cascade-build-heading">
+          <div><span class="cascade-panel-index">C</span><div><h3 id="cascade-build-title">Runbook build</h3><p id="cascadeBuildStage">BASELINE / INCIDENT 01</p></div></div>
+          <span id="cascadeBuildSummary">No runbooks installed yet</span>
+        </div>
+        <div class="cascade-build-cards" id="cascadeBuildCards" aria-live="polite">
+          <div class="cascade-build-empty"><span aria-hidden="true">＋</span><strong>BASELINE OPERATIONS</strong><small>Stabilize the first incident to earn your first runbook card.</small></div>
+        </div>
+      </section>
 
       <div class="cascade-console-grid">
         <section class="cascade-city-panel" aria-labelledby="cascade-city-title">
@@ -130,6 +142,38 @@ sitemap: true
             <p id="cascadeIncidentDescription">A seeded shift gives you the same failure every time. Use that to learn the graph, then send the link to someone else.</p>
             <div class="cascade-incident-impact"><span><small>SYMPTOM</small><b id="cascadeIncidentSymptom">—</b></span><span><small>MODE</small><b id="cascadeModeLabel">STANDBY</b></span></div>
           </article>
+
+          <section class="cascade-nova-card" id="cascadeNovaCard" aria-labelledby="cascade-nova-title">
+            <div class="cascade-nova-head">
+              <div class="cascade-nova-title-wrap">
+                <span class="cascade-panel-index">N</span>
+                <div>
+                  <h3 id="cascade-nova-title">NOVA <span>//</span> incident analyst</h3>
+                  <p>Evidence-weighted local inference</p>
+                </div>
+              </div>
+              <div class="cascade-nova-controls">
+                <span class="cascade-nova-runtime" id="cascadeNovaRuntime"><i></i> local only</span>
+                <button class="cascade-small-button cascade-nova-toggle" type="button" id="cascadeNovaToggle" aria-pressed="false">Enable NOVA</button>
+              </div>
+            </div>
+            <div class="cascade-nova-body">
+              <p class="cascade-nova-intro" id="cascadeNovaIntro">NOVA is dormant. Enable it to inspect the current snapshot on this device. No telemetry, prompt, or API key leaves the browser.</p>
+              <form class="cascade-nova-form" id="cascadeNovaForm">
+                <label for="cascadeNovaQuestion">ASK NOVA <input id="cascadeNovaQuestion" type="text" value="Why is checkout failing?" maxlength="140" autocomplete="off"></label>
+                <button class="cascade-small-button" type="submit" id="cascadeNovaAnalyze" disabled>Analyze snapshot</button>
+              </form>
+              <div class="cascade-nova-prompts" aria-label="Suggested NOVA questions">
+                <button type="button" class="cascade-nova-prompt" data-nova-question="Why is checkout failing?" disabled>Why checkout?</button>
+                <button type="button" class="cascade-nova-prompt" data-nova-question="What should I inspect next?" disabled>What next?</button>
+                <button type="button" class="cascade-nova-prompt" data-nova-question="Could this be a capacity problem?" disabled>Capacity?</button>
+              </div>
+              <div class="cascade-nova-response" id="cascadeNovaResponse" aria-live="polite">
+                <div class="cascade-nova-placeholder"><span aria-hidden="true">✦</span><strong>Enable local analysis</strong><small>NOVA will show a lead, the signals behind it, and the check that could prove it wrong.</small></div>
+              </div>
+              <p class="cascade-nova-disclaimer"><strong>Human in the loop.</strong> NOVA can be wrong by design. Verify its claim against the graph before touching a runbook.</p>
+            </div>
+          </section>
 
           <div class="cascade-telemetry-card">
             <div class="cascade-card-title"><span>SELECTED SERVICE</span><strong id="cascadeSelectedService">—</strong></div>
@@ -179,7 +223,7 @@ sitemap: true
             <div><span>UNNECESSARY CHANGES</span><strong id="postmortemChanges">—</strong></div>
           </div>
           <div class="cascade-postmortem-actions">
-            <button class="cascade-button cascade-button-primary" type="button" id="cascadeRerun">↻ Re-run this seed</button>
+            <button class="cascade-button cascade-button-primary" type="button" id="cascadeRerun">↻ Re-run this build</button>
             <button class="cascade-button cascade-button-ghost" type="button" id="cascadeAnother">New incident</button>
           </div>
         </div>
@@ -191,6 +235,21 @@ sitemap: true
           <p class="cascade-replay-note">Drag the timeline to rewind the topology. Packets, health, and blast radius are reconstructed from the same deterministic run.</p>
         </div>
       </div>
+      <section class="cascade-upgrade-panel" id="cascadeUpgradePanel" hidden aria-labelledby="cascade-upgrade-title">
+        <div class="cascade-upgrade-heading">
+          <div>
+            <p class="cascade-section-kicker">BETWEEN INCIDENTS / CHOOSE ONE</p>
+            <h3 id="cascade-upgrade-title">Install a runbook.</h3>
+          </div>
+          <span class="cascade-upgrade-token"><i aria-hidden="true">✦</i> OPERATIONAL UPGRADE</span>
+        </div>
+        <p class="cascade-upgrade-intro" id="cascadeUpgradeIntro">The system held. Pick one permanent rule for the next incident. The same seed plus the same cards creates the same build to replay.</p>
+        <div class="cascade-upgrade-grid" id="cascadeUpgradeCards" role="group" aria-label="Available runbook cards"></div>
+        <div class="cascade-upgrade-footer">
+          <span id="cascadeUpgradeHint">Select one card to continue the shift.</span>
+          <button class="cascade-button cascade-button-primary" type="button" id="cascadeContinueShift" disabled>Install &amp; continue <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
     </section>
 
     <section class="cascade-architecture" id="cascade-architecture" aria-labelledby="cascade-architecture-title">

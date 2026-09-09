@@ -38,6 +38,7 @@
   let history = [];
   let replayTimer = null;
   let noticeTimer = null;
+  let nova = null;
 
   function normalizeSeed(value) {
     const cleaned = String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
@@ -175,6 +176,14 @@
     if (focusCanvas) canvas.focus({ preventScroll: true });
   }
 
+  function refreshNova(snapshot) {
+    if (nova) nova.refresh(snapshot || null);
+  }
+
+  function getNovaSeed() {
+    return $('#cascadeSeed').value;
+  }
+
   function appendEvent(event) {
     const log = $('#cascadeEventLog');
     const empty = log.querySelector('.cascade-empty-event');
@@ -225,6 +234,7 @@
   function applyReplaySnapshot(snapshot, index, total) {
     if (!snapshot) return;
     currentSnapshot = snapshot;
+    refreshNova(snapshot);
     updateStatus(snapshot);
     renderServiceList(snapshot);
     renderTelemetry();
@@ -276,6 +286,7 @@
     selectedService = null;
     currentSnapshot = null;
     history = [];
+    refreshNova(null);
     $('#cascadePostmortem').hidden = true;
     $('#cascadeShare').disabled = false;
     $('#cascadeModeLabel').textContent = currentMode === 'recruiter' ? '90-SECOND SHIFT' : 'FREEPLAY';
@@ -331,7 +342,8 @@
 
   function receiveSnapshot(snapshot) {
     currentSnapshot = snapshot;
-    if (!selectedService && snapshot.services.length) selectService(snapshot.scenario.root, false);
+    refreshNova(snapshot);
+    if (snapshot && snapshot.scenario && !selectedService) selectService(snapshot.scenario.root, false);
     updateStatus(snapshot);
     updateIncidentCard(snapshot);
     renderServiceList(snapshot);
@@ -342,6 +354,7 @@
   function receiveComplete(snapshot, completeHistory) {
     active = false;
     currentSnapshot = snapshot;
+    refreshNova(snapshot);
     history = Array.isArray(completeHistory) ? completeHistory : [];
     updateStatus(snapshot);
     updateIncidentCard(snapshot);
@@ -590,6 +603,23 @@
     const querySeed = new URLSearchParams(window.location.search).get('seed');
     resizeCanvas();
     setupWorker();
+    if (window.CascadeNova && typeof window.CascadeNova.create === 'function') {
+      nova = window.CascadeNova.create({
+        root,
+        getSnapshot: () => currentSnapshot,
+        getSeed: () => $('#cascadeSeed').value,
+        onStateChange: (enabled) => {
+          if (enabled && currentSnapshot && !currentSnapshot.complete) {
+            nova.analyze($('#cascadeNovaQuestion').value);
+          }
+        },
+        onAnalyze: (result) => {
+          if (result && result.misleading) {
+            showNotice('NOVA marked this as a plausible false lead. Verify the graph.');
+          }
+        }
+      });
+    }
     bindEvents();
     renderTelemetry();
     selectService('gateway', false);

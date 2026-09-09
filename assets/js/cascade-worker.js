@@ -49,6 +49,58 @@ const SCENARIOS = [
   }
 ];
 
+const TOTAL_STAGES = 4;
+const RUNBOOK_CARDS = [
+  {
+    id: 'bulkhead',
+    name: 'Bulkhead',
+    label: 'CONTAINMENT',
+    description: 'Install a hard boundary between callers and a sick dependency.',
+    benefit: 'Dependency pressure propagates 32% slower.',
+    tradeoff: 'Some isolated requests fail fast while the wall is up.'
+  },
+  {
+    id: 'adaptive-scaling',
+    name: 'Adaptive Autoscaling',
+    label: 'CAPACITY',
+    description: 'Let the platform add a replica when a service crosses its saturation line.',
+    benefit: 'Services above 80% CPU can self-scale once per incident.',
+    tradeoff: 'New capacity costs time and operational budget.'
+  },
+  {
+    id: 'trace-sampling',
+    name: 'Trace Sampling',
+    label: 'OBSERVABILITY',
+    description: 'Keep enough distributed traces to find the first domino quickly.',
+    benefit: 'Inspection cooldown is cut in half and traces surface more clearly.',
+    tradeoff: 'Sampling still shows symptoms if you stop at the edge.'
+  },
+  {
+    id: 'chaos-tested',
+    name: 'Chaos Tested',
+    label: 'RESILIENCE',
+    description: 'Exercise the secondary path before production asks for it.',
+    benefit: 'Failover is stronger and recovery completes sooner.',
+    tradeoff: 'The secondary cluster remains capacity-constrained.'
+  },
+  {
+    id: 'conservative-deployments',
+    name: 'Conservative Deployments',
+    label: 'RELEASE SAFETY',
+    description: 'Prefer a known-good release when a rollout changes behavior.',
+    benefit: 'Rollbacks restore more health and latency margin.',
+    tradeoff: 'You give up the newest release while the incident is active.'
+  },
+  {
+    id: 'aggressive-retry',
+    name: 'Aggressive Retry',
+    label: 'HIGH VARIANCE',
+    description: 'Keep trying when a dependency is healthy and available.',
+    benefit: 'Healthy paths recover small transient blips faster.',
+    tradeoff: 'A sick dependency receives even more retry traffic.'
+  }
+];
+
 let run = null;
 let intervalId = null;
 
@@ -81,6 +133,35 @@ function statusFor(health) {
   if (health <= 44) return 'critical';
   if (health <= 76) return 'warning';
   return 'healthy';
+}
+
+function hasCard(cardId) {
+  return Boolean(run && run.build.includes(cardId));
+}
+
+function normalizeBuild(value) {
+  const values = Array.isArray(value) ? value : String(value || '').split(',');
+  const valid = RUNBOOK_CARDS.map((card) => card.id);
+  return values
+    .map((cardId) => String(cardId || '').trim())
+    .filter((cardId, index, list) => valid.includes(cardId) && list.indexOf(cardId) === index);
+}
+
+function cardMetadata(cardIds) {
+  return cardIds.map((cardId) => RUNBOOK_CARDS.find((card) => card.id === cardId)).filter(Boolean).map((card) => ({ ...card }));
+}
+
+function upgradeOptions() {
+  if (!run || run.replayBuild) return [];
+  return RUNBOOK_CARDS
+    .filter((card) => !run.build.includes(card.id))
+    .map((card) => ({
+      card,
+      order: hashSeed(`${run.seed}|offer|${run.stage}|${run.build.join(':')}|${card.id}`)
+    }))
+    .sort((left, right) => left.order - right.order)
+    .slice(0, 3)
+    .map(({ card }) => ({ ...card }));
 }
 
 function serviceById(id) {
@@ -122,14 +203,22 @@ function snapshot() {
     seed: run.seed,
     mode: run.mode,
     time: round(run.time, 1),
+    stage: run.stage,
+    totalStages: TOTAL_STAGES,
     services,
     impact: round(impact),
     blastRadius,
     phase,
     resolved: run.resolved,
     complete: run.complete,
+    runComplete: run.runComplete,
+    awaitingUpgrade: run.awaitingUpgrade,
+    replayBuild: run.replayBuild,
     success: run.success,
     scenario: { id: run.scenario.id, code: run.scenario.code, title: run.scenario.title, description: run.scenario.description, symptom: run.scenario.symptom, root: run.scenario.root, rootCause: run.scenario.rootCause },
+    build: run.build.slice(),
+    buildCards: cardMetadata(run.build),
+    upgradeOptions: run.awaitingUpgrade ? upgradeOptions() : [],
     unnecessaryChanges: run.unnecessaryChanges,
     diagnosed: run.diagnosed
   };
@@ -170,10 +259,11 @@ function initialiseServices(seedHash) {
   });
 }
 
-function start(seed, mode) {
+function start(seed, mode, build) {
   if (intervalId) clearInterval(intervalId);
   const normalized = normalizeSeed(seed);
   const seedHash = hashSeed(normalized);
+  const selectedBuild = normalizeBuild(build);
   run = {
     seed: normalized,
     mode: mode === 'freeplay' ? 'freeplay' : 'recruiter',
@@ -181,6 +271,11 @@ function start(seed, mode) {
     services: initialiseServices(seedHash),
     time: 0,
     maxTime: mode === 'freeplay' ? 120 : 90,
+    stage: Math.min(TOTAL_STAGES, selectedBuild.length + 1),
+    build: selectedBuild,
+    replayBuild: selectedBuild.length > 0,
+    runComplete: false,
+    awaitingUpgrade: false,
     events: 0,
     unnecessaryChanges: 0,
     diagnosed: false,
@@ -207,6 +302,10 @@ function applyBaseline(next, previous) {
   next.queue = Math.max(0, smoothing(previous.queue, next.base.queue, 0.022));
   next.traffic = smoothing(previous.traffic, next.base.traffic, 0.01) + next.loadBoost;
   next.loadBoost *= 0.992;
+  if (hasCard('aggressive-retry') && !run.resolved && next.health > 76) {
+    next.health += 0.02;
+    next.latency = Math.max(next.base.latency, next.latency - 0.7);
+  }
   if (next.circuitOpen) {
     next.traffic = Math.max(next.base.traffic * 0.45, next.traffic - 2.8);
     next.queue = Math.max(0, next.queue - 1.8);
@@ -227,12 +326,18 @@ function applyDependencyStress(next, previousById) {
   next.errors += dependencyStress * 2.2;
   next.queue += dependencyStress * 2.8;
   next.cpu += dependencyStress * 1.1;
-  next.health -= dependencyStress * 0.52;
-  next.traffic += dependencyStress * 12;
+  next.health -= dependencyStress * 0.52 * (hasCard('bulkhead') ? 0.68 : 1);
+  next.traffic += dependencyStress * 12 * (hasCard('aggressive-retry') ? 1.12 : 1);
 }
 
 function applyIncidentPressure(next) {
   const scenario = run.scenario;
+  if (hasCard('adaptive-scaling') && !run.resolved && next.cpu > 80 && next.replicas < 8 && Math.round(run.time * 10) % 30 === 0) {
+    next.replicas += 1;
+    next.cpu = Math.max(10, next.cpu - 13);
+    next.queue = Math.max(0, next.queue - 9);
+    emitEvent(`Adaptive Autoscaling added a ${next.name} replica at ${Math.round(next.cpu)}% CPU.`, 'info');
+  }
   if (run.resolved && next.id === scenario.root) {
     next.health += (100 - next.health) * 0.045;
     next.latency = Math.max(next.base.latency, next.latency - 9);
@@ -301,7 +406,9 @@ function tick() {
 
   if (run.resolved) {
     run.recoveryTime += 0.1;
-    if (run.recoveryTime >= 7 && snapshot().impact < 17) finish(true);
+    const recoveryTarget = hasCard('chaos-tested') ? 11 : 17;
+    const recoveryWindow = hasCard('chaos-tested') ? 4.5 : 7;
+    if (run.recoveryTime >= recoveryWindow && snapshot().impact < recoveryTarget) finish(true);
   } else if (run.time >= run.maxTime) {
     finish(false);
   }
