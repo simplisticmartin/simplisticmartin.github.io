@@ -1,7 +1,7 @@
 ---
 layout: none
-seo_title: "Martin Li | Software Engineer II @ JPMorgan Chase | Java, Python, React, AWS"
-description: "Software Engineer II at JPMorgan Chase. 5+ years building and operating enterprise financial systems in Java, Python, React, and SQL Server on AWS: 35+ microservices, 99.9% uptime, and the reliability work underneath. M.S. CS (AI/ML), Georgia Tech."
+seo_title: "Martin Li | Software Engineer · Distributed Systems · AI"
+description: "Software Engineer building distributed systems, reliable product experiences, and AI tools. Play CASCADE, a seeded browser incident simulator, then explore Martin Li's engineering work."
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -654,6 +654,128 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
       animation: pulse 1.5s infinite;
     }
     
+    /* ==================== CASCADE FLAGSHIP CALLOUT ==================== */
+    .cascade-home-callout {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(4rem, 8vw, 7rem) var(--spacing-lg);
+      background: #071018;
+      color: #e6f4f5;
+    }
+
+    .cascade-home-callout::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-image: linear-gradient(rgba(102, 229, 226, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(102, 229, 226, 0.06) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to right, black, transparent 85%);
+      pointer-events: none;
+    }
+
+    .cascade-home-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(380px, 1.1fr);
+      gap: clamp(2rem, 7vw, 7rem);
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .cascade-home-copy { max-width: 600px; }
+    .cascade-home-kicker {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      color: #66e5e2;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .cascade-home-kicker span {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: #72e4a1;
+      box-shadow: 0 0 0 6px rgba(114, 228, 161, 0.1);
+    }
+    .cascade-home-copy h2 {
+      margin: 0 0 0.85rem;
+      color: #e6f4f5;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(2.35rem, 5vw, 5rem);
+      letter-spacing: -0.07em;
+      line-height: 0.95;
+    }
+    .cascade-home-tagline {
+      margin-bottom: 1.1rem;
+      color: #66e5e2;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.15rem, 2vw, 1.65rem);
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+    .cascade-home-description {
+      max-width: 54ch;
+      margin-bottom: 0;
+      color: #a7c0c4;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .cascade-home-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.1rem; margin-top: 1.7rem; }
+    .cascade-home-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      border-radius: 0.45rem;
+      background: #66e5e2;
+      color: #062027;
+      font-size: 0.85rem;
+      font-weight: 800;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+    .cascade-home-play:hover { color: #062027; background: #8af1ed; box-shadow: 0 0 28px rgba(102, 229, 226, 0.3); transform: translateY(-2px); }
+    .cascade-home-link { color: #a7c0c4; font-size: 0.84rem; font-weight: 700; }
+    .cascade-home-link:hover { color: #66e5e2; }
+    .cascade-home-stack { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.6rem; }
+    .cascade-home-stack span { padding: 0.28rem 0.45rem; border: 1px solid rgba(159, 205, 218, 0.2); border-radius: 0.2rem; color: #6f8a90; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.62rem; text-transform: uppercase; }
+
+    .cascade-home-telemetry {
+      min-height: 365px;
+      border: 1px solid rgba(159, 205, 218, 0.3);
+      border-radius: 0.8rem;
+      overflow: hidden;
+      background: #06111a;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35), inset 0 0 60px rgba(102, 229, 226, 0.06);
+    }
+    .cascade-home-terminal-top, .cascade-home-terminal-bottom { display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 0.9rem; color: #6f8a90; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.59rem; letter-spacing: 0.09em; }
+    .cascade-home-terminal-top { border-bottom: 1px solid rgba(159, 205, 218, 0.13); }
+    .cascade-home-terminal-top b { color: #72e4a1; font-weight: 700; }
+    .cascade-home-terminal-top b i { display: inline-block; width: 0.4rem; height: 0.4rem; margin-right: 0.25rem; border-radius: 50%; background: #72e4a1; }
+    .cascade-home-terminal-body { min-height: 290px; position: relative; overflow: hidden; background-image: linear-gradient(rgba(102, 229, 226, 0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(102, 229, 226, 0.055) 1px, transparent 1px); background-size: 38px 38px; }
+    .cascade-home-terminal-body::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(39, 119, 126, 0.22), transparent 60%); }
+    .cascade-home-building { position: absolute; z-index: 2; display: flex; width: 94px; height: 76px; align-items: center; justify-content: center; border: 1px solid rgba(102, 229, 226, 0.7); border-radius: 0.35rem; background: rgba(7, 31, 42, 0.96); box-shadow: 0 0 24px rgba(102, 229, 226, 0.16); color: #66e5e2; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .cascade-home-building b { font-size: 1rem; }
+    .cascade-home-building span { position: absolute; top: calc(100% + 0.45rem); white-space: nowrap; color: #a7c0c4; font-size: 0.56rem; letter-spacing: 0.1em; }
+    .cascade-home-building-gateway { top: 17%; left: 41%; }
+    .cascade-home-building-orders { top: 50%; left: 16%; }
+    .cascade-home-building-pricing { top: 50%; left: 43%; border-color: #f5b95b; color: #f5b95b; animation: cascadeHomeWarn 2.1s ease-in-out infinite; }
+    .cascade-home-building-db { top: 72%; right: 13%; border-color: #b7a2ff; color: #b7a2ff; }
+    .cascade-home-beam { position: absolute; z-index: 1; height: 2px; transform-origin: left center; background: linear-gradient(90deg, transparent, #45cfd0, transparent); box-shadow: 0 0 8px rgba(102, 229, 226, 0.6); }
+    .cascade-home-beam-one { width: 35%; top: 39%; left: 44%; transform: rotate(115deg); }
+    .cascade-home-beam-two { width: 40%; top: 59%; left: 29%; transform: rotate(0deg); }
+    .cascade-home-beam-three { width: 39%; top: 61%; left: 50%; transform: rotate(28deg); }
+    .cascade-home-terminal-bottom { border-top: 1px solid rgba(159, 205, 218, 0.13); }
+
+    @keyframes cascadeHomeWarn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
     /* ==================== RESPONSIVE ==================== */
     @media (max-width: 768px) {
       .stats-bar {
@@ -722,15 +844,15 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
     
     <div class="hero-content">
       <img src="/assets/images/profile-512.jpg"
-           alt="Martin Li, Software Engineer II at JPMorgan Chase"
+           alt="Martin Li, Software Engineer"
            class="hero-image" width="150" height="150"
            fetchpriority="high" decoding="async">
       
       <h1>Hi, I'm Martin Li</h1>
-      <p class="tagline">Software Engineer II @ JPMorgan Chase</p>
+      <p class="tagline">Software Engineer · Distributed Systems · AI</p>
       <p class="description">
-        I build the systems people depend on, and then I look after them. For the past four years that has
-        meant <strong>Java, Python, and React</strong> at JPMorgan Chase: the fund platform portfolio managers
+        I build the systems people depend on, and then I look after them. For four years, that meant
+        <strong>Java, Python, and React</strong> at JPMorgan Chase (2022&ndash;2026): the fund platform portfolio managers
         open every morning, and the quieter work underneath it that keeps the lights on. I am finishing an
         <strong>M.S. in Computer Science</strong> at Georgia Tech, and most evenings I am building something
         of my own.
@@ -744,7 +866,8 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
       </p>
 
       <div class="hero-cta">
-        <a href="#experience" class="btn btn-primary">View Experience</a>
+        <a href="/cascade/" class="btn btn-primary"><i class="fas fa-bolt" aria-hidden="true"></i> Play CASCADE</a>
+        <a href="#experience" class="btn btn-outline">View Experience</a>
         <a href="/resume/" class="btn btn-outline">
           <i class="fas fa-file-lines" aria-hidden="true"></i> View Résumé
         </a>
@@ -806,6 +929,34 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
     </div>
   </section>
 
+  <!-- CASCADE Flagship Project -->
+  <section class="cascade-home-callout reveal" id="cascade">
+    <div class="cascade-home-inner">
+      <div class="cascade-home-copy">
+        <p class="cascade-home-kicker"><span></span> Flagship project / playable now</p>
+        <h2>Keep the city alive.</h2>
+        <p class="cascade-home-tagline">Every building is a service. Every fix has a blast radius.</p>
+        <p class="cascade-home-description">CASCADE is a seeded distributed-systems roguelite running entirely in your browser. Trace dependencies, contain cascading failures, and see the architecture behind the game in motion.</p>
+        <div class="cascade-home-actions">
+          <a class="cascade-home-play" href="/cascade/"><i class="fas fa-play" aria-hidden="true"></i> Play the 90-second incident</a>
+          <a class="cascade-home-link" href="/cascade/#cascade-architecture">See how it is built <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="cascade-home-stack"><span>TypeScript</span><span>Canvas 2D</span><span>Web Worker</span><span>Deterministic simulation</span></div>
+      </div>
+      <div class="cascade-home-telemetry" aria-label="CASCADE live preview">
+        <div class="cascade-home-terminal-top"><span>CASCADE / LIVE TOPOLOGY</span><b><i></i> NOMINAL</b></div>
+        <div class="cascade-home-terminal-body">
+          <div class="cascade-home-building cascade-home-building-gateway"><b>GW</b><span>API GATEWAY</span></div>
+          <div class="cascade-home-building cascade-home-building-orders"><b>OR</b><span>ORDERS</span></div>
+          <div class="cascade-home-building cascade-home-building-pricing"><b>PR</b><span>PRICING</span></div>
+          <div class="cascade-home-building cascade-home-building-db"><b>DB</b><span>POSTGRES</span></div>
+          <div class="cascade-home-beam cascade-home-beam-one"></div><div class="cascade-home-beam cascade-home-beam-two"></div><div class="cascade-home-beam cascade-home-beam-three"></div>
+        </div>
+        <div class="cascade-home-terminal-bottom"><span>8 SERVICES</span><span>11 EDGES</span><span>10 HZ SIM</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Role Fit -->
   <section class="section reveal" id="roles">
     <div class="section-header">
@@ -820,8 +971,7 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
       <div class="role-card">
         <div class="role-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
         <h3>Full-Stack Engineer</h3>
-        <p>React and TypeScript front ends on Java and Spring Boot microservices. The fund platform I work on
-        handles onboarding, due diligence, factsheets, and portfolio management for 25+ portfolio managers and
+        <p>React and TypeScript front ends on Java and Spring Boot microservices. The fund platform I worked on            handled onboarding, due diligence, factsheets, and portfolio management for 25+ portfolio managers and
         internal teams. I have also sole-authored a compliance tool end to end, from the SQL up to the screen.</p>
         <div class="role-stack">
           <span>React</span><span>TypeScript</span><span>Java</span><span>Spring Boot</span><span>SQL Server</span>
@@ -974,7 +1124,7 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
             <h3 class="xp-role">Software Engineer II</h3>
             <p class="xp-org">JPMorgan Chase &amp; Co. &middot; Plano, TX</p>
           </div>
-          <span class="xp-date">Jul 2022 &ndash; Present</span>
+          <span class="xp-date">Jul 2022 &ndash; Aug 2026</span>
         </div>
         <ul class="xp-points">
           <li>Shipped the fund platform <strong>25+ portfolio managers</strong> and internal teams rely on for onboarding, due diligence, and portfolio management. React and TypeScript on the front, Java and Spring Boot REST APIs over SQL Server behind it.</li>
@@ -1275,7 +1425,8 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
   <!-- Projects Section -->
   <section class="section reveal" id="projects">
     <div class="section-header">
-      <h2 class="section-title fade-in-up">Featured Projects</h2>
+      <p class="section-kicker">More things I build</p>
+      <h2 class="section-title fade-in-up">Selected projects</h2>
       <p class="section-description fade-in-up">
         These are the things I build when nobody is asking me to. They are where I make every architectural
         call myself, get them wrong in private, and learn the most.
@@ -1406,7 +1557,7 @@ description: "Software Engineer II at JPMorgan Chase. 5+ years building and oper
       
       // ==================== TYPING EFFECT ====================
       const roles = [
-        'Software Engineer II @ JPMorgan Chase',
+        'Software Engineer · Distributed Systems · AI',
         'M.S. CS (AI/ML) @ Georgia Tech',
         'Java • Spring Boot • React • TypeScript',
         'AWS Certified Cloud Practitioner'

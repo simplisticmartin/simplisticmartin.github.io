@@ -5,6 +5,15 @@
 
 const projects = [
   {
+    title: "CASCADE: a distributed-systems roguelite",
+    description: "A seeded browser incident simulator where every service is a building and every fix has a blast radius. Trace dependencies, contain cascading failures, and inspect a deterministic Web Worker simulation through a live topology, telemetry console, and replayable postmortem.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23071018'/%3E%3Cstop offset='100%25' stop-color='%231ea7ad'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='200'/%3E%3Cpath d='M50 55h110M160 55l55 50M160 55l55-35M215 105h115M215 105l-30 55' stroke='%2366e5e2' stroke-width='4' fill='none'/%3E%3Cg fill='%2366e5e2'%3E%3Crect x='28' y='35' width='44' height='40' rx='4'/%3E%3Crect x='138' y='35' width='44' height='40' rx='4'/%3E%3Crect x='193' y='85' width='44' height='40' rx='4'/%3E%3Crect x='300' y='85' width='44' height='40' rx='4'/%3E%3C/g%3E%3Ctext fill='%23071018' x='50%25' y='182' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='24' font-weight='bold'%3ECASCADE%3C/text%3E%3C/svg%3E",
+    tags: ["TypeScript", "Canvas 2D", "Web Worker", "Simulation", "Graph Systems"],
+    github: null,
+    demo: "/cascade/",
+    featured: true
+  },
+  {
     title: "Gauntlet: an interview engine that grades its own grader",
     description: "A FastAPI and LangGraph platform that runs adaptive technical interviews. The hard part was never the LLM call, it was deciding what the model is allowed to judge: deterministic code computes the facts and enforces the constraints, and the model only handles genuine judgment. 21 REST endpoints, 194 automated tests, and a CI-gated benchmark that measures the grader's own accuracy.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23279d7f' width='400' height='200'/%3E%3Ctext fill='white' x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='48' font-weight='bold'%3E⚔️%3C/text%3E%3C/svg%3E",

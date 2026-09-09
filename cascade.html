@@ -1,0 +1,203 @@
+---
+layout: default
+permalink: /cascade/
+stylesheet: /assets/css/cascade.css
+script: /assets/js/cascade.js
+seo_title: "CASCADE | A distributed-systems roguelite — Martin Li"
+description: "Play CASCADE, a seeded browser incident simulator where every service is a building and every fix has a blast radius."
+og_type: game
+sitemap: true
+---
+
+<div class="cascade-page" id="cascadeGame" data-worker="{{ '/assets/js/cascade-worker.js' | relative_url }}">
+  <header class="cascade-hero" id="cascade-top">
+    <div class="cascade-hero-copy">
+      <p class="cascade-eyebrow"><span class="cascade-live-dot" aria-hidden="true"></span> Browser-native incident simulator</p>
+      <h1>CASCADE</h1>
+      <p class="cascade-tagline">Keep the city alive. <em>Every fix has a blast radius.</em></p>
+      <p class="cascade-hero-lede">
+        A distributed-systems roguelite built from the ideas I have spent years shipping and operating:
+        dependencies, retries, failover, observability, and the uncomfortable distance between a green
+        service and a healthy system.
+      </p>
+      <div class="cascade-hero-actions">
+        <button class="cascade-button cascade-button-primary" type="button" data-start-mode="recruiter">
+          <span aria-hidden="true">▶</span> Play the 90-second incident
+        </button>
+        <button class="cascade-button cascade-button-ghost" type="button" data-start-mode="freeplay">
+          Run a seeded shift <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <div class="cascade-tech-row" aria-label="Built with">
+        <span>TypeScript</span><span>Canvas 2D</span><span>Web Worker</span><span>Deterministic seeds</span><span>No backend</span>
+      </div>
+    </div>
+
+    <div class="cascade-hero-map" aria-label="CASCADE city preview" role="img">
+      <div class="cascade-map-scanline" aria-hidden="true"></div>
+      <div class="cascade-map-label"><span>LIVE TOPOLOGY</span><strong>01 DISTRICT / 08 SERVICES</strong></div>
+      <div class="cascade-map-grid" aria-hidden="true"></div>
+      <div class="cascade-map-edge cascade-map-edge-a" aria-hidden="true"></div>
+      <div class="cascade-map-edge cascade-map-edge-b" aria-hidden="true"></div>
+      <div class="cascade-map-edge cascade-map-edge-c" aria-hidden="true"></div>
+      <div class="cascade-map-node cascade-map-node-gateway"><span>GW</span><b>API GATEWAY</b></div>
+      <div class="cascade-map-node cascade-map-node-orders"><span>OR</span><b>ORDERS</b></div>
+      <div class="cascade-map-node cascade-map-node-data"><span>DB</span><b>POSTGRES</b></div>
+      <div class="cascade-map-node cascade-map-node-auth"><span>AU</span><b>AUTH</b></div>
+      <div class="cascade-map-node cascade-map-node-pricing"><span>PR</span><b>PRICING</b></div>
+      <div class="cascade-map-node cascade-map-node-incident"><i aria-hidden="true"></i><b>INCIDENT</b></div>
+      <div class="cascade-map-readout"><span>ALL SYSTEMS NOMINAL</span><strong>UNTIL THEY AREN'T</strong></div>
+    </div>
+  </header>
+
+  <div class="cascade-main" id="cascade-console" tabindex="-1">
+    <section class="cascade-briefing" aria-labelledby="cascade-briefing-title">
+      <div class="cascade-briefing-copy">
+        <p class="cascade-section-kicker">01 / THE SHIFT</p>
+        <h2 id="cascade-briefing-title">You are on call.</h2>
+        <p>
+          The city is a dependency graph. Read the telemetry, find the first domino, and choose a runbook
+          before a symptom becomes a system-wide outage. Restarting the red building is not the same thing
+          as fixing the cause.
+        </p>
+      </div>
+      <div class="cascade-briefing-rules">
+        <div><span>01</span><strong>Observe</strong><small>Click a service to inspect its live signals.</small></div>
+        <div><span>02</span><strong>Diagnose</strong><small>Follow latency, retries, and dependency edges.</small></div>
+        <div><span>03</span><strong>Stabilize</strong><small>Spend the right runbook, not the loudest one.</small></div>
+      </div>
+    </section>
+
+    <section class="cascade-console" aria-labelledby="cascade-console-title">
+      <div class="cascade-console-head">
+        <div>
+          <p class="cascade-section-kicker">02 / CONTROL ROOM</p>
+          <h2 id="cascade-console-title">Incident command</h2>
+        </div>
+        <div class="cascade-console-tools">
+          <label class="cascade-seed-control" for="cascadeSeed">
+            <span>INCIDENT SEED</span>
+            <input id="cascadeSeed" type="text" value="8F31A" maxlength="12" autocomplete="off" spellcheck="false">
+          </label>
+          <button class="cascade-small-button" type="button" id="cascadeNewSeed">New seed</button>
+          <button class="cascade-small-button" type="button" id="cascadeShare" disabled>Share run</button>
+        </div>
+      </div>
+
+      <div class="cascade-run-status" role="status" aria-live="polite">
+        <div class="cascade-status-main">
+          <span class="cascade-status-badge" id="cascadePhaseBadge">STANDBY</span>
+          <strong id="cascadeRunMessage">Choose a shift to initialize the city.</strong>
+        </div>
+        <div class="cascade-status-metrics">
+          <span><small>TIME</small><b id="cascadeTimer">00:00</b></span>
+          <span><small>CUSTOMER IMPACT</small><b id="cascadeImpact">0.0%</b></span>
+          <span><small>BLAST RADIUS</small><b id="cascadeBlastRadius">0 services</b></span>
+        </div>
+      </div>
+
+      <div class="cascade-console-grid">
+        <section class="cascade-city-panel" aria-labelledby="cascade-city-title">
+          <div class="cascade-panel-heading">
+            <div><span class="cascade-panel-index">A</span><h3 id="cascade-city-title">Service topology</h3></div>
+            <span class="cascade-panel-note"><i class="cascade-legend-dot cascade-legend-healthy"></i> healthy <i class="cascade-legend-dot cascade-legend-warning"></i> degrading <i class="cascade-legend-dot cascade-legend-critical"></i> failing</span>
+          </div>
+          <div class="cascade-canvas-wrap">
+            <canvas id="cascadeCanvas" width="1200" height="680" tabindex="0" aria-label="Interactive service topology. Select a service to inspect it."></canvas>
+            <div class="cascade-canvas-overlay" id="cascadeCanvasOverlay">
+              <span class="cascade-overlay-icon" aria-hidden="true">◌</span>
+              <strong>NO ACTIVE SHIFT</strong>
+              <span>Start an incident to bring the city online.</span>
+              <button class="cascade-button cascade-button-primary cascade-overlay-button" type="button" data-start-mode="recruiter">Start incident</button>
+            </div>
+          </div>
+          <div class="cascade-city-footer">
+            <p><span class="cascade-keycap">CLICK</span> a building to select it <span class="cascade-keycap">TAB</span> through services</p>
+            <span id="cascadeSelectedLabel">No service selected</span>
+          </div>
+          <div class="cascade-sr-service-list" id="cascadeServiceList" aria-label="Service topology list"></div>
+        </section>
+
+        <aside class="cascade-ops-panel" aria-labelledby="cascade-ops-title">
+          <div class="cascade-panel-heading">
+            <div><span class="cascade-panel-index">B</span><h3 id="cascade-ops-title">Operator console</h3></div>
+            <span class="cascade-pulse-label"><i></i> telemetry / 10hz</span>
+          </div>
+
+          <article class="cascade-incident-card">
+            <div class="cascade-incident-topline"><span id="cascadeIncidentSeverity">PAGER ALERT</span><span id="cascadeIncidentCode">INC—----</span></div>
+            <h4 id="cascadeIncidentTitle">Awaiting an incident</h4>
+            <p id="cascadeIncidentDescription">A seeded shift gives you the same failure every time. Use that to learn the graph, then send the link to someone else.</p>
+            <div class="cascade-incident-impact"><span><small>SYMPTOM</small><b id="cascadeIncidentSymptom">—</b></span><span><small>MODE</small><b id="cascadeModeLabel">STANDBY</b></span></div>
+          </article>
+
+          <div class="cascade-telemetry-card">
+            <div class="cascade-card-title"><span>SELECTED SERVICE</span><strong id="cascadeSelectedService">—</strong></div>
+            <div class="cascade-telemetry-grid">
+              <div><span>HEALTH</span><strong id="telemetryHealth">—</strong></div>
+              <div><span>CPU</span><strong id="telemetryCpu">—</strong></div>
+              <div><span>LATENCY</span><strong id="telemetryLatency">—</strong></div>
+              <div><span>ERRORS</span><strong id="telemetryErrors">—</strong></div>
+              <div><span>QUEUE DEPTH</span><strong id="telemetryQueue">—</strong></div>
+              <div><span>REPLICAS</span><strong id="telemetryReplicas">—</strong></div>
+            </div>
+            <div class="cascade-dependencies"><span>DEPENDENCIES</span><div id="cascadeDependencies">Select a building to trace its calls.</div></div>
+          </div>
+
+          <div class="cascade-actions-card">
+            <div class="cascade-card-title"><span>RUNBOOK ACTIONS</span><small id="cascadeActionHint">Select a service first</small></div>
+            <div class="cascade-action-grid">
+              <button class="cascade-action-button" type="button" data-action="inspect" disabled><span>⌕</span><b>Inspect</b><small>trace dependency</small></button>
+              <button class="cascade-action-button" type="button" data-action="restart" disabled><span>↻</span><b>Restart</b><small>reset process</small></button>
+              <button class="cascade-action-button" type="button" data-action="scale" disabled><span>＋</span><b>Scale +2</b><small>add capacity</small></button>
+              <button class="cascade-action-button" type="button" data-action="rollback" disabled><span>◀</span><b>Rollback</b><small>restore release</small></button>
+              <button class="cascade-action-button" type="button" data-action="circuit" disabled><span>⫯</span><b>Break circuit</b><small>stop retries</small></button>
+              <button class="cascade-action-button" type="button" data-action="failover" disabled><span>⇄</span><b>Failover</b><small>use secondary</small></button>
+            </div>
+          </div>
+
+          <div class="cascade-event-card">
+            <div class="cascade-card-title"><span>EVENT STREAM</span><span id="cascadeEventCount">0 events</span></div>
+            <ol id="cascadeEventLog" aria-live="off"><li class="cascade-empty-event">No events yet. The quiet before the pager.</li></ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cascade-postmortem" id="cascadePostmortem" hidden aria-labelledby="cascade-postmortem-title">
+      <div class="cascade-postmortem-head">
+        <div><p class="cascade-section-kicker">03 / AFTER ACTION</p><h2 id="cascade-postmortem-title">Postmortem</h2></div>
+        <span class="cascade-postmortem-result" id="cascadePostmortemResult">RUN COMPLETE</span>
+      </div>
+      <div class="cascade-postmortem-grid">
+        <div class="cascade-postmortem-summary">
+          <p id="cascadePostmortemLead">The city has stabilized. Here is the shape of the incident you just navigated.</p>
+          <div class="cascade-score-grid">
+            <div><span>ROOT CAUSE</span><strong id="postmortemRootCause">—</strong></div>
+            <div><span>MTTR</span><strong id="postmortemMttr">—</strong></div>
+            <div><span>AVAILABILITY</span><strong id="postmortemAvailability">—</strong></div>
+            <div><span>UNNECESSARY CHANGES</span><strong id="postmortemChanges">—</strong></div>
+          </div>
+          <div class="cascade-postmortem-actions">
+            <button class="cascade-button cascade-button-primary" type="button" id="cascadeRerun">↻ Re-run this seed</button>
+            <button class="cascade-button cascade-button-ghost" type="button" id="cascadeAnother">New incident</button>
+          </div>
+        </div>
+        <div class="cascade-timeline-card">
+          <div class="cascade-card-title"><span>INCIDENT TIMELINE</span><span id="cascadeReplayTime">LIVE</span></div>
+          <input id="cascadeReplaySlider" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay incident timeline">
+          <div class="cascade-timeline-labels"><span>ALERT</span><span>ROOT CAUSE</span><span>STABILIZED</span></div>
+          <div class="cascade-replay-actions"><button type="button" class="cascade-small-button" id="cascadeReplayPlay" disabled>▶ Play replay</button><button type="button" class="cascade-small-button" id="cascadeReplayNow" disabled>Jump to now</button></div>
+          <p class="cascade-replay-note">Drag the timeline to rewind the topology. Packets, health, and blast radius are reconstructed from the same deterministic run.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cascade-architecture" id="cascade-architecture" aria-labelledby="cascade-architecture-title">
+      <div class="cascade-architecture-copy"><p class="cascade-section-kicker">04 / UNDER THE CITY</p><h2 id="cascade-architecture-title">The portfolio piece is the architecture.</h2><p>CASCADE deliberately separates a 10 Hz simulation from the render loop. The worker owns graph state, propagation, and deterministic incidents. The browser owns the city, HUD, and operator decisions.</p><a href="https://github.com/simplisticmartin/simplisticmartin.github.io" target="_blank" rel="noopener" class="cascade-text-link">Inspect the source <span aria-hidden="true">↗</span></a></div>
+      <div class="cascade-architecture-diagram" aria-label="CASCADE architecture diagram">
+        <div class="cascade-arch-box"><span>60 FPS</span><strong>Canvas renderer</strong><small>city · particles · motion</small></div><i aria-hidden="true">↕</i><div class="cascade-arch-box cascade-arch-box-accent"><span>STATE SNAPSHOT</span><strong>Web Worker</strong><small>graph · incidents · actions</small></div><i aria-hidden="true">↕</i><div class="cascade-arch-box"><span>DETERMINISTIC</span><strong>Seeded engine</strong><small>same outage · shareable URL</small></div>
+      </div>
+    </section>
+  </div>
+</div>

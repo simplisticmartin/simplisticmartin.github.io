@@ -1,8 +1,8 @@
 # Site settings
 title: "Martin Li"
-tagline: "Software Engineer II @ JPMorgan Chase · Full-Stack & SRE · M.S. CS (AI/ML)"
+tagline: "Software Engineer · Distributed Systems · AI · Formerly JPMorgan Chase"
 description: >
-  Software Engineer with 5+ years building and operating enterprise financial systems at JPMorgan Chase
+  Software Engineer with 5+ years building and operating enterprise financial systems, including four years at JPMorgan Chase
   in Java, Spring Boot, microservices, React, and SQL Server on AWS — blending full-stack delivery with
   SRE, application resiliency, and CI/CD. Georgia Tech M.S. in Computer Science (AI/ML) and AWS Certified Cloud Practitioner.
 

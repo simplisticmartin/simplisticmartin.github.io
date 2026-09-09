@@ -17,6 +17,12 @@ sitemap: false
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>{{ '/cascade/' | absolute_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
     <loc>{{ '/about/' | absolute_url }}</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>

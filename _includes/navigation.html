@@ -12,6 +12,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>Home</a></li>
       <li><a href="{% if page.url == '/' %}#experience{% else %}{{ '/#experience' | relative_url }}{% endif %}">Experience</a></li>
+      <li><a href="{{ '/cascade/' | relative_url }}"{% if page.url contains '/cascade' %} class="active"{% endif %}>CASCADE</a></li>
       <li><a href="{% if page.url == '/' %}#projects{% else %}{{ '/#projects' | relative_url }}{% endif %}">Projects</a></li>
       <li><a href="{{ '/blog/' | relative_url }}"{% if page.url contains '/blog' or page.layout == 'post' %} class="active"{% endif %}>Blog</a></li>
       <li><a href="{{ '/learning.html' | relative_url }}"{% if page.url contains 'learning' %} class="active"{% endif %}>Learning</a></li>
