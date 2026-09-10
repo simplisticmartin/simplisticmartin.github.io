@@ -1,7 +1,7 @@
 {
   "product": "CASCADE",
   "auditVersion": 1,
-  "generatedAt": "2026-09-10T19:05:55.546Z",
+  "generatedAt": "2026-09-10T19:18:04.193Z",
   "status": "PASS",
   "layers": {
     "deployment": {
@@ -41,6 +41,13 @@
       "freeplayMode": true,
       "combinations": 8,
       "novaDeckRecruiter": true
+    },
+    "roguelite": {
+      "stages": 4,
+      "upgrades": 3,
+      "replayableBuild": true,
+      "deterministic": true,
+      "hashLedger": 580
     },
     "golden": {
       "cases": 10,
@@ -110,7 +117,7 @@
     },
     "fuzz": {
       "seeds": 1000,
-      "snapshots": 112790,
+      "snapshots": 132338,
       "invariants": "pass"
     },
     "replay": {
@@ -125,5 +132,5 @@
       "productionSmoke": "external-smoke-required"
     }
   },
-  "durationMs": 4260
+  "durationMs": 6644
 }

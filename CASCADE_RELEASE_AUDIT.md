@@ -31,7 +31,7 @@ The audit writes `cascade-audit-report.json`. It covers:
 - causal golden incidents for database exhaustion, edge surge, retries, cache, certificate, queue, memory, release, regional, and DNS failures;
 - runbook card fields, deterministic offers, lifecycle transitions, duplicate-card protection, and combinations;
 - NOVA healthy-state abstention, database grounding, capacity reasoning, optional operation, and reproducible false leads;
-- recruiter/freeplay budgets and 1,000-seed invariant fuzzing.
+- recruiter/freeplay budgets, full four-incident roguelite builds, installed-build replay, and 1,000-seed invariant fuzzing.
 
 ## Production parity gate
 

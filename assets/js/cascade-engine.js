@@ -417,7 +417,11 @@
     service.cacheFreshness += (clamp(targetFreshness, 0, 100) - service.cacheFreshness) * response;
     service.certificateTtl += (clamp(targetCertificate, 0, 100) - service.certificateTtl) * response;
     service.health += (targetHealth - service.health) * response;
-    service.retryMultiplier += ((service.releasePressure > 0 ? 1 + service.releasePressure * 1.4 : 1) - service.retryMultiplier) * 0.045;
+    const releaseRetryTarget = service.releasePressure > 0 ? 1 + service.releasePressure * 1.4 : 1;
+    const retryIncidentTarget = run.scenario.primary.target === service.id && run.scenario.primary.id === 'retry-regression'
+      ? 1 + direct * 3.2
+      : 1;
+    service.retryMultiplier += (Math.max(releaseRetryTarget, retryIncidentTarget) - service.retryMultiplier) * 0.045;
     service.restartGrace = Math.max(0, service.restartGrace - TICK_SECONDS);
     service.releasePressure = Math.max(0, service.releasePressure - 0.003);
     service.manualCapacity += (0 - service.manualCapacity) * 0.001;

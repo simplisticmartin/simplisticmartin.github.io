@@ -114,6 +114,17 @@ function auditEngine() {
   const pricingAfter = Engine.snapshot(circuitRun).edges.find((edge) => edge.from === 'orders' && edge.to === 'pricing');
   assert(pricingAfter.requestRate < pricingBefore.requestRate, 'Circuit action must reduce downstream request rate.');
 
+  const retryFixture = Engine.createRun('RETRY-GOLDEN', 'freeplay', []);
+  retryFixture.scenario.primary = { ...Engine.INCIDENT_TEMPLATES.find((item) => item.id === 'retry-regression'), severity: 1 };
+  retryFixture.scenario.modifier = null;
+  const initialRetryEdge = Engine.snapshot(retryFixture).edges.find((edge) => edge.from === 'orders' && edge.to === 'pricing');
+  for (let i = 0; i < 100; i += 1) Engine.advance(retryFixture, Engine.TICK_SECONDS);
+  const retrySnapshot = Engine.snapshot(retryFixture);
+  const retryOrders = retrySnapshot.services.find((service) => service.id === 'orders');
+  const retryEdge = retrySnapshot.edges.find((edge) => edge.from === 'orders' && edge.to === 'pricing');
+  assert(retryOrders.retryMultiplier > 1.05, 'Retry regression must increase the observable retry multiplier.');
+  assert(retryEdge.requestRate > initialRetryEdge.requestRate, 'Retry amplification must increase downstream request rate.');
+
   const dbFixture = Engine.createRun('DB17', 'freeplay', []);
   dbFixture.scenario.primary = { ...Engine.INCIDENT_TEMPLATES.find((item) => item.id === 'db-exhaustion'), severity: 1 };
   for (let i = 0; i < 80; i += 1) Engine.advance(dbFixture, Engine.TICK_SECONDS);
@@ -280,6 +291,61 @@ function auditRecruiterAndIntegration() {
   return { recruiterMode: true, freeplayMode: true, combinations: combinations.length, novaDeckRecruiter: true };
 }
 
+function auditFullRun() {
+  const mitigationByIncident = {
+    'db-exhaustion': ['failover', 'postgres'],
+    'edge-surge': ['scale', 'gateway'],
+    'retry-regression': ['circuit', 'orders'],
+    'cache-staleness': ['restart', 'cache'],
+    'certificate-expiry': ['restart', 'auth'],
+    'queue-backlog': ['scale', 'orders'],
+    'memory-leak': ['restart', 'inventory'],
+    'deployment-regression': ['rollback', 'pricing'],
+    'region-degradation': ['failover', 'postgres'],
+    'dns-flap': ['restart', 'gateway']
+  };
+
+  function finishRun(seed, build, replayBuild) {
+    const run = Engine.createRun(seed, 'recruiter', build, replayBuild);
+    let actionNumber = 0;
+    while (!run.runComplete) {
+      const [action, target] = mitigationByIncident[run.scenario.primary.id] || ['inspect', 'gateway'];
+      let dispatched = false;
+      for (let tick = 0; tick < Math.ceil(run.maxTime / Engine.TICK_SECONDS) + 1 && !run.complete; tick += 1) {
+        if (!dispatched && run.stageTime >= 8 - 1e-9) {
+          const result = Engine.applyAction(run, action, target, `${seed}-stage-${run.stage}-action-${actionNumber}`);
+          assert(result.accepted, `${seed}: ${action} was rejected in stage ${run.stage}.`);
+          dispatched = true;
+          actionNumber += 1;
+        }
+        Engine.advance(run, Engine.TICK_SECONDS);
+      }
+      assert(run.complete && run.success, `${seed}: stage ${run.stage} did not stabilize.`);
+      if (run.awaitingUpgrade) {
+        const result = replayBuild
+          ? Engine.continueReplay(run)
+          : Engine.chooseUpgrade(run, Engine.snapshot(run).upgradeOptions[0].id);
+        assert(result.accepted, `${seed}: stage ${run.stage} could not advance.`);
+      }
+    }
+    return { run, final: Engine.snapshot(run) };
+  }
+
+  const live = finishRun('FULL-BUILD', [], false);
+  const liveAgain = finishRun('FULL-BUILD', [], false);
+  assert(live.run.runComplete && live.run.success && live.run.stage === Engine.TOTAL_STAGES, 'A live roguelite run must finish all incidents.');
+  assert(live.run.build.length === Engine.TOTAL_STAGES - 1, 'A live run must install one runbook between each pair of incidents.');
+  assert(deepEqual(live.run.history, liveAgain.run.history), 'A full build must replay deterministically from the same seed and choices.');
+  assert(live.final.postmortem.stateHashes.length === live.run.history.length, 'A full-run postmortem must contain the full replay ledger.');
+
+  const replay = finishRun('FULL-BUILD', live.run.build, true);
+  const replayAgain = finishRun('FULL-BUILD', live.run.build, true);
+  assert(replay.run.runComplete && replay.run.success, 'An installed build must be replayable through all incidents.');
+  assert(deepEqual(replay.run.history, replayAgain.run.history), 'The same installed build must replay byte-for-byte.');
+  assert(replay.run.build.join(',') === live.run.build.join(','), 'Replay must preserve the installed build combination.');
+  return { stages: Engine.TOTAL_STAGES, upgrades: live.run.build.length, replayableBuild: true, deterministic: true, hashLedger: live.run.history.length };
+}
+
 function auditFuzz() {
   let seeds = 0;
   let snapshots = 0;
@@ -316,6 +382,7 @@ function run() {
     report.layers.cards = auditCards();
     report.layers.nova = auditNova();
     report.layers.integration = auditRecruiterAndIntegration();
+    report.layers.roguelite = auditFullRun();
     report.layers.golden = auditGoldenRuns();
     report.layers.fuzz = auditFuzz();
     report.layers.replay = auditReplay();
@@ -331,4 +398,4 @@ function run() {
 }
 
 if (!args.has('--module')) run();
-module.exports = { run, auditDeployment, auditEngine, auditActions, auditReplay, auditGoldenRuns, auditCards, auditNova, auditRecruiterAndIntegration, auditFuzz };
+module.exports = { run, auditDeployment, auditEngine, auditActions, auditReplay, auditGoldenRuns, auditCards, auditNova, auditRecruiterAndIntegration, auditFullRun, auditFuzz };
