@@ -11,6 +11,8 @@
   const context = canvas.getContext('2d');
   const overlay = $('#cascadeCanvasOverlay');
   const workerUrl = root.dataset.worker;
+  const engineVersion = root.dataset.engineVersion || (window.CASCADE_BUILD && window.CASCADE_BUILD.version) || 'unknown';
+  const buildCommit = root.dataset.buildCommit || (window.CASCADE_BUILD && window.CASCADE_BUILD.commit) || 'unknown';
   const serviceOrder = ['gateway', 'orders', 'auth', 'pricing', 'inventory', 'cache', 'postgres', 'redis'];
   const nodes = {
     gateway: { x: 600, y: 102, width: 150, height: 104, color: '#66e5e2' },
@@ -44,6 +46,7 @@
   let pendingUpgrade = null;
   let displayedStage = 0;
   let lastUrlState = '';
+  let workerGeneration = 0;
   let onboarding = null;
   let presentationMode = false;
   let animationFrame = null;
@@ -119,13 +122,12 @@
     if (!card) return;
     const title = $('#cascadeFirstActionTitle');
     const detail = $('#cascadeFirstActionDetail');
-    const incidentRoot = snapshot && snapshot.scenario ? snapshot.scenario.root : null;
-    const selected = incidentRoot ? serviceById(incidentRoot) : null;
+    const selected = selectedService ? serviceById(selectedService) : serviceById('gateway');
     const shouldShow = Boolean(onboarding && onboarding.active && onboarding.step < 4 && snapshot && !snapshot.complete && !snapshot.resolved);
     card.hidden = !shouldShow;
     $$('.cascade-action-button').forEach((button) => button.classList.remove('cascade-guide-action'));
     if (!shouldShow) return;
-    const recommendedAction = onboarding.step <= 2 ? 'inspect' : (snapshot.scenario && snapshot.scenario.correctAction);
+    const recommendedAction = onboarding.step <= 2 ? 'inspect' : null;
     const recommendedButton = recommendedAction ? $(`.cascade-action-button[data-action="${recommendedAction}"]`) : null;
     if (recommendedButton) recommendedButton.classList.add('cascade-guide-action');
     if (onboarding.step === 1) {
@@ -135,9 +137,8 @@
       title.textContent = `Inspect ${selected ? selected.name : 'the root service'}`;
       detail.textContent = 'Confirm the first failing edge. Read latency, errors, and queue depth together.';
     } else {
-      const actionName = snapshot.scenario && snapshot.scenario.id === 'traffic' ? 'Scale +2' : snapshot.scenario && snapshot.scenario.id === 'deployment' ? 'Rollback' : 'Break circuit';
-      title.textContent = `Use ${actionName}`;
-      detail.textContent = 'This guided action addresses the failure mode. Your other runbooks remain available.';
+      title.textContent = 'Use the evidence-backed action';
+      detail.textContent = 'NOVA and telemetry can suggest a move, but the engine resolves only when customer SLOs recover.';
     }
   }
 
@@ -313,7 +314,7 @@
     snapshot.services.forEach((service) => {
       const button = document.createElement('button');
       button.type = 'button';
-      const isGuidedService = Boolean(onboarding && onboarding.active && onboarding.step < 4 && snapshot.scenario && snapshot.scenario.root === service.id);
+      const isGuidedService = Boolean(onboarding && onboarding.active && onboarding.step < 4 && service.id === 'gateway');
       button.className = `cascade-service-button ${statusClass(service.status)}${isGuidedService ? ' cascade-guide-service' : ''}`;
       button.dataset.service = service.id;
       button.setAttribute('aria-current', service.id === selectedService ? 'true' : 'false');
@@ -377,9 +378,8 @@
     if (!serviceOrder.includes(id)) return;
     selectedService = id;
     if (userInitiated && onboarding && onboarding.active && onboarding.step === 1) {
-      const rootId = currentSnapshot && currentSnapshot.scenario ? currentSnapshot.scenario.root : null;
-      if (id === rootId) onboarding.step = 2;
-      else showNotice('Follow the cyan guide: select the highlighted root service.');
+      if (id === 'gateway') onboarding.step = 2;
+      else showNotice('Start at the gateway symptom, then follow the dependency evidence.');
     }
     renderTelemetry();
     if (onboarding && onboarding.active) updateOnboarding(currentSnapshot);
@@ -430,7 +430,7 @@
         ? `You contained the final incident in ${formatTime(snapshot.time)}. The city survived all ${snapshot.totalStages || 4} incidents with ${snapshot.build && snapshot.build.length ? snapshot.build.length : 'no'} runbook upgrades installed.`
         : `You contained ${snapshot.scenario.title.toLowerCase()} in ${formatTime(snapshot.time)}. Choose one runbook below before incident ${(snapshot.stage || 1) + 1}.`)
       : `The shift ended with ${snapshot.blastRadius} services outside nominal health. The postmortem is still useful: every unnecessary change is a clue about where the graph hid the cause.`;
-    $('#postmortemRootCause').textContent = snapshot.scenario.rootCause;
+    $('#postmortemRootCause').textContent = snapshot.postmortem && snapshot.postmortem.rootCause ? snapshot.postmortem.rootCause : 'Derived from post-incident evidence';
     $('#postmortemMttr').textContent = formatTime(snapshot.time);
     $('#postmortemAvailability').textContent = `${Math.max(0, 100 - snapshot.impact).toFixed(2)}%`;
     $('#postmortemChanges').textContent = String(snapshot.totalUnnecessaryChanges ?? snapshot.unnecessaryChanges);
@@ -460,7 +460,7 @@
 
   function sendReplay(index) {
     if (!worker || !history.length) return;
-    worker.postMessage({ type: 'replay', index });
+    worker.postMessage({ type: 'replay', index, runToken: workerGeneration });
   }
 
   function toggleReplay() {
@@ -517,6 +517,7 @@
 
   function resetForStart(seed, mode, explicitBuild, isReplayBuild, guided) {
     clearReplay();
+    workerGeneration += 1;
     active = true;
     currentMode = mode === 'freeplay' ? 'freeplay' : 'recruiter';
     runbookBuild = normalizeBuild(explicitBuild);
@@ -534,6 +535,8 @@
     setGuidedTarget(guided ? '#cascadeIncidentCard' : null, Boolean(guided));
     $('#cascadeShare').disabled = false;
     $('#cascadeModeLabel').textContent = currentMode === 'recruiter' ? '90-SECOND SHIFT' : 'FREEPLAY';
+    $('#cascadeRenderBudget').setAttribute('data-engine-version', engineVersion);
+    $('#cascadeRenderBudget').setAttribute('data-build-commit', buildCommit);
     $('#cascadeSeed').value = seed;
     renderBuild({ build: runbookBuild, buildCards: [], stage: 1, totalStages: 4, replayBuild });
     $('#cascadeIncidentTitle').textContent = 'Initializing incident…';
@@ -545,7 +548,7 @@
     setPhase('BOOTING', 'Connecting the simulation worker…');
     $('#cascadeConsole').scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (guided) updateOnboarding(null);
-    if (worker) worker.postMessage({ type: 'start', seed, mode: currentMode, build: runbookBuild, replayBuild });
+    if (worker) worker.postMessage({ type: 'start', seed, mode: currentMode, build: runbookBuild, replayBuild, runToken: workerGeneration });
   }
 
   function start(mode, explicitSeed, explicitBuild, explicitReplayBuild, explicitGuided) {
@@ -556,6 +559,7 @@
     resetForStart(seed, mode, suppliedBuild, shouldReplay, guided);
     const url = new URL(window.location.href);
     url.searchParams.set('seed', seed);
+    url.searchParams.set('engine', engineVersion);
     if (runbookBuild.length) url.searchParams.set('build', runbookBuild.join(','));
     else url.searchParams.delete('build');
     window.history.replaceState({}, '', url);
@@ -571,6 +575,7 @@
     const seed = normalizeSeed($('#cascadeSeed').value);
     const url = new URL(window.location.href);
     url.searchParams.set('seed', seed);
+    url.searchParams.set('engine', engineVersion);
     if (runbookBuild.length) url.searchParams.set('build', runbookBuild.join(','));
     else url.searchParams.delete('build');
     url.hash = 'cascade-console';
@@ -601,7 +606,7 @@
       renderUpgradeOptions(snapshot);
     }
     refreshNova(snapshot);
-    if (snapshot && snapshot.scenario && !selectedService && !(onboarding && onboarding.active)) selectService(snapshot.scenario.root, false);
+    if (!selectedService) renderTelemetry();
     updateStatus(snapshot);
     updateIncidentCard(snapshot);
     renderServiceList(snapshot);
@@ -633,9 +638,10 @@
 
   function setupWorker() {
     try {
-      worker = new Worker(workerUrl);
+      worker = new Worker(`${workerUrl}?v=${encodeURIComponent(engineVersion)}`);
       worker.addEventListener('message', (message) => {
         const payload = message.data || {};
+        if (payload.runToken !== undefined && payload.runToken !== workerGeneration) return;
         if (payload.type === 'event') {
           appendEvent(payload.event);
           eventCount = payload.count || eventCount + 1;
@@ -721,13 +727,16 @@
       const target = serviceById(toId);
       const start = nodeAnchor(from, to);
       const end = nodeAnchor(to, from);
+      const edge = currentSnapshot && currentSnapshot.edges && currentSnapshot.edges.find((candidate) => candidate.from === fromId && candidate.to === toId);
       const stress = Math.max(source ? 100 - source.health : 0, target ? 100 - target.health : 0);
-      const color = stress > 52 ? '#ff6b6b' : stress > 22 ? '#f5b95b' : '#45cfd0';
+      const trafficStress = edge ? Math.min(100, Math.max(0, ((edge.requestRate || 0) / 900) * 18 + ((edge.latency || 0) / 180) * 28 + (edge.errors || 0) * 3)) : 0;
+      const combinedStress = Math.max(stress, trafficStress);
+      const color = edge && edge.route === 'secondary' ? '#b7a2ff' : combinedStress > 52 ? '#ff6b6b' : combinedStress > 22 ? '#f5b95b' : '#45cfd0';
       context.save();
-      context.globalAlpha = stress > 52 ? 0.92 : 0.52;
-      context.strokeStyle = rgba(color, stress > 52 ? 0.7 : 0.35);
-      context.lineWidth = stress > 52 ? 3.5 : stress > 22 ? 2.5 : 1.5;
-      context.setLineDash(stress > 22 ? [9, 8] : []);
+      context.globalAlpha = combinedStress > 52 ? 0.92 : 0.52;
+      context.strokeStyle = rgba(color, combinedStress > 52 ? 0.7 : 0.35);
+      context.lineWidth = edge ? Math.min(7, Math.max(1.5, 1.2 + ((edge.requestRate || 0) / 260))) : (combinedStress > 52 ? 3.5 : combinedStress > 22 ? 2.5 : 1.5);
+      context.setLineDash(edge && edge.circuitOpen ? [5, 8] : combinedStress > 22 ? [9, 8] : []);
       context.beginPath();
       context.moveTo(start.x, start.y);
       context.lineTo(end.x, end.y);
@@ -739,7 +748,7 @@
       context.fillStyle = color;
       context.shadowColor = color;
       context.shadowBlur = presentationMode ? 0 : 10;
-      context.beginPath(); context.arc(packetX, packetY, presentationMode ? 2 : (stress > 52 ? 4 : 2.5), 0, Math.PI * 2); context.fill();
+      context.beginPath(); context.arc(packetX, packetY, presentationMode ? 2 : (combinedStress > 52 ? 4 : 2.5), 0, Math.PI * 2); context.fill();
       context.restore();
     });
   }
@@ -765,7 +774,7 @@
       roundedRect(context, x - 8, y - 8, node.width + 16, node.height + 16, 12);
       context.stroke();
     }
-    const guidedRoot = Boolean(onboarding && onboarding.active && onboarding.step < 4 && currentSnapshot && currentSnapshot.scenario && currentSnapshot.scenario.root === service.id);
+    const guidedRoot = Boolean(onboarding && onboarding.active && onboarding.step < 4 && service.id === 'gateway');
     if (guidedRoot) {
       context.save();
       context.strokeStyle = '#66e5e2';
@@ -873,7 +882,7 @@
       const button = $('#cascadeContinueShift');
       button.disabled = true;
       if (currentSnapshot.replayBuild) {
-        worker.postMessage({ type: 'continue' });
+        worker.postMessage({ type: 'continue', runToken: workerGeneration });
         return;
       }
       if (!pendingUpgrade) {
@@ -881,7 +890,7 @@
         showNotice('Choose one runbook card first.');
         return;
       }
-      worker.postMessage({ type: 'upgrade', cardId: pendingUpgrade });
+      worker.postMessage({ type: 'upgrade', cardId: pendingUpgrade, runToken: workerGeneration });
     });
     $('#cascadeReplayPlay').addEventListener('click', toggleReplay);
     $('#cascadeReplayNow').addEventListener('click', () => {
@@ -898,23 +907,20 @@
       if (!selectedService || !active || !worker) return;
       const actionId = button.dataset.action;
       if (onboarding && onboarding.active) {
-        const rootId = currentSnapshot && currentSnapshot.scenario ? currentSnapshot.scenario.root : null;
-        const correctAction = currentSnapshot && currentSnapshot.scenario ? currentSnapshot.scenario.correctAction : null;
-        const isRoot = selectedService === rootId;
-        if (actionId === 'inspect' && isRoot && onboarding.step >= 2) {
+        const isGateway = selectedService === 'gateway';
+        if (actionId === 'inspect' && isGateway && onboarding.step >= 2) {
           onboarding.step = 3;
-        } else if (actionId === correctAction && isRoot && onboarding.step >= 3) {
-          onboarding.step = 4;
         } else if (actionId === 'inspect') {
-          showNotice('Inspect the highlighted root service first; symptoms can look healthy.');
+          showNotice('Start with the gateway symptom, then inspect the dependency evidence.');
         } else if (onboarding.step < 3) {
-          showNotice('Observe the pager, select the highlighted service, then inspect its telemetry.');
-        } else if (actionId !== correctAction) {
-          showNotice('That changes a symptom. Follow the highlighted runbook action for this incident.');
+          showNotice('Observe the pager, select the gateway, then inspect its telemetry.');
+        } else if (actionId !== 'inspect') {
+          onboarding.step = 4;
         }
         updateOnboarding(currentSnapshot);
       }
-      worker.postMessage({ type: 'action', action: actionId, target: selectedService });
+      const actionToken = `${$('#cascadeSeed').value}:${currentSnapshot && currentSnapshot.stage ? currentSnapshot.stage : 1}:${actionId}:${selectedService}:${Math.round((currentSnapshot && currentSnapshot.time ? currentSnapshot.time : 0) * 10)}`;
+      worker.postMessage({ type: 'action', action: actionId, target: selectedService, actionId: actionToken, runToken: workerGeneration });
     }));
     canvas.addEventListener('click', (event) => {
       const id = canvasServiceAt(event);
@@ -956,7 +962,7 @@
     }
     applyPresentationMode(presentationMode, false);
     renderTelemetry();
-    selectService('gateway', false);
+    renderTelemetry();
     animate();
     if (querySeed) {
       const seed = normalizeSeed(querySeed);

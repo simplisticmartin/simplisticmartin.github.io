@@ -1,0 +1,57 @@
+name: CASCADE release audit
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'cascade.html'
+      - 'assets/js/cascade*.js'
+      - 'assets/css/cascade.css'
+      - 'assets/data/cascade-build.json'
+      - '_data/cascade-build.json'
+      - 'scripts/cascade-smoke.js'
+      - 'CASCADE_RELEASE_AUDIT.md'
+      - '.github/workflows/cascade-audit.yml'
+  pull_request:
+    paths:
+      - 'cascade.html'
+      - 'assets/js/cascade*.js'
+      - 'assets/css/cascade.css'
+      - 'assets/data/cascade-build.json'
+      - '_data/cascade-build.json'
+      - 'scripts/cascade-smoke.js'
+      - 'CASCADE_RELEASE_AUDIT.md'
+      - '.github/workflows/cascade-audit.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check CASCADE JavaScript syntax
+        run: |
+          node --check assets/js/cascade-engine.js
+          node --check assets/js/cascade-worker.js
+          node --check assets/js/cascade.js
+          node --check assets/js/cascade-nova.js
+          node --check assets/js/cascade-audit.js
+          node --check scripts/cascade-smoke.js
+      - name: Run engine, feature, integration, replay, and fuzz audit
+        run: node assets/js/cascade-audit.js
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cascade-audit-report
+          path: cascade-audit-report.json
+      - name: Smoke test production parity
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          CASCADE_VERSION: 0.5.1-audit
+          GITHUB_SHA: ${{ github.sha }}
+        run: node scripts/cascade-smoke.js https://simplisticmartin.github.io/cascade/

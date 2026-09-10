@@ -1,0 +1,17 @@
+{
+  "product": "CASCADE",
+  "version": "0.5.1-audit",
+  "commit": "7fa4724",
+  "builtAt": "2026-09-09T00:00:00Z",
+  "productionUrl": "https://simplisticmartin.github.io/cascade/",
+  "features": [
+    "base-engine",
+    "nova-local-analyst",
+    "runbook-deck",
+    "recruiter-mode",
+    "deterministic-replay",
+    "seeded-incidents",
+    "presentation-mode",
+    "90-second-onboarding"
+  ]
+}

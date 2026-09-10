@@ -10,7 +10,10 @@ og_type: game
 sitemap: true
 ---
 
-<div class="cascade-page" id="cascadeGame" data-worker="{{ '/assets/js/cascade-worker.js' | relative_url }}">
+{% assign cascade_manifest = site.data['cascade-build'] %}
+{% assign cascade_revision = site.github.build_revision | default: cascade_manifest.commit %}
+{% assign cascade_commit = cascade_revision | slice: 0, 7 %}
+<div class="cascade-page" id="cascadeGame" data-worker="{{ '/assets/js/cascade-worker.js' | relative_url }}" data-engine-version="{{ cascade_manifest.version }}" data-build-commit="{{ cascade_commit }}">
   <header class="cascade-hero" id="cascade-top">
     <div class="cascade-hero-copy">
       <p class="cascade-eyebrow"><span class="cascade-live-dot" aria-hidden="true"></span> Browser-native incident simulator</p>
@@ -32,6 +35,9 @@ sitemap: true
       <div class="cascade-tech-row" aria-label="Built with">
         <span>TypeScript</span><span>Canvas 2D</span><span>Web Worker</span><span>Deterministic seeds</span><span>No backend</span>
       </div>
+      <div class="cascade-build-identity" aria-label="CASCADE build identity">
+        <span>CASCADE <b>v{{ cascade_manifest.version }}</b></span><span>BUILD <b>{{ cascade_commit }}</b></span><span>LOCAL + PRODUCTION PARITY</span>
+      </div>
     </div>
 
     <div class="cascade-hero-map" aria-label="CASCADE city preview" role="img">
@@ -51,6 +57,15 @@ sitemap: true
     </div>
   </header>
 
+  <script>
+    window.CASCADE_BUILD = {
+      product: 'CASCADE',
+      version: '{{ cascade_manifest.version }}',
+      commit: '{{ cascade_commit }}',
+      builtAt: '{{ cascade_manifest.builtAt }}'
+    };
+  </script>
+
   <div class="cascade-main" id="cascade-console" tabindex="-1">
     <section class="cascade-briefing" aria-labelledby="cascade-briefing-title">
       <div class="cascade-briefing-copy">
@@ -69,7 +84,7 @@ sitemap: true
       </div>
     </section>
 
-    <section class="cascade-console" aria-labelledby="cascade-console-title">
+    <section class="cascade-console" id="cascadeConsole" aria-labelledby="cascade-console-title">
       <div class="cascade-console-head">
         <div>
           <p class="cascade-section-kicker">02 / CONTROL ROOM</p>
@@ -263,7 +278,7 @@ sitemap: true
           <input id="cascadeReplaySlider" type="range" min="0" max="0" value="0" step="1" disabled aria-label="Replay incident timeline">
           <div class="cascade-timeline-labels"><span>ALERT</span><span>ROOT CAUSE</span><span>STABILIZED</span></div>
           <div class="cascade-replay-actions"><button type="button" class="cascade-small-button" id="cascadeReplayPlay" disabled>▶ Play replay</button><button type="button" class="cascade-small-button" id="cascadeReplayNow" disabled>Jump to now</button></div>
-          <p class="cascade-replay-note">Drag the timeline to rewind the topology. Packets, health, and blast radius are reconstructed from the same deterministic run.</p>
+          <p class="cascade-replay-note">Drag the timeline to rewind the topology. Packets, health, and blast radius are reconstructed from the same deterministic run. Each snapshot carries a state hash for auditability.</p>
         </div>
       </div>
       <section class="cascade-upgrade-panel" id="cascadeUpgradePanel" hidden aria-labelledby="cascade-upgrade-title">

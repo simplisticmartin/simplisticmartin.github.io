@@ -251,6 +251,26 @@
   margin-top: 2rem;
 }
 
+.cascade-build-identity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: var(--cascade-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cascade-build-identity span {
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--cascade-line);
+}
+
+.cascade-build-identity span:last-child { border-right: 0; }
+.cascade-build-identity b { color: var(--cascade-cyan); font-weight: 800; }
+
 .cascade-tech-row span {
   padding: 0.32rem 0.55rem;
   border: 1px solid var(--cascade-line);

@@ -1,0 +1,124 @@
+{
+  "product": "CASCADE",
+  "auditVersion": 1,
+  "generatedAt": "2026-09-10T18:47:41.668Z",
+  "status": "PASS",
+  "layers": {
+    "deployment": {
+      "version": "0.5.1-audit",
+      "commit": "7fa4724",
+      "builtAt": "2026-09-09T00:00:00Z",
+      "productionUrl": "https://simplisticmartin.github.io/cascade/"
+    },
+    "engine": {
+      "deterministic": true,
+      "duplicateActions": true,
+      "stateHashes": 901,
+      "scaleCapacity": true,
+      "circuitPressure": true
+    },
+    "cards": {
+      "cards": 6,
+      "deterministicOffers": true,
+      "lifecycle": true,
+      "combinationSafe": true
+    },
+    "nova": {
+      "controlledSnapshots": 3,
+      "hiddenRootLeak": false,
+      "optional": true,
+      "safeAbstention": true,
+      "telemetryOnly": true,
+      "groundedFixtures": true
+    },
+    "integration": {
+      "recruiterMode": true,
+      "freeplayMode": true,
+      "combinations": 8,
+      "novaDeckRecruiter": true
+    },
+    "golden": {
+      "cases": 10,
+      "results": {
+        "db-exhaustion": {
+          "action": "failover",
+          "target": "postgres",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "edge-surge": {
+          "action": "scale",
+          "target": "gateway",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "retry-regression": {
+          "action": "circuit",
+          "target": "orders",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "cache-staleness": {
+          "action": "restart",
+          "target": "cache",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "certificate-expiry": {
+          "action": "restart",
+          "target": "auth",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "queue-backlog": {
+          "action": "scale",
+          "target": "orders",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "memory-leak": {
+          "action": "restart",
+          "target": "inventory",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "deployment-regression": {
+          "action": "rollback",
+          "target": "pricing",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "region-degradation": {
+          "action": "failover",
+          "target": "postgres",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        },
+        "dns-flap": {
+          "action": "restart",
+          "target": "gateway",
+          "success": true,
+          "resolutionSeconds": 14.299999999999965
+        }
+      },
+      "causalResolution": true
+    },
+    "fuzz": {
+      "seeds": 1000,
+      "snapshots": 112790,
+      "invariants": "pass"
+    },
+    "replay": {
+      "stateHashes": 137,
+      "deterministic": true,
+      "clamped": true
+    },
+    "player": {
+      "recruiterBudgetSeconds": 90,
+      "onboarding": true,
+      "postmortem": true,
+      "productionSmoke": "external-smoke-required"
+    }
+  },
+  "durationMs": 3946
+}
