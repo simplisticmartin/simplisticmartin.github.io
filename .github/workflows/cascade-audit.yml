@@ -54,4 +54,6 @@ jobs:
         env:
           CASCADE_VERSION: 0.5.1-audit
           GITHUB_SHA: ${{ github.sha }}
+          CASCADE_SMOKE_ATTEMPTS: 12
+          CASCADE_SMOKE_DELAY_MS: 10000
         run: node scripts/cascade-smoke.js https://simplisticmartin.github.io/cascade/

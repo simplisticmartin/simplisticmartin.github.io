@@ -1,17 +1,15 @@
+---
+---
+{% assign cascade_manifest = site.data['cascade-build'] %}
+{% assign cascade_revision = site.github.build_revision | default: cascade_manifest.commit %}
+{% assign cascade_commit = cascade_revision | slice: 0, 7 %}
 {
   "product": "CASCADE",
-  "version": "0.5.1-audit",
-  "commit": "7fa4724",
-  "builtAt": "2026-09-09T00:00:00Z",
-  "productionUrl": "https://simplisticmartin.github.io/cascade/",
+  "version": "{{ cascade_manifest.version }}",
+  "commit": "{{ cascade_commit }}",
+  "builtAt": "{{ cascade_manifest.builtAt }}",
+  "productionUrl": "{{ cascade_manifest.productionUrl }}",
   "features": [
-    "base-engine",
-    "nova-local-analyst",
-    "runbook-deck",
-    "recruiter-mode",
-    "deterministic-replay",
-    "seeded-incidents",
-    "presentation-mode",
-    "90-second-onboarding"
-  ]
+{% for feature in cascade_manifest.features %}    "{{ feature }}"{% unless forloop.last %},{% endunless %}
+{% endfor %}  ]
 }

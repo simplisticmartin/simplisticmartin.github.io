@@ -14,7 +14,31 @@
   const VERSION = '0.5.1-audit';
   const TICK_SECONDS = 0.1;
   const TOTAL_STAGES = 4;
-  const ACTIONS = ['inspect', 'restart', 'scale', 'rollback', 'circuit', 'failover'];
+  const ACTIONS = ['inspect', 'restart', 'scale', 'rollback', 'circuit', 'failover', 'hold'];
+  const REQUIRED_STABLE_SECONDS = { recruiter: 3, normal: 4, sev0: 5 };
+  const STAGE_PROFILES = {
+    1: { name: 'SIGNAL', primary: 0.72, modifier: 0, boss: false },
+    2: { name: 'CASCADE', primary: 0.84, modifier: 0.16, boss: false },
+    3: { name: 'COMPOUND FAILURE', primary: 0.96, modifier: 0.32, boss: false },
+    4: { name: 'SEV-0', primary: 1.08, modifier: 0.48, boss: true }
+  };
+  const BUILD_SYNERGIES = [
+    { id: 'controlled-aggression', name: 'Controlled Aggression', cards: ['bulkhead', 'aggressive-retry'], description: 'Retry pressure is contained before it can fan out.' },
+    { id: 'multi-region-ready', name: 'Multi-Region Ready', cards: ['chaos-tested'], description: 'Failover routes carry a larger safety margin.' },
+    { id: 'change-detective', name: 'Change Detective', cards: ['trace-sampling', 'conservative-deployments'], description: 'Release signals are easier to verify before rollback.' },
+    { id: 'elastic-edge', name: 'Elastic Edge', cards: ['adaptive-scaling', 'bulkhead'], description: 'Capacity can grow without surrendering the dependency boundary.' }
+  ];
+  const EMERGENCY_RUNBOOKS = [
+    { id: 'load-shed', name: 'Load Shed', label: 'EMERGENCY', description: 'Drop non-critical edge traffic for 12 seconds.', charges: 1, cooldown: 0, duration: 12, target: 'gateway', cost: 0.8 },
+    { id: 'warm-failover', name: 'Warm Failover', label: 'EMERGENCY', description: 'Prepare the secondary route before the next failover.', charges: 1, cooldown: 0, duration: 0, target: 'postgres', cost: 0.5 },
+    { id: 'connection-drain', name: 'Connection Drain', label: 'EMERGENCY', description: 'Stop new database connections while existing work drains.', charges: 1, cooldown: 0, duration: 8, target: 'postgres', cost: 0.7 },
+    { id: 'freeze-deployments', name: 'Freeze Deployments', label: 'EMERGENCY', description: 'Prevent release pressure from increasing for 15 seconds.', charges: 1, cooldown: 0, duration: 15, target: 'pricing', cost: 0.4 },
+    { id: 'cache-bypass', name: 'Cache Bypass', label: 'EMERGENCY', description: 'Trade freshness for direct source reads for 10 seconds.', charges: 1, cooldown: 0, duration: 10, target: 'cache', cost: 0.6 }
+  ];
+  const ACTION_COSTS = { restart: 0.8, scale: 1.8, rollback: 0.6, circuit: 0.7, failover: 1, hold: 0 };
+  const REQUIRED_CATASTROPHIC_SECONDS = 5;
+  const BETWEEN_INCIDENT_RECOVERY = 10;
+  const OPERATION_DURATIONS = { restart: 8, scale: 5, rollback: 6, failover: 4 };
 
   const SERVICE_DEFINITIONS = [
     { id: 'gateway', name: 'API Gateway', short: 'GATEWAY', role: 'edge', dependencies: ['orders', 'auth', 'pricing'], callWeights: { orders: 0.52, auth: 0.16, pricing: 0.32 }, base: { health: 98, cpu: 31, memory: 44, latency: 120, errors: 0.2, queue: 12, replicas: 3, traffic: 920, connectionUtilization: 31, latencySlo: 250, errorSlo: 2, queueSlo: 180, memorySlo: 88 } },
@@ -77,6 +101,34 @@
       .map((id) => String(id || '').trim())
       .filter((id, index, list) => valid.includes(id) && list.indexOf(id) === index)
       .slice(0, TOTAL_STAGES - 1);
+  }
+
+  function stageProfile(stage, difficulty) {
+    const base = STAGE_PROFILES[Math.max(1, Math.min(TOTAL_STAGES, Number(stage) || 1))] || STAGE_PROFILES[1];
+    const multiplier = difficulty === 'apprentice' ? 0.9 : (difficulty === 'sev-0' ? 1.08 : (difficulty === 'recruiter' ? 0.88 : 1));
+    return { ...base, primary: base.primary * multiplier, modifier: base.modifier * multiplier };
+  }
+
+  function stabilizationRequired(run) {
+    if (run && run.mode === 'recruiter') return REQUIRED_STABLE_SECONDS.recruiter;
+    if (run && run.difficulty === 'sev-0') return REQUIRED_STABLE_SECONDS.sev0;
+    return REQUIRED_STABLE_SECONDS.normal;
+  }
+
+  function normalizeDifficulty(mode, value) {
+    if (mode === 'recruiter') return 'recruiter';
+    const normalized = String(value || '').toLowerCase();
+    return ['apprentice', 'on-call', 'sev-0'].includes(normalized) ? normalized : 'on-call';
+  }
+
+  function dailySeed(dateValue) {
+    const date = dateValue ? new Date(dateValue) : new Date();
+    if (Number.isNaN(date.getTime())) return normalizeSeed('20260910');
+    return normalizeSeed(`${date.getUTCFullYear()}${String(date.getUTCMonth() + 1).padStart(2, '0')}${String(date.getUTCDate()).padStart(2, '0')}`);
+  }
+
+  function cloneOperation(operation) {
+    return operation ? { ...operation } : null;
   }
 
   function clamp(value, minimum, maximum) {
@@ -160,18 +212,24 @@
     return critical ? 'critical' : (warning ? 'warning' : 'healthy');
   }
 
-  function scenarioFor(seed, stage, build) {
+  function scenarioFor(seed, stage, build, difficulty) {
+    const profile = stageProfile(stage, difficulty);
     const primary = INCIDENT_TEMPLATES[hashSeed(`${seed}|incident|${stage}|${build.join(':')}`) % INCIDENT_TEMPLATES.length];
     const modifier = INCIDENT_TEMPLATES[hashSeed(`${seed}|modifier|${stage}|${build.join(':')}`) % INCIDENT_TEMPLATES.length];
     const noise = 0.92 + ((hashSeed(`${seed}|severity|${stage}|${primary.id}`) % 17) / 100);
+    const bossTitles = ['The Retry Storm', 'Midnight Certificate', 'The Friday Release', 'Region Blackout'];
+    const bossTitle = profile.boss ? bossTitles[hashSeed(`${seed}|boss|${stage}`) % bossTitles.length] : primary.title;
     return {
-      id: `${primary.id}${modifier.id === primary.id ? '' : `-${modifier.id}`}`,
+      id: `${primary.id}${profile.modifier && modifier.id !== primary.id ? `-${modifier.id}` : ''}`,
       code: primary.code,
-      title: primary.title,
-      description: primary.description,
+      title: bossTitle,
+      description: profile.boss ? `${primary.description} This is a SEV-0 compound failure: treat every new signal as a possible multiplier.` : primary.description,
       symptom: primary.symptom,
-      primary: { ...primary, severity: primary.severity * noise },
-      modifier: modifier.id === primary.id ? null : { id: modifier.id, family: modifier.family, target: modifier.target, severity: modifier.severity * 0.24 * noise }
+      stageName: profile.name,
+      boss: profile.boss,
+      primary: { ...primary, severity: primary.severity * noise * profile.primary },
+      modifier: profile.modifier && modifier.id !== primary.id ? { id: modifier.id, family: modifier.family, target: modifier.target, severity: modifier.severity * noise * profile.modifier } : null,
+      modifierDelay: profile.boss ? 28 : (stage >= 3 ? 20 : (stage === 2 ? 10 : 0))
     };
   }
 
@@ -199,6 +257,107 @@
 
   function drainEvents(run) {
     return run.pendingEvents.splice(0);
+  }
+
+  function operationProgress(service) {
+    if (!service || !service.operation) return 1;
+    const operation = service.operation;
+    if (!operation.duration) return 0;
+    return clamp(1 - (Number(operation.remaining) || 0) / operation.duration, 0, 1);
+  }
+
+  function tickOperation(run, service, seconds) {
+    if (!service.operation) return;
+    const operation = service.operation;
+    operation.remaining = Math.max(0, (Number(operation.remaining) || 0) - seconds);
+    service.capacityReadiness = operationProgress(service);
+    if (operation.remaining > 0) return;
+    if (operation.type === 'scale' && service.desiredReplicas > service.replicas) {
+      const added = service.desiredReplicas - service.replicas;
+      service.replicas = service.desiredReplicas;
+      service.capacityReadiness = 1;
+      addEvent(run, `${service.name} provisioning complete: ${service.replicas} replicas are serving traffic.`, 'info');
+      operation.completed = `${added} replicas ready`;
+    } else if (operation.type === 'failover') {
+      service.route = 'secondary';
+      service.failover = true;
+      service.failoverCapacity = operation.finalFailoverCapacity || service.failoverCapacity || 0.16;
+      service.capacityReadiness = 1;
+      service.warmFailover = false;
+      addEvent(run, `${service.name} routing transition complete. Secondary traffic is live.`, 'info');
+      operation.completed = 'secondary route live';
+    } else if (operation.type === 'rollback') {
+      service.capacityReadiness = 1;
+      addEvent(run, `${service.name} rollback complete. Comparing the known-good release window.`, 'info');
+      operation.completed = 'known-good release live';
+    } else if (operation.type === 'restart') {
+      service.capacityReadiness = 1;
+      addEvent(run, `${service.name} cold start complete. Watching the next telemetry window.`, 'info');
+      operation.completed = 'cold start complete';
+    }
+    service.operation = null;
+  }
+
+  function operationSnapshot(service) {
+    if (!service || !service.operation) return null;
+    return { type: service.operation.type, remaining: round(service.operation.remaining, 1), duration: service.operation.duration, progress: round(operationProgress(service), 2) };
+  }
+
+  function emergencyStates(run) {
+    return EMERGENCY_RUNBOOKS.map((card) => {
+      const state = run.emergencyState && run.emergencyState[card.id] ? run.emergencyState[card.id] : { charges: card.charges, cooldown: 0 };
+      return { ...card, charges: state.charges, cooldown: round(state.cooldown, 1), activeUntil: round(state.activeUntil || 0, 1), available: state.charges > 0 && state.cooldown <= 0 };
+    });
+  }
+
+  function activeSynergies(run) {
+    return BUILD_SYNERGIES.filter((synergy) => synergy.cards.every((cardId) => run.build.includes(cardId))).map((synergy) => ({ ...synergy, cards: synergy.cards.slice() }));
+  }
+
+  function addConsequence(run, details) {
+    const consequence = {
+      time: round(run.stageTime, 1),
+      stage: run.stage,
+      action: details.action,
+      target: details.target || null,
+      kind: details.kind || 'neutral',
+      summary: details.summary,
+      impactBefore: round(details.impactBefore || 0, 2),
+      impactAfter: round(details.impactAfter || 0, 2),
+      budgetCost: round(details.budgetCost || 0, 2),
+      targetBefore: details.targetBefore || null,
+      targetAfter: details.targetAfter || null
+    };
+    run.lastConsequence = consequence;
+    run.consequenceLog.push(consequence);
+    return consequence;
+  }
+
+  function budgetDrain(run, impact, blastRadius, seconds) {
+    if (!seconds || !run) return 0;
+    const radiusPenalty = impact > 20 ? Math.max(0, blastRadius - 2) * 0.025 : 0;
+    const catastrophicPenalty = impact > 60 ? 0.35 : (impact > 40 ? 0.08 : 0);
+    const difficultyFactor = run.difficulty === 'sev-0' ? 1.18 : (run.difficulty === 'apprentice' ? 0.78 : 1);
+    const drain = (impact / 25 + radiusPenalty + catastrophicPenalty) * seconds * difficultyFactor;
+    run.reliabilityBudget = clamp(run.reliabilityBudget - drain, 0, 100);
+    run.budgetBurned += drain;
+    run.stageBudgetBurn += drain;
+    run.stageImpactSeconds += impact * seconds;
+    run.impactSeconds += impact * seconds;
+    run.availabilitySeconds += Math.max(0, 100 - impact) * seconds;
+    return drain;
+  }
+
+  function classifyConsequence(beforeImpact, afterImpact, action, targetBefore) {
+    if (action === 'inspect' || action === 'hold') return 'informative';
+    if (afterImpact < beforeImpact - 0.25) return 'helpful';
+    if (afterImpact > beforeImpact + 0.25) return 'harmful';
+    // A change can be harmful before the customer aggregate moves. Starting a
+    // cold operation on a healthy service, or opening a circuit on a healthy
+    // path, is an observable operational risk even when the next 100 ms frame
+    // has not propagated it through the graph yet.
+    if (targetBefore && targetBefore.status === 'healthy' && ['restart', 'scale', 'circuit', 'failover'].includes(action)) return 'harmful';
+    return 'neutral';
   }
 
   function baseServices(seedHash) {
@@ -241,7 +400,20 @@
         route: 'primary',
         autoScaled: false,
         recoveryBoost: 0,
-        incidentSuppression: 0
+        incidentSuppression: 0,
+        operation: null,
+        capacityReadiness: 1,
+        desiredCapacity: base.traffic * 1.4,
+        desiredReplicas: base.replicas,
+        failoverTransition: false,
+        loadShedUntil: 0,
+        connectionDrainUntil: 0,
+        warmFailover: false,
+        cacheBypassUntil: 0,
+        trafficMultiplier: 1,
+        outgoingPressure: 1,
+        outgoingPressureUntil: 0,
+        freezeDeploymentsUntil: 0
       };
       service.status = statusFor(service);
       return service;
@@ -250,31 +422,51 @@
 
   function resetIncident(run) {
     const topologyHash = hashSeed(`${run.seed}|topology|${run.stage}|${run.build.join(':')}`);
-    run.scenario = scenarioFor(run.seed, run.stage, run.build);
+    run.scenario = scenarioFor(run.seed, run.stage, run.build, run.difficulty);
     run.services = baseServices(topologyHash);
     run.stageTime = 0;
+    run.stageBudgetStart = run.reliabilityBudget;
+    run.stageBudgetBurn = 0;
+    run.stageImpactSeconds = 0;
+    run.stagePeakImpact = 0;
+    run.stagePeakBlastRadius = 0;
     run.incidentComplete = false;
     run.complete = false;
     run.success = false;
     run.awaitingUpgrade = false;
     run.resolved = false;
+    run.lossReason = null;
     run.recoveryTime = 0;
     run.stableTicks = 0;
+    run.stableTime = 0;
+    run.stabilizationRequired = stabilizationRequired(run);
+    run.catastrophicTime = 0;
     run.actionCooldown = 0;
+    run.holdUntil = 0;
     run.diagnosed = false;
     run.stageUnnecessaryChanges = 0;
+    run.stageActionStart = run.actionLog.length;
+    run.stageConsequenceStart = run.consequenceLog.length;
+    run.wasUnsafe = false;
     run.processedActionIds = Object.create(null);
     run.finalStateHashes = [];
+    run.lastConsequence = null;
+    if (!Array.isArray(run.consequenceLog)) run.consequenceLog = [];
+    run.emergencyState = Object.fromEntries(EMERGENCY_RUNBOOKS.map((card) => [card.id, { charges: card.charges, cooldown: 0, activeUntil: 0 }]));
   }
 
-  function createRun(seed, mode, build, replayBuild) {
+  function createRun(seed, mode, build, replayBuild, difficulty) {
     const normalized = normalizeSeed(seed);
     const normalizedMode = mode === 'freeplay' ? 'freeplay' : 'recruiter';
-    const maxTime = normalizedMode === 'freeplay' ? 120 : 90;
+    const normalizedDifficulty = normalizeDifficulty(normalizedMode, difficulty);
+    const maxTime = normalizedMode === 'freeplay'
+      ? (normalizedDifficulty === 'apprentice' ? 135 : (normalizedDifficulty === 'sev-0' ? 100 : 120))
+      : 90;
     const run = {
       engineVersion: VERSION,
       seed: normalized,
       mode: normalizedMode,
+      difficulty: normalizedDifficulty,
       stage: 1,
       build: normalizeBuild(build),
       replayBuild: Boolean(replayBuild),
@@ -286,13 +478,28 @@
       historyLimit: (TOTAL_STAGES * Math.ceil(maxTime / TICK_SECONDS)) + 128,
       stageTime: 0,
       elapsed: 0,
+      reliabilityBudget: 100,
+      initialReliabilityBudget: 100,
+      budgetBurned: 0,
+      budgetRecovery: 0,
+      budgetActionCost: 0,
+      impactSeconds: 0,
+      availabilitySeconds: 0,
+      peakBlastRadius: 0,
+      catastrophicEvents: 0,
+      wasUnsafe: false,
+      holdSeconds: 0,
+      stageMetrics: [],
+      completedStages: [],
       totalUnnecessaryChanges: 0,
+      harmfulChanges: 0,
       pendingEvents: [],
       history: [],
       actionLog: [],
       actionSequence: 0,
       runComplete: false,
       incidentComplete: false,
+      runStartedAt: normalized,
       complete: false,
       success: false,
       awaitingUpgrade: false,
@@ -304,6 +511,12 @@
       peakImpactedServices: Object.create(null),
       peakImpact: 0,
       finalStateHashes: [],
+      score: null,
+      grade: null,
+      lossReason: null,
+      lastConsequence: null,
+      consequenceLog: [],
+      scoreDetails: null,
       // The browser keeps history and hashes for replay. Audit/fuzz callers can
       // disable either capture path without changing the simulation physics.
       captureHistory: true,
@@ -312,7 +525,7 @@
       services: []
     };
     resetIncident(run);
-    addEvent(run, `Incident ${run.stage}/${TOTAL_STAGES}: telemetry is moving. Start from the customer symptom.`, 'warning');
+    addEvent(run, `Incident ${run.stage}/${TOTAL_STAGES} · ${run.scenario.stageName}: telemetry is moving. Start from the customer symptom.`, 'warning');
     addEvent(run, run.build.length ? `Build online: ${run.build.join(' · ')}.` : `Seed ${run.seed} initialized. Observe before changing capacity.`, 'info');
     recordSnapshot(run);
     return run;
@@ -326,7 +539,7 @@
   function directPressure(run, service) {
     let pressure = 0;
     if (run.scenario.primary.target === service.id) pressure += pressureAt(run, run.scenario.primary.severity);
-    if (run.scenario.modifier && run.scenario.modifier.target === service.id) pressure += pressureAt(run, run.scenario.modifier.severity);
+    if (run.scenario.modifier && run.stageTime >= (run.scenario.modifierDelay || 0) && run.scenario.modifier.target === service.id) pressure += pressureAt(run, run.scenario.modifier.severity);
     // Interventions change the fault's physics instead of toggling a hidden
     // success flag. Suppression is deliberately persistent for this incident;
     // the next incident starts with a fresh service state.
@@ -367,21 +580,27 @@
       const retry = Math.max(1, previous.retryMultiplier || 1);
       const circuitFactor = previous.circuitOpen || service.circuitOpen ? 0.28 : 1;
       const callerLoad = Math.max(0, previous.requestRate || previous.base.traffic);
-      demand += callerLoad * weight * 0.32 * retry * circuitFactor;
+      const outgoingPressure = previous.outgoingPressureUntil > run.stageTime ? (previous.outgoingPressure || 1) : 1;
+      demand += callerLoad * weight * 0.32 * retry * circuitFactor * outgoingPressure;
     });
     const dependencyContainment = hasCard(run, 'bulkhead')
       ? clamp(dependencyStress(run, service, previousById) * 0.22, 0, 0.22)
       : 0;
-    const shed = Math.max(service.loadShed || 0, dependencyContainment);
-    return Math.max(1, demand * (1 - shed));
+    const activeLoadShed = service.loadShedUntil > run.stageTime ? service.loadShed : 0;
+    const connectionDrain = service.connectionDrainUntil > run.stageTime ? 0.34 : 0;
+    const cacheBypass = service.cacheBypassUntil > run.stageTime ? 1.16 : 1;
+    const shed = Math.max(activeLoadShed, dependencyContainment);
+    return Math.max(1, demand * (1 - shed) * (1 - connectionDrain) * cacheBypass);
   }
 
   function updateService(run, service, previousById) {
+    tickOperation(run, service, TICK_SECONDS);
     const direct = directPressure(run, service);
     const dependency = dependencyStress(run, service, previousById);
     const demand = incomingDemand(run, service, previousById);
     const failoverFactor = service.failover ? (service.failoverCapacity || 0.18) : 0;
-    const capacity = Math.max(40, service.replicas * service.base.capacityPerReplica + service.manualCapacity) * (1 - failoverFactor);
+    const readiness = service.operation ? clamp(service.capacityReadiness, 0.1, 1) : 1;
+    const capacity = Math.max(40, service.replicas * service.base.capacityPerReplica * readiness + service.manualCapacity) * (1 - failoverFactor);
     const saturation = demand / capacity;
     const overload = clamp((saturation - 0.82) / 1.1, 0, 1.2);
     const retryPressure = Math.max(0, service.retryMultiplier - 1);
@@ -406,7 +625,9 @@
     service.incomingRequests = demand;
     service.capacity = capacity;
     service.saturation = saturation;
-    service.requestRate = Math.min(demand, capacity * (service.circuitOpen ? 0.7 : 0.98));
+    const trafficMultiplier = service.trafficMultiplier || 1;
+    const effectiveDemand = demand * trafficMultiplier;
+    service.requestRate = Math.min(effectiveDemand, capacity * (service.circuitOpen ? 0.7 : 0.98));
     service.traffic = service.requestRate;
     service.latency += (targetLatency - service.latency) * response;
     service.errors += (targetErrors - service.errors) * response;
@@ -455,7 +676,8 @@
     if (!gateway) return { affectedRequestPct: 0, timeoutPct: 0, errorPct: 0, loadShedPct: 0, checkoutSuccessRate: 100, p95: 0 };
     const timeoutPct = clamp(Math.max(0, gateway.latency - gateway.base.latency) / 30 + Math.max(0, gateway.queue - gateway.base.queue) / 75, 0, 100);
     const errorPct = clamp(gateway.errors * 0.92, 0, 100);
-    const loadShedPct = clamp(Math.max(0, gateway.saturation - 1) * 32 + gateway.loadShed * 100, 0, 100);
+    const activeLoadShed = gateway.loadShedUntil > run.stageTime ? gateway.loadShed : 0;
+    const loadShedPct = clamp(Math.max(0, gateway.saturation - 1) * 32 + activeLoadShed * 100, 0, 100);
     const affectedRequestPct = clamp(timeoutPct * 0.52 + errorPct * 0.36 + loadShedPct * 0.42, 0, 100);
     return { affectedRequestPct: round(affectedRequestPct, 2), timeoutPct: round(timeoutPct, 2), errorPct: round(errorPct, 2), loadShedPct: round(loadShedPct, 2), checkoutSuccessRate: round(100 - affectedRequestPct, 2), p95: Math.round(gateway.latency) };
   }
@@ -527,7 +749,13 @@
       status: service.status,
       circuitOpen: Boolean(service.circuitOpen),
       failover: Boolean(service.failover),
-      route: service.route || 'primary'
+      route: service.route || 'primary',
+      trafficMultiplier: round(service.trafficMultiplier || 1, 2),
+      operation: operationSnapshot(service),
+      capacityReadiness: round(service.capacityReadiness, 2),
+      loadShedUntil: round(service.loadShedUntil, 1),
+      connectionDrainUntil: round(service.connectionDrainUntil, 1),
+      warmFailover: Boolean(service.warmFailover)
     };
   }
 
@@ -561,8 +789,26 @@
   }
 
   function updatePeaks(run, impact, services) {
+    const blastRadius = services.filter(isImpacted).length;
     run.peakImpact = Math.max(run.peakImpact, impact.affectedRequestPct);
+    run.stagePeakImpact = Math.max(run.stagePeakImpact, impact.affectedRequestPct);
+    run.peakBlastRadius = Math.max(run.peakBlastRadius, blastRadius);
+    run.stagePeakBlastRadius = Math.max(run.stagePeakBlastRadius, blastRadius);
     services.filter(isImpacted).forEach((service) => { run.peakImpactedServices[service.id] = true; });
+  }
+
+  function scoreRun(run) {
+    const availability = run.elapsed > 0 ? clamp(run.availabilitySeconds / (run.elapsed * 100), 0, 1) : 1;
+    const mttr = Math.max(0, run.elapsed);
+    const speed = clamp(1 - mttr / (run.maxTime * TOTAL_STAGES), 0, 1);
+    const diagnosis = run.actionSequence ? clamp((run.diagnosed ? 1 : 0.35) - (run.totalUnnecessaryChanges * 0.04), 0, 1) : 0.2;
+    const minimal = clamp(1 - run.totalUnnecessaryChanges * 0.07 - Math.max(0, run.actionSequence - TOTAL_STAGES * 3) * 0.01, 0, 1);
+    const synergy = clamp(activeSynergies(run).length / 2, 0, 1);
+    const harmful = run.consequenceLog.filter((entry) => entry.kind === 'harmful').length;
+    const raw = availability * 3000 + run.reliabilityBudget * 20 + speed * 1500 + diagnosis * 1000 + minimal * 800 + synergy * 600 - harmful * 450 - run.catastrophicEvents * 400;
+    const score = Math.max(0, Math.round(raw));
+    const grade = score >= 8200 ? 'S+' : (score >= 7000 ? 'S' : (score >= 5600 ? 'A' : (score >= 4100 ? 'B' : (score >= 2600 ? 'C' : 'D'))));
+    return { score, grade, availability: round(availability * 100, 2), mttr: round(mttr, 1), harmfulChanges: harmful, peakImpact: round(run.peakImpact, 2), peakBlastRadius: run.peakBlastRadius };
   }
 
   function snapshot(run) {
@@ -582,10 +828,35 @@
       elapsed: round(run.elapsed, 1),
       stage: run.stage,
       totalStages: TOTAL_STAGES,
+      difficulty: run.difficulty,
+      stageName: run.scenario.stageName,
       services,
       edges: edgesSnapshot(run),
       impact: impact.affectedRequestPct,
       customerImpact: impact,
+      averageHealth: round(averageHealth),
+      reliabilityBudget: round(run.reliabilityBudget, 2),
+      stageBudgetStart: round(run.stageBudgetStart, 2),
+      stageBudgetBurn: round(run.stageBudgetBurn, 2),
+      budgetBurned: round(run.budgetBurned, 2),
+      budgetRecovery: round(run.budgetRecovery, 2),
+      stability: { safe: sloHealthy(run), stableTime: round(run.stableTime, 1), required: run.stabilizationRequired, progress: round(clamp(run.stableTime / Math.max(0.1, run.stabilizationRequired), 0, 1), 2), lost: run.stableTime <= 0 && run.stageTime > 0 },
+      catastrophicTime: round(run.catastrophicTime, 1),
+      catastrophicWarning: impact.affectedRequestPct > 60 && impact.affectedRequestPct < 85,
+      holdUntil: round(run.holdUntil, 1),
+      holdSeconds: round(run.holdSeconds, 1),
+      deadlineRemaining: round(Math.max(0, run.maxTime - run.stageTime), 1),
+      actionCooldown: round(run.actionCooldown, 1),
+      lastConsequence: cloneOperation(run.lastConsequence),
+      consequences: run.consequenceLog.slice(-8),
+      emergencyRunbooks: emergencyStates(run),
+      synergies: activeSynergies(run),
+      peakImpact: round(run.peakImpact, 2),
+      peakBlastRadius: run.peakBlastRadius,
+      score: run.score,
+      grade: run.grade,
+      scoreDetails: run.scoreDetails,
+      lossReason: run.lossReason,
       averageHealth: round(averageHealth),
       blastRadius,
       impactedServices,
@@ -607,9 +878,20 @@
       unnecessaryChanges: run.stageUnnecessaryChanges,
       totalUnnecessaryChanges: run.totalUnnecessaryChanges,
       diagnosed: run.diagnosed,
-      actionCount: run.actionLog.length
+      actionCount: run.actionLog.length,
+      actionLog: run.complete ? run.actionLog.slice() : undefined,
+      stageMetrics: run.complete ? run.stageMetrics.slice() : undefined
     };
-    if (run.complete) result.postmortem = postmortem(run);
+    if (run.complete) {
+      const score = run.scoreDetails || scoreRun(run);
+      run.scoreDetails = score;
+      run.score = score.score;
+      run.grade = score.grade;
+      result.score = score.score;
+      result.grade = score.grade;
+      result.scoreDetails = score;
+      result.postmortem = postmortem(run);
+    }
     // Postmortem text is intentionally revealed only after completion and it
     // contains the hash ledger itself. Exclude that presentation-only object
     // from the state hash so the final frame cannot hash differently merely
@@ -625,12 +907,16 @@
   }
 
   function recordSnapshot(run) {
+    // Update peak metrics before hashing the frame. Otherwise the terminal
+    // frame would be hashed once before and once after peak bookkeeping, which
+    // makes the postmortem ledger disagree with the replay slider.
+    const observedServices = run.services.map(observableService);
+    updatePeaks(run, customerImpact(run), observedServices);
     const current = snapshot(run);
     if (run.captureHistory !== false) {
       run.history.push(current);
       if (run.history.length > run.historyLimit) run.history.shift();
     }
-    updatePeaks(run, current.customerImpact, current.services);
     return current;
   }
 
@@ -641,7 +927,10 @@
     // SLO and no uncontained service to remain critical; requiring every node
     // to be green would turn normal tail recovery into a false outage.
     const uncontainedCritical = run.services.filter((service) => service.status === 'critical' && !service.failover && !service.circuitOpen);
-    return impact.affectedRequestPct < 6 && uncontainedCritical.length === 0;
+    const gateway = serviceById(run, 'gateway');
+    return impact.affectedRequestPct < 6
+      && (!gateway || (gateway.latency < 650 && gateway.errors < 3))
+      && uncontainedCritical.length === 0;
   }
 
   function applyCausalMitigation(run, actionId, target) {
@@ -668,17 +957,38 @@
     if (!isRoot && actionId === 'circuit' && target.dependencies.includes(primary.target)) strengthen(0.3, 0.72);
   }
 
-  function finish(run, success) {
+  function finish(run, success, reason) {
     if (run.complete) return;
     run.complete = true;
     run.incidentComplete = true;
     run.success = Boolean(success);
     run.resolved = Boolean(success);
+    run.lossReason = success ? null : (reason || 'deadline');
     run.awaitingUpgrade = Boolean(success && run.stage < TOTAL_STAGES);
     run.runComplete = Boolean(!success || run.stage >= TOTAL_STAGES);
     run.totalUnnecessaryChanges += run.stageUnnecessaryChanges;
-    addEvent(run, success ? `Incident ${run.stage}/${TOTAL_STAGES} stabilized through observable SLO recovery.` : 'The shift expired before customer SLOs recovered.', success ? 'info' : 'critical');
-    if (run.runComplete) addEvent(run, success ? `Run complete. Final build: ${run.build.length ? run.build.join(' · ') : 'baseline operations'}.` : 'Run ended. Re-run the build and change less, earlier.', success ? 'info' : 'critical');
+    run.stageMetrics.push({
+      stage: run.stage,
+      name: run.scenario.stageName,
+      success: run.success,
+      time: round(run.stageTime, 1),
+      budgetStart: round(run.stageBudgetStart, 2),
+      budgetEnd: round(run.reliabilityBudget, 2),
+      budgetBurn: round(run.stageBudgetBurn, 2),
+      peakImpact: round(run.stagePeakImpact, 2),
+      peakBlastRadius: run.stagePeakBlastRadius,
+      actions: run.actionLog.slice(run.stageActionStart),
+      consequences: run.consequenceLog.slice(run.stageConsequenceStart),
+      holdSeconds: round(run.holdSeconds, 1),
+      lossReason: run.lossReason
+    });
+    addEvent(run, success ? `Incident ${run.stage}/${TOTAL_STAGES} stabilized through observable SLO recovery.` : `Shift ended: ${run.lossReason === 'budget' ? 'reliability budget exhausted' : run.lossReason === 'catastrophic' ? 'customer impact remained above 85%' : 'the SLO window expired'}.`, success ? 'info' : 'critical');
+    if (run.runComplete) {
+      run.scoreDetails = scoreRun(run);
+      run.score = run.scoreDetails.score;
+      run.grade = run.scoreDetails.grade;
+      addEvent(run, success ? `Run complete. Final build: ${run.build.length ? run.build.join(' · ') : 'baseline operations'}.` : 'Run ended. Re-run the build and change less, earlier.', success ? 'info' : 'critical');
+    }
     else addEvent(run, `Choose one runbook before incident ${run.stage + 1}.`, 'info');
   }
 
@@ -696,21 +1006,35 @@
     run.elapsed += seconds;
     run.actionCooldown = Math.max(0, run.actionCooldown - seconds);
     run.services.forEach((service) => updateService(run, service, previousById));
-    if (!run.resolved && run.actionLog.some((entry) => entry.stage === run.stage && entry.action !== 'inspect') && sloHealthy(run)) run.stableTicks += 1;
-    else if (!run.resolved) run.stableTicks = Math.max(0, run.stableTicks - 1);
-    if (!run.resolved && run.stableTicks >= 28) {
+    run.emergencyState && Object.values(run.emergencyState).forEach((state) => { state.cooldown = Math.max(0, (state.cooldown || 0) - seconds); });
+    const impact = customerImpact(run);
+    const blastRadius = run.services.filter(isImpacted).length;
+    if (impact.affectedRequestPct >= 6 || blastRadius > 0) run.wasUnsafe = true;
+    budgetDrain(run, impact.affectedRequestPct, blastRadius, seconds);
+    if (run.holdUntil > run.stageTime - 1e-9) run.holdSeconds += seconds;
+    if (impact.affectedRequestPct > 85) run.catastrophicTime += seconds;
+    else run.catastrophicTime = Math.max(0, run.catastrophicTime - seconds * 2);
+    const hasIntervention = run.actionLog.some((entry) => entry.stage === run.stage && !['inspect', 'hold'].includes(entry.action));
+    if (!run.resolved && hasIntervention && run.wasUnsafe && sloHealthy(run)) run.stableTime += seconds;
+    else if (!run.resolved && !sloHealthy(run)) run.stableTime = Math.max(0, run.stableTime - seconds * 2);
+    if (!run.resolved && run.stableTime >= run.stabilizationRequired) {
       run.resolved = true;
       run.recoveryTime = 0;
-      addEvent(run, 'Customer SLOs are back inside the safety envelope. Hold the line and watch recovery.', 'info');
+      addEvent(run, `SYSTEM STABILIZING · ${round(run.stabilizationRequired, 1)} seconds inside the safe envelope.`, 'info');
     }
     if (run.resolved) run.recoveryTime += seconds;
-    if (run.resolved && run.recoveryTime >= 3.5 && sloHealthy(run)) finish(run, true);
-    else if (run.stageTime >= run.maxTime) finish(run, Boolean(run.resolved && sloHealthy(run)));
+    if (run.reliabilityBudget <= 0) finish(run, false, 'budget');
+    else if (run.catastrophicTime >= REQUIRED_CATASTROPHIC_SECONDS) {
+      run.catastrophicEvents += 1;
+      finish(run, false, 'catastrophic');
+    } else if (run.resolved && run.recoveryTime >= 0.5 && sloHealthy(run)) finish(run, true);
+    else if (run.stageTime >= run.maxTime) finish(run, false, 'deadline');
     let current = recordSnapshot(run);
     if (run.complete) {
       run.finalStateHashes = run.history.map((entry) => entry.stateHash);
       current = snapshot(run);
       run.history[run.history.length - 1] = current;
+      run.finalStateHashes = run.history.map((entry) => entry.stateHash);
     }
     return { snapshot: current, events: drainEvents(run), complete: run.complete };
   }
@@ -735,22 +1059,34 @@
 
   function applyAction(run, actionId, targetId, actionToken) {
     if (!run || run.complete || !ACTIONS.includes(actionId)) return { accepted: false, reason: run && run.complete ? 'complete' : 'invalid-action', snapshot: run ? snapshot(run) : null, events: [] };
-    const target = serviceById(run, targetId);
+    const effectiveTargetId = actionId === 'hold' && !targetId ? 'gateway' : targetId;
+    const target = serviceById(run, effectiveTargetId);
     if (!target) return { accepted: false, reason: 'invalid-target', snapshot: snapshot(run), events: [] };
     const token = String(actionToken || `${run.seed}:${run.stage}:${run.actionSequence + 1}:${actionId}:${targetId}`);
     if (run.processedActionIds[token]) return { accepted: false, duplicate: true, reason: 'duplicate-action', snapshot: snapshot(run), events: [] };
     if (run.actionCooldown > 0 && actionId !== 'inspect') return { accepted: false, reason: 'cooldown', snapshot: snapshot(run), events: [] };
     run.processedActionIds[token] = true;
     run.actionSequence += 1;
-    run.actionLog.push({ token, action: actionId, target: targetId, time: round(run.stageTime, 1), stage: run.stage });
+    const beforeImpact = customerImpact(run).affectedRequestPct;
+    const beforeTarget = observableService(target);
+    run.actionLog.push({ token, action: actionId, target: effectiveTargetId, time: round(run.stageTime, 1), stage: run.stage });
     if (actionId === 'inspect') {
       run.diagnosed = true;
-      addEvent(run, evidenceFor(run, targetId), 'info');
+      addConsequence(run, { action: actionId, target: effectiveTargetId, kind: 'informative', summary: `Telemetry inspected on ${target.name}.`, impactBefore: beforeImpact, impactAfter: beforeImpact, targetBefore: beforeTarget, targetAfter: beforeTarget });
+      addEvent(run, evidenceFor(run, effectiveTargetId), 'info');
+      return { accepted: true, snapshot: recordSnapshot(run), events: drainEvents(run) };
+    }
+    if (actionId === 'hold') {
+      run.holdUntil = Math.max(run.holdUntil, run.stageTime + 5);
+      addEvent(run, 'HOLD CHANGES · observing the next five seconds without touching infrastructure.', 'info');
+      addConsequence(run, { action: actionId, target: effectiveTargetId, kind: 'informative', summary: 'No infrastructure change made. Observation window opened.', impactBefore: beforeImpact, impactAfter: beforeImpact, targetBefore: beforeTarget, targetAfter: beforeTarget });
       return { accepted: true, snapshot: recordSnapshot(run), events: drainEvents(run) };
     }
     if (!potentiallyUseful(actionId, target)) run.stageUnnecessaryChanges += 1;
     if (actionId === 'restart') {
-      target.restartGrace = 10;
+      target.restartGrace = 8;
+      target.operation = { type: 'restart', duration: OPERATION_DURATIONS.restart, remaining: OPERATION_DURATIONS.restart };
+      target.capacityReadiness = 0.35;
       target.faultMitigation = Math.min(target.faultMitigation, 0.62);
       target.recoveryBoost = 0.3;
       target.incidentSuppression = Math.max(target.incidentSuppression || 0, 0.58);
@@ -763,16 +1099,20 @@
       target.health = clamp(target.health + 5, 0, 100);
       addEvent(run, `${target.name} restarted. Process symptoms are quieter; dependency telemetry still matters.`, 'warning');
     } else if (actionId === 'scale') {
-      target.replicas = clamp(target.replicas + 2, 1, 12);
+      target.desiredReplicas = clamp(target.replicas + 2, 1, 12);
+      target.operation = { type: 'scale', duration: OPERATION_DURATIONS.scale, remaining: OPERATION_DURATIONS.scale };
+      target.capacityReadiness = 0.35;
       target.faultMitigation = Math.min(target.faultMitigation, 0.55);
       target.incidentSuppression = Math.max(target.incidentSuppression || 0, 0.12);
-      target.capacity = Math.max(40, target.replicas * target.base.capacityPerReplica) * (1 - (target.failoverCapacity || 0));
+      target.capacity = Math.max(40, target.replicas * target.base.capacityPerReplica * target.capacityReadiness) * (1 - (target.failoverCapacity || 0));
       target.saturation = target.incomingRequests / target.capacity;
       target.recoveryBoost = Math.max(target.recoveryBoost, 0.18);
       target.health = clamp(target.health + 3, 0, 100);
       addEvent(run, `${target.name} gained two replicas. Watch whether downstream request pressure rises with capacity.`, 'warning');
     } else if (actionId === 'rollback') {
       target.releasePressure = 0;
+      target.operation = { type: 'rollback', duration: OPERATION_DURATIONS.rollback, remaining: OPERATION_DURATIONS.rollback };
+      target.capacityReadiness = 0.45;
       target.faultMitigation = Math.min(target.faultMitigation, hasCard(run, 'conservative-deployments') ? 0.24 : 0.34);
       target.incidentSuppression = Math.max(target.incidentSuppression || 0, hasCard(run, 'conservative-deployments') ? 0.9 : 0.82);
       target.retryMultiplier = Math.max(1, target.retryMultiplier - (hasCard(run, 'conservative-deployments') ? 0.65 : 0.42));
@@ -792,7 +1132,9 @@
       target.errors += 0.8;
       addEvent(run, `Circuit opened around ${target.name}. Downstream pressure is being shed at the boundary.`, 'warning');
     } else if (actionId === 'failover') {
-      target.failover = true;
+      target.operation = { type: 'failover', duration: OPERATION_DURATIONS.failover, remaining: OPERATION_DURATIONS.failover, finalFailoverCapacity: hasCard(run, 'chaos-tested') ? 0.08 : (target.warmFailover ? 0.12 : 0.16) };
+      target.capacityReadiness = 0.55;
+      target.failoverTransition = true;
       target.faultMitigation = Math.min(target.faultMitigation, hasCard(run, 'chaos-tested') ? 0.16 : 0.28);
       target.failoverCapacity = hasCard(run, 'chaos-tested') ? 0.08 : 0.16;
       target.incidentSuppression = Math.max(target.incidentSuppression || 0, hasCard(run, 'chaos-tested') ? 0.94 : 0.86);
@@ -801,11 +1143,87 @@
       target.health = clamp(target.health + (hasCard(run, 'chaos-tested') ? 16 : 9), 0, 100);
       target.latency *= hasCard(run, 'chaos-tested') ? 0.68 : 0.84;
       target.errors *= hasCard(run, 'chaos-tested') ? 0.48 : 0.72;
-      addEvent(run, `${target.name} is routing through the secondary path. Verify its remaining capacity.`, 'info');
+      addEvent(run, `${target.name} is preparing a secondary route. Verify its remaining capacity.`, 'info');
     }
     applyCausalMitigation(run, actionId, target);
+    const afterImpact = customerImpact(run).affectedRequestPct;
+    const kind = classifyConsequence(beforeImpact, afterImpact, actionId, beforeTarget);
+    const cost = ACTION_COSTS[actionId] || 0;
+    run.budgetActionCost += cost;
+    run.reliabilityBudget = clamp(run.reliabilityBudget - cost, 0, 100);
+    if (kind === 'harmful') run.harmfulChanges += 1;
+    addConsequence(run, {
+      action: actionId,
+      target: effectiveTargetId,
+      kind,
+      summary: kind === 'helpful' ? `${target.name} responded; customer pressure is falling.` : (kind === 'harmful' ? `${target.name} changed the shape of pressure. Watch the dependency edge.` : `${target.name} accepted the change; wait for the next telemetry window.`),
+      impactBefore: beforeImpact,
+      impactAfter: afterImpact,
+      budgetCost: cost,
+      targetBefore: beforeTarget,
+      targetAfter: observableService(target)
+    });
     run.actionCooldown = hasCard(run, 'trace-sampling') ? 0.55 : 1.1;
     target.status = statusFor(target);
+    return { accepted: true, snapshot: recordSnapshot(run), events: drainEvents(run) };
+  }
+
+  function useEmergency(run, emergencyId, targetId, actionToken) {
+    if (!run || run.complete) return { accepted: false, reason: run && run.complete ? 'complete' : 'invalid-run', snapshot: run ? snapshot(run) : null, events: [] };
+    const card = EMERGENCY_RUNBOOKS.find((candidate) => candidate.id === emergencyId);
+    if (!card) return { accepted: false, reason: 'invalid-emergency', snapshot: snapshot(run), events: [] };
+    const state = run.emergencyState && run.emergencyState[card.id];
+    if (!state || state.charges <= 0) return { accepted: false, reason: 'no-charges', snapshot: snapshot(run), events: [] };
+    if (state.cooldown > 0) return { accepted: false, reason: 'cooldown', snapshot: snapshot(run), events: [] };
+    const target = serviceById(run, targetId || card.target);
+    if (!target) return { accepted: false, reason: 'invalid-target', snapshot: snapshot(run), events: [] };
+    const token = String(actionToken || `${run.seed}:${run.stage}:emergency:${card.id}:${run.actionSequence + 1}`);
+    if (run.processedActionIds[token]) return { accepted: false, duplicate: true, reason: 'duplicate-action', snapshot: snapshot(run), events: [] };
+    run.processedActionIds[token] = true;
+    run.actionSequence += 1;
+    const beforeImpact = customerImpact(run).affectedRequestPct;
+    const beforeTarget = observableService(target);
+    state.charges -= 1;
+    state.cooldown = card.cooldown || 0;
+    state.activeUntil = card.duration ? run.stageTime + card.duration : run.stageTime;
+    const action = `emergency:${card.id}`;
+    run.actionLog.push({ token, action, target: target.id, time: round(run.stageTime, 1), stage: run.stage });
+    if (card.id === 'load-shed') {
+      target.loadShed = 0.35;
+      target.loadShedUntil = run.stageTime + card.duration;
+      addEvent(run, 'LOAD SHED · non-critical edge traffic is being dropped for twelve seconds.', 'warning');
+    } else if (card.id === 'warm-failover') {
+      target.warmFailover = true;
+      addEvent(run, 'WARM FAILOVER · the secondary route is prepared before the next transition.', 'info');
+    } else if (card.id === 'connection-drain') {
+      target.connectionDrainUntil = run.stageTime + card.duration;
+      target.faultMitigation = Math.min(target.faultMitigation, 0.72);
+      addEvent(run, 'CONNECTION DRAIN · new database connections are paused while work drains.', 'warning');
+    } else if (card.id === 'freeze-deployments') {
+      target.freezeDeploymentsUntil = run.stageTime + card.duration;
+      target.releasePressure = 0;
+      addEvent(run, 'FREEZE DEPLOYMENTS · release pressure is locked for fifteen seconds.', 'info');
+    } else if (card.id === 'cache-bypass') {
+      target.cacheBypassUntil = run.stageTime + card.duration;
+      addEvent(run, 'CACHE BYPASS · freshness is protected, but source traffic will rise.', 'warning');
+    }
+    const afterImpact = customerImpact(run).affectedRequestPct;
+    const kind = classifyConsequence(beforeImpact, afterImpact, action, beforeTarget);
+    run.budgetActionCost += card.cost;
+    run.reliabilityBudget = clamp(run.reliabilityBudget - card.cost, 0, 100);
+    if (kind === 'harmful') run.harmfulChanges += 1;
+    addConsequence(run, {
+      action,
+      target: target.id,
+      kind,
+      summary: `${card.name} engaged on ${target.name}. Watch the next telemetry window for its tradeoff.`,
+      impactBefore: beforeImpact,
+      impactAfter: afterImpact,
+      budgetCost: card.cost,
+      targetBefore: beforeTarget,
+      targetAfter: observableService(target)
+    });
+    run.actionCooldown = hasCard(run, 'trace-sampling') ? 0.55 : 1.1;
     return { accepted: true, snapshot: recordSnapshot(run), events: drainEvents(run) };
   }
 
@@ -814,7 +1232,11 @@
     const card = upgradeOptions(run).find((candidate) => candidate.id === cardId);
     if (!card) return { accepted: false, reason: 'card-not-offered', snapshot: snapshot(run), events: [] };
     run.build.push(card.id);
+    const recovery = Math.min(BETWEEN_INCIDENT_RECOVERY, 100 - run.reliabilityBudget);
+    run.reliabilityBudget += recovery;
+    run.budgetRecovery += recovery;
     addEvent(run, `Runbook installed: ${card.name}. ${card.benefit}`, 'info');
+    if (recovery > 0) addEvent(run, `Between-incident maintenance restored ${round(recovery, 1)} reliability budget.`, 'info');
     run.stage += 1;
     resetIncident(run);
     addEvent(run, `Incident ${run.stage}/${TOTAL_STAGES}: new telemetry window open.`, 'warning');
@@ -823,7 +1245,11 @@
 
   function continueReplay(run) {
     if (!run || !run.awaitingUpgrade || run.runComplete) return { accepted: false, reason: 'not-awaiting-upgrade', snapshot: run ? snapshot(run) : null, events: [] };
+    const recovery = Math.min(BETWEEN_INCIDENT_RECOVERY, 100 - run.reliabilityBudget);
+    run.reliabilityBudget += recovery;
+    run.budgetRecovery += recovery;
     addEvent(run, `Replaying the installed build: ${run.build.length ? run.build.join(' · ') : 'baseline operations'}.`, 'info');
+    if (recovery > 0) addEvent(run, `Between-incident maintenance restored ${round(recovery, 1)} reliability budget.`, 'info');
     run.stage += 1;
     resetIncident(run);
     addEvent(run, `Incident ${run.stage}/${TOTAL_STAGES}: new telemetry window open.`, 'warning');
@@ -860,6 +1286,8 @@
     SERVICE_DEFINITIONS: SERVICE_DEFINITIONS.map((item) => ({ ...item, dependencies: item.dependencies.slice(), callWeights: { ...item.callWeights }, base: { ...item.base } })),
     INCIDENT_TEMPLATES: INCIDENT_TEMPLATES.map((item) => ({ ...item })),
     RUNBOOK_CARDS: RUNBOOK_CARDS.map((card) => ({ ...card, targets: card.targets.slice(), prerequisites: card.prerequisites.slice() })),
+    EMERGENCY_RUNBOOKS: EMERGENCY_RUNBOOKS.map((card) => ({ ...card })),
+    BUILD_SYNERGIES: BUILD_SYNERGIES.map((synergy) => ({ ...synergy, cards: synergy.cards.slice() })),
     hashSeed,
     normalizeSeed,
     normalizeBuild,
@@ -872,10 +1300,12 @@
     drainEvents,
     advance,
     applyAction,
+    useEmergency,
     chooseUpgrade,
     continueReplay,
     replay,
     runTicks,
+    dailySeed,
     isImpacted
   };
 }));

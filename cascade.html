@@ -96,6 +96,7 @@ sitemap: true
             <input id="cascadeSeed" type="text" value="8F31A" maxlength="12" autocomplete="off" spellcheck="false">
           </label>
           <button class="cascade-small-button" type="button" id="cascadeNewSeed">New seed</button>
+          <button class="cascade-small-button" type="button" id="cascadeDaily">Daily incident</button>
           <button class="cascade-small-button" type="button" id="cascadeShare" disabled>Share run</button>
           <span class="cascade-render-budget" id="cascadeRenderBudget" aria-live="polite">RENDER / 60 FPS</span>
           <button class="cascade-small-button cascade-presentation-toggle" type="button" id="cascadePresentationToggle" aria-pressed="false" title="Use a stable 30 FPS render budget and reduced visual effects">Presentation mode</button>
@@ -107,12 +108,22 @@ sitemap: true
           <span class="cascade-status-badge" id="cascadePhaseBadge">STANDBY</span>
           <strong id="cascadeRunMessage">Choose a shift to initialize the city.</strong>
         </div>
+        <div class="cascade-budget-module" aria-label="Reliability budget and stabilization status">
+          <div class="cascade-budget-heading"><span>RELIABILITY BUDGET</span><b id="cascadeBudget">100%</b></div>
+          <div class="cascade-budget-track" id="cascadeBudgetTrack" role="progressbar" aria-label="Reliability budget" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="cascadeBudgetBar"></span></div>
+          <div class="cascade-budget-footer"><span id="cascadeStabilityLabel">SAFE ENVELOPE</span><b id="cascadeStability">0.0 / 3.0s</b><span id="cascadeDeadlineLabel">SLO WINDOW</span><b id="cascadeDeadline">01:30</b></div>
+        </div>
         <div class="cascade-status-metrics">
           <span><small>TIME</small><b id="cascadeTimer">00:00</b></span>
           <span><small>CUSTOMER IMPACT</small><b id="cascadeImpact">0.0%</b></span>
           <span><small>BLAST RADIUS</small><b id="cascadeBlastRadius">0 services</b></span>
           <span><small>INCIDENT</small><b id="cascadeStage">01 / 04</b></span>
         </div>
+      </div>
+      <div class="cascade-consequence-toast" id="cascadeConsequenceToast" role="status" aria-live="polite" hidden>
+        <span class="cascade-consequence-kicker" id="cascadeConsequenceKicker">CAUSE / EFFECT</span>
+        <strong id="cascadeConsequenceTitle">Waiting for an operator decision</strong>
+        <span id="cascadeConsequenceDetail">The next snapshot will show what changed.</span>
       </div>
 
       <section class="cascade-onboarding" id="cascadeOnboarding" hidden aria-labelledby="cascade-onboarding-title" aria-live="polite">
@@ -243,8 +254,15 @@ sitemap: true
               <button class="cascade-action-button" type="button" data-action="rollback" disabled><span>◀</span><b>Rollback</b><small>restore release</small></button>
               <button class="cascade-action-button" type="button" data-action="circuit" disabled><span>⫯</span><b>Break circuit</b><small>stop retries</small></button>
               <button class="cascade-action-button" type="button" data-action="failover" disabled><span>⇄</span><b>Failover</b><small>use secondary</small></button>
+              <button class="cascade-action-button cascade-action-hold" type="button" data-action="hold" disabled><span>◉</span><b>Hold changes</b><small>observe 5 sec</small></button>
             </div>
           </div>
+
+          <section class="cascade-emergency-card" id="cascadeEmergencyCard" aria-labelledby="cascade-emergency-title">
+            <div class="cascade-card-title"><span id="cascade-emergency-title">EMERGENCY RUNBOOKS</span><small>one charge / incident</small></div>
+            <p class="cascade-emergency-intro">Spend a limited power when the next five seconds matter more than a perfect diagnosis.</p>
+            <div class="cascade-emergency-grid" id="cascadeEmergencyGrid"></div>
+          </section>
 
           <div class="cascade-event-card">
             <div class="cascade-card-title"><span>EVENT STREAM</span><span id="cascadeEventCount">0 events</span></div>
@@ -264,9 +282,17 @@ sitemap: true
           <p id="cascadePostmortemLead">The city has stabilized. Here is the shape of the incident you just navigated.</p>
           <div class="cascade-score-grid">
             <div><span>ROOT CAUSE</span><strong id="postmortemRootCause">—</strong></div>
+            <div><span>SCORE</span><strong id="postmortemScore">—</strong></div>
+            <div><span>GRADE</span><strong id="postmortemGrade">—</strong></div>
             <div><span>MTTR</span><strong id="postmortemMttr">—</strong></div>
             <div><span>AVAILABILITY</span><strong id="postmortemAvailability">—</strong></div>
+            <div><span>BUDGET LEFT</span><strong id="postmortemBudget">—</strong></div>
+            <div><span>PEAK IMPACT</span><strong id="postmortemPeakImpact">—</strong></div>
             <div><span>UNNECESSARY CHANGES</span><strong id="postmortemChanges">—</strong></div>
+          </div>
+          <div class="cascade-decision-log" id="cascadeDecisionLog" hidden>
+            <div class="cascade-card-title"><span>YOUR DECISIONS</span><span id="cascadeDecisionCount">0 changes</span></div>
+            <ol id="cascadeDecisionItems"></ol>
           </div>
           <div class="cascade-postmortem-actions">
             <button class="cascade-button cascade-button-primary" type="button" id="cascadeRerun">↻ Re-run this build</button>

@@ -27,12 +27,15 @@ function hasAny(text, terms) {
 
 function auditDeployment() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  const publicManifest = JSON.parse(fs.readFileSync(publicManifestPath, 'utf8'));
+  const publicManifestSource = fs.readFileSync(publicManifestPath, 'utf8');
   const worker = fs.readFileSync(path.join(ROOT, 'assets/js/cascade-worker.js'), 'utf8');
   const engineSource = fs.readFileSync(path.join(ROOT, 'assets/js/cascade-engine.js'), 'utf8');
   const page = fs.readFileSync(path.join(ROOT, 'cascade.html'), 'utf8');
   assert(manifest.version && manifest.commit && manifest.builtAt, 'Build manifest must include version, commit, and builtAt.');
-  assert(publicManifest.version === manifest.version && publicManifest.commit === manifest.commit, 'Public and Jekyll build manifests must agree.');
+  assert(publicManifestSource.startsWith('---'), 'Public build manifest must be a Jekyll-rendered asset, not a stale hand-copied JSON file.');
+  assert(publicManifestSource.includes('site.github.build_revision'), 'Public build manifest must derive its commit from the deployment revision.');
+  assert(publicManifestSource.includes('cascade_manifest.version'), 'Public build manifest must inherit its version from _data/cascade-build.json.');
+  assert(publicManifestSource.includes('cascade_manifest.features'), 'Public build manifest must inherit the checked-in feature contract.');
   assert(page.includes(manifest.version) || page.includes('cascade_manifest.version'), 'CASCADE page must expose the manifest version.');
   assert(page.includes('data-build-commit="{{ cascade_commit }}"'), 'CASCADE page must expose the deploy-resolved commit expression.');
   assert(page.includes('site.github.build_revision'), 'CASCADE page must derive the build marker from the deployment revision.');
@@ -46,7 +49,7 @@ function auditDeployment() {
   assert(manifest.version === Engine.VERSION, 'Build manifest version must match the shared engine.');
   assert(manifest.version === Nova.VERSION, 'Build manifest version must match NOVA.');
   assert(manifest.commit !== 'working-tree', 'Build manifest must not ship a placeholder commit.');
-  return { version: manifest.version, commit: manifest.commit, builtAt: manifest.builtAt, productionUrl: manifest.productionUrl || null };
+  return { version: manifest.version, fallbackCommit: manifest.commit, builtAt: manifest.builtAt, productionUrl: manifest.productionUrl || null, publicManifest: 'jekyll-rendered', manifestEndpoint: '/assets/data/cascade-build.json' };
 }
 
 function runScripted(seed, build, mode = 'recruiter', actionSchedule, options = {}) {
@@ -105,8 +108,12 @@ function auditEngine() {
   const afterScale = Engine.snapshot(actionRun);
   const gatewayBefore = before.services.find((service) => service.id === 'gateway');
   const gatewayAfter = afterScale.services.find((service) => service.id === 'gateway');
-  assert(gatewayAfter.replicas === gatewayBefore.replicas + 2, 'Scale must add exactly two replicas once.');
-  assert(gatewayAfter.capacity > gatewayBefore.capacity, 'Scale must increase capacity.');
+  assert(gatewayAfter.operation && gatewayAfter.operation.type === 'scale', 'Scale must expose a provisioning operation instead of teleporting capacity online.');
+  assert(gatewayAfter.capacityReadiness < 1, 'Scale must show a visible provisioning delay.');
+  for (let tick = 0; tick < 55; tick += 1) Engine.advance(actionRun, Engine.TICK_SECONDS);
+  const readyScale = Engine.snapshot(actionRun).services.find((service) => service.id === 'gateway');
+  assert(readyScale.replicas === gatewayBefore.replicas + 2, 'Scale must add exactly two replicas when provisioning completes.');
+  assert(readyScale.capacity > gatewayBefore.capacity, 'Scale must increase capacity after provisioning.');
 
   const circuitRun = Engine.createRun('DBPOOL1', 'freeplay', []);
   const pricingBefore = Engine.snapshot(circuitRun).edges.find((edge) => edge.from === 'orders' && edge.to === 'pricing');
@@ -148,7 +155,10 @@ function auditActions() {
     if (action === 'scale') {
       const beforeTarget = before.services.find((service) => service.id === target);
       const afterTarget = result.snapshot.services.find((service) => service.id === target);
-      assert(afterTarget.capacity > beforeTarget.capacity, 'Scale must increase target capacity.');
+      assert(afterTarget.operation && afterTarget.operation.type === 'scale', 'Scale must expose its provisioning delay.');
+      for (let tick = 0; tick < 55; tick += 1) Engine.advance(run, Engine.TICK_SECONDS);
+      const readyTarget = Engine.snapshot(run).services.find((service) => service.id === target);
+      assert(readyTarget.capacity > beforeTarget.capacity && readyTarget.replicas === beforeTarget.replicas + 2, 'Scale must increase target capacity after provisioning.');
     }
     const duplicate = Engine.applyAction(run, action, target, `once-${action}`);
     assert(duplicate.duplicate, `${action} duplicate IDs must be rejected.`);

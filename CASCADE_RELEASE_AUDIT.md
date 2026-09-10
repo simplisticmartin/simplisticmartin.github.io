@@ -38,11 +38,11 @@ The audit writes `cascade-audit-report.json`. It covers:
 After the intended commit is deployed, run:
 
 ```bash
-CASCADE_VERSION=0.5.1-audit GITHUB_SHA=$(git rev-parse HEAD) \\
+CASCADE_VERSION=0.5.1-audit CASCADE_COMMIT=$(git rev-parse --short=7 HEAD) \\
   node scripts/cascade-smoke.js https://simplisticmartin.github.io/cascade/
 ```
 
-The smoke test must find the same version, a seven-character production commit marker, NOVA, the runbook deck, presentation mode, and onboarding. A stale GitHub Pages build is a **real failure**, not a reason to weaken the check. The page also exposes `window.CASCADE_BUILD` so browser-based checks can compare the runtime identity.
+The smoke test fetches both the page and `/assets/data/cascade-build.json`. It must find the same version, the same seven-character production commit marker in both places, NOVA, the runbook deck, presentation mode, and onboarding. A stale GitHub Pages build is a **real failure**, not a reason to weaken the check. The page also exposes `window.CASCADE_BUILD` so browser-based checks can compare the runtime identity. The master-push workflow retries this check for up to two minutes to allow Pages propagation; it still fails if the deployed revision never converges.
 
 The Jekyll page resolves its displayed commit from `site.github.build_revision`, falling back to the checked-in manifest only for local builds. `_data/cascade-build.json` and `assets/data/cascade-build.json` must keep the same version and release metadata.
 

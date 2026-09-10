@@ -1,24 +1,26 @@
 {
   "product": "CASCADE",
   "auditVersion": 1,
-  "generatedAt": "2026-09-10T19:18:04.193Z",
+  "generatedAt": "2026-09-10T21:59:03.726Z",
   "status": "PASS",
   "layers": {
     "deployment": {
       "version": "0.5.1-audit",
-      "commit": "7fa4724",
+      "fallbackCommit": "79167bc",
       "builtAt": "2026-09-09T00:00:00Z",
-      "productionUrl": "https://simplisticmartin.github.io/cascade/"
+      "productionUrl": "https://simplisticmartin.github.io/cascade/",
+      "publicManifest": "jekyll-rendered",
+      "manifestEndpoint": "/assets/data/cascade-build.json"
     },
     "engine": {
       "deterministic": true,
       "duplicateActions": true,
-      "stateHashes": 896,
+      "stateHashes": 165,
       "scaleCapacity": true,
       "circuitPressure": true
     },
     "actions": {
-      "actions": 6,
+      "actions": 7,
       "healthyTargets": true,
       "afterGameDisabled": true
     },
@@ -47,7 +49,7 @@
       "upgrades": 3,
       "replayableBuild": true,
       "deterministic": true,
-      "hashLedger": 580
+      "hashLedger": 586
     },
     "golden": {
       "cases": 10,
@@ -56,72 +58,72 @@
           "action": "failover",
           "target": "postgres",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 14.999999999999963
         },
         "edge-surge": {
           "action": "scale",
           "target": "gateway",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 16.499999999999964
         },
         "retry-regression": {
           "action": "circuit",
           "target": "orders",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 11.599999999999975
         },
         "cache-staleness": {
           "action": "restart",
           "target": "cache",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 17.999999999999986
         },
         "certificate-expiry": {
           "action": "restart",
           "target": "auth",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 16.399999999999963
         },
         "queue-backlog": {
           "action": "scale",
           "target": "orders",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 14.799999999999963
         },
         "memory-leak": {
           "action": "restart",
           "target": "inventory",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 16.599999999999966
         },
         "deployment-regression": {
           "action": "rollback",
           "target": "pricing",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 15.99999999999996
         },
         "region-degradation": {
           "action": "failover",
           "target": "postgres",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 14.999999999999963
         },
         "dns-flap": {
           "action": "restart",
           "target": "gateway",
           "success": true,
-          "resolutionSeconds": 14.299999999999965
+          "resolutionSeconds": 16.599999999999966
         }
       },
       "causalResolution": true
     },
     "fuzz": {
       "seeds": 1000,
-      "snapshots": 132338,
+      "snapshots": 261807,
       "invariants": "pass"
     },
     "replay": {
-      "stateHashes": 137,
+      "stateHashes": 154,
       "deterministic": true,
       "clamped": true
     },
@@ -132,5 +134,5 @@
       "productionSmoke": "external-smoke-required"
     }
   },
-  "durationMs": 6644
+  "durationMs": 14094
 }
