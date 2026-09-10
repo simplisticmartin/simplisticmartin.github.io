@@ -1,7 +1,7 @@
 {
   "product": "CASCADE",
   "auditVersion": 1,
-  "generatedAt": "2026-09-10T18:47:41.668Z",
+  "generatedAt": "2026-09-10T19:05:55.546Z",
   "status": "PASS",
   "layers": {
     "deployment": {
@@ -13,9 +13,14 @@
     "engine": {
       "deterministic": true,
       "duplicateActions": true,
-      "stateHashes": 901,
+      "stateHashes": 896,
       "scaleCapacity": true,
       "circuitPressure": true
+    },
+    "actions": {
+      "actions": 6,
+      "healthyTargets": true,
+      "afterGameDisabled": true
     },
     "cards": {
       "cards": 6,
@@ -120,5 +125,5 @@
       "productionSmoke": "external-smoke-required"
     }
   },
-  "durationMs": 3946
+  "durationMs": 4260
 }

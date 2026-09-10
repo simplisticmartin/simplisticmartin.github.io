@@ -226,6 +226,7 @@
     const promptButtons = Array.from(host.querySelectorAll('.cascade-nova-prompt'));
 
     function renderResult(result) {
+      if (!result || typeof result !== 'object') return;
       response.innerHTML = '';
       const header = document.createElement('div');
       header.className = `cascade-nova-result-head ${result.misleading ? 'is-misleading' : ''}`;

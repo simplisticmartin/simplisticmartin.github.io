@@ -29,6 +29,7 @@ function auditDeployment() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const publicManifest = JSON.parse(fs.readFileSync(publicManifestPath, 'utf8'));
   const worker = fs.readFileSync(path.join(ROOT, 'assets/js/cascade-worker.js'), 'utf8');
+  const engineSource = fs.readFileSync(path.join(ROOT, 'assets/js/cascade-engine.js'), 'utf8');
   const page = fs.readFileSync(path.join(ROOT, 'cascade.html'), 'utf8');
   assert(manifest.version && manifest.commit && manifest.builtAt, 'Build manifest must include version, commit, and builtAt.');
   assert(publicManifest.version === manifest.version && publicManifest.commit === manifest.commit, 'Public and Jekyll build manifests must agree.');
@@ -40,6 +41,8 @@ function auditDeployment() {
   assert(worker.includes('cascade-engine.js'), 'Worker must import the shared engine.');
   assert(worker.includes('acceptsPayload'), 'Worker must reject stale generation messages.');
   assert(worker.includes('nextToken < runToken'), 'Worker must reject stale start messages.');
+  assert(!engineSource.includes('correctAction'), 'Engine source must not restore an answer-key action field.');
+  assert(!engineSource.includes('scenario.root'), 'Engine source must not expose or consume a hidden scenario root.');
   assert(manifest.version === Engine.VERSION, 'Build manifest version must match the shared engine.');
   assert(manifest.version === Nova.VERSION, 'Build manifest version must match NOVA.');
   assert(manifest.commit !== 'working-tree', 'Build manifest must not ship a placeholder commit.');
@@ -78,6 +81,8 @@ function auditEngine() {
   assert(!Object.prototype.hasOwnProperty.call(first.final.scenario, 'root'), 'Player snapshots must not expose the answer key.');
   assert(!Object.prototype.hasOwnProperty.call(first.final.scenario, 'rootCause'), 'Player snapshots must not expose the root cause.');
   assert(!Object.prototype.hasOwnProperty.call(first.final.scenario, 'correctAction'), 'Player snapshots must not expose a correct action.');
+  assert(first.final.scenario.id === 'incident-1', 'Active incident identity must remain opaque.');
+  assert(!first.final.scenario.code.includes(first.run.scenario.code), 'Active incident code must not mirror the internal template code.');
   assert(first.final.blastRadius >= 0, 'Blast radius must be defined by observable SLO impact.');
 
   const inspectRun = Engine.createRun('DBPOOL1', 'recruiter', []);
@@ -92,6 +97,7 @@ function auditEngine() {
   assert(initial.scenario && !Object.prototype.hasOwnProperty.call(initial.scenario, 'root'), 'Initial player scenario must begin with a symptom, not the root answer.');
   assert(!Object.prototype.hasOwnProperty.call(initial.scenario, 'target'), 'Initial player scenario must not expose an internal target.');
   assert(!Object.prototype.hasOwnProperty.call(initial.scenario, 'rootCause'), 'Initial player scenario must not expose root cause.');
+  assert(initial.scenario.id === 'incident-1', 'Initial incident identity must remain opaque.');
 
   const actionRun = Engine.createRun('EDGE99', 'freeplay', []);
   const before = Engine.snapshot(actionRun);
@@ -114,7 +120,33 @@ function auditEngine() {
   const postgres = Engine.snapshot(dbFixture).services.find((service) => service.id === 'postgres');
   assert(postgres.connectionUtilization > 92 || postgres.latency > postgres.latencySlo, 'Database exhaustion must damage PostgreSQL telemetry, not only Pricing.');
 
+  const postmortemHashes = first.final.postmortem && first.final.postmortem.stateHashes;
+  assert(Array.isArray(postmortemHashes) && postmortemHashes.length === first.run.history.length, 'Completed postmortems must carry the complete replay hash ledger.');
+  assert(postmortemHashes[postmortemHashes.length - 1] === first.run.history[first.run.history.length - 1].stateHash, 'Final postmortem hash must equal the final replay frame.');
   return { deterministic: true, duplicateActions: true, stateHashes: first.snapshots.length, scaleCapacity: true, circuitPressure: true };
+}
+
+function auditActions() {
+  Engine.ACTIONS.forEach((action) => {
+    const run = Engine.createRun(`ACTION-${action}`, 'freeplay', []);
+    const before = Engine.snapshot(run);
+    const target = action === 'failover' ? 'postgres' : (action === 'circuit' ? 'pricing' : 'gateway');
+    const result = Engine.applyAction(run, action, target, `once-${action}`);
+    assert(result.accepted, `${action} must be accepted against a valid target.`);
+    assert(result.snapshot && result.snapshot.services.every((service) => Number.isFinite(service.health)), `${action} must preserve finite telemetry.`);
+    if (action === 'scale') {
+      const beforeTarget = before.services.find((service) => service.id === target);
+      const afterTarget = result.snapshot.services.find((service) => service.id === target);
+      assert(afterTarget.capacity > beforeTarget.capacity, 'Scale must increase target capacity.');
+    }
+    const duplicate = Engine.applyAction(run, action, target, `once-${action}`);
+    assert(duplicate.duplicate, `${action} duplicate IDs must be rejected.`);
+  });
+  const terminal = Engine.createRun('ACTION-AFTER-GAME', 'recruiter', []);
+  for (let tick = 0; tick < Math.ceil(terminal.maxTime / Engine.TICK_SECONDS) + 1 && !terminal.complete; tick += 1) Engine.advance(terminal, Engine.TICK_SECONDS);
+  const afterGame = Engine.applyAction(terminal, 'inspect', 'gateway', 'after-game');
+  assert(!afterGame.accepted && afterGame.reason === 'complete', 'Actions must be disabled after an incident ends.');
+  return { actions: Engine.ACTIONS.length, healthyTargets: true, afterGameDisabled: true };
 }
 
 function auditReplay() {
@@ -207,6 +239,7 @@ function auditNova() {
   assert(!novaSource.includes('scenarioRoot'), 'NOVA source must not use a hidden scenarioRoot bonus.');
   assert(!novaSource.includes('rootCandidate.score +='), 'NOVA must not score a hidden answer bonus.');
   assert(!novaSource.includes('scenario.root'), 'NOVA must not access scenario.root.');
+  assert(!/fetch\s*\(|XMLHttpRequest|WebSocket/.test(novaSource), 'NOVA must remain optional and local-only.');
   const healthy = makeNovaSnapshot([
     { id: 'gateway', name: 'API Gateway', health: 99, cpu: 31, latency: 120, errors: 0.2, queue: 12, replicas: 3, status: 'healthy', dependencies: ['orders'] },
     { id: 'pricing', name: 'Pricing', health: 98, cpu: 28, latency: 140, errors: 0.4, queue: 12, replicas: 3, status: 'healthy', dependencies: ['postgres'] },
@@ -279,6 +312,7 @@ function run() {
   try {
     report.layers.deployment = auditDeployment();
     report.layers.engine = auditEngine();
+    report.layers.actions = auditActions();
     report.layers.cards = auditCards();
     report.layers.nova = auditNova();
     report.layers.integration = auditRecruiterAndIntegration();
@@ -297,4 +331,4 @@ function run() {
 }
 
 if (!args.has('--module')) run();
-module.exports = { run, auditDeployment, auditEngine, auditReplay, auditGoldenRuns, auditCards, auditNova, auditRecruiterAndIntegration, auditFuzz };
+module.exports = { run, auditDeployment, auditEngine, auditActions, auditReplay, auditGoldenRuns, auditCards, auditNova, auditRecruiterAndIntegration, auditFuzz };

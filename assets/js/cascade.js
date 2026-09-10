@@ -599,6 +599,7 @@
   }
 
   function receiveSnapshot(snapshot) {
+    if (!snapshot) return;
     currentSnapshot = snapshot;
     active = Boolean(snapshot && !snapshot.complete && !snapshot.runComplete);
     if (snapshot && !snapshot.complete) {
@@ -615,6 +616,7 @@
   }
 
   function receiveComplete(snapshot, completeHistory) {
+    if (!snapshot) return;
     active = false;
     currentSnapshot = snapshot;
     if (onboarding && onboarding.active) {

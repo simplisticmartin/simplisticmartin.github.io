@@ -176,7 +176,11 @@
   }
 
   function publicScenario(run) {
-    return { id: run.scenario.id, code: run.scenario.code, title: run.scenario.title, description: run.scenario.description, symptom: run.scenario.symptom };
+    // The active incident card is an observation surface. Do not serialize the
+    // template id or primary incident code: both are answer-key metadata that
+    // would let a player (or NOVA) skip the causal investigation.
+    const opaqueCode = `INC-${hashSeed(`${run.seed}|public-incident|${run.stage}`).toString(16).toUpperCase().slice(-4).padStart(4, '0')}`;
+    return { id: `incident-${run.stage}`, code: opaqueCode, title: run.scenario.title, description: run.scenario.description, symptom: run.scenario.symptom };
   }
 
   function upgradeOptions(run) {
@@ -265,15 +269,21 @@
 
   function createRun(seed, mode, build, replayBuild) {
     const normalized = normalizeSeed(seed);
+    const normalizedMode = mode === 'freeplay' ? 'freeplay' : 'recruiter';
+    const maxTime = normalizedMode === 'freeplay' ? 120 : 90;
     const run = {
       engineVersion: VERSION,
       seed: normalized,
-      mode: mode === 'freeplay' ? 'freeplay' : 'recruiter',
+      mode: normalizedMode,
       stage: 1,
       build: normalizeBuild(build),
       replayBuild: Boolean(replayBuild),
       totalStages: TOTAL_STAGES,
-      maxTime: mode === 'freeplay' ? 120 : 90,
+      maxTime,
+      // Keep enough frames for every incident plus action/event snapshots. A
+      // fixed 3,600-frame cap silently dropped the first incident in a full
+      // recruiter run, which made replay and the final hash ledger incomplete.
+      historyLimit: (TOTAL_STAGES * Math.ceil(maxTime / TICK_SECONDS)) + 128,
       stageTime: 0,
       elapsed: 0,
       totalUnnecessaryChanges: 0,
@@ -596,7 +606,17 @@
       actionCount: run.actionLog.length
     };
     if (run.complete) result.postmortem = postmortem(run);
-    result.stateHash = run.hashSnapshots === false ? null : hashState(result);
+    // Postmortem text is intentionally revealed only after completion and it
+    // contains the hash ledger itself. Exclude that presentation-only object
+    // from the state hash so the final frame cannot hash differently merely
+    // because its postmortem was attached.
+    if (run.hashSnapshots === false) {
+      result.stateHash = null;
+    } else {
+      const hashPayload = { ...result };
+      delete hashPayload.postmortem;
+      result.stateHash = hashState(hashPayload);
+    }
     return result;
   }
 
@@ -604,7 +624,7 @@
     const current = snapshot(run);
     if (run.captureHistory !== false) {
       run.history.push(current);
-      if (run.history.length > 3600) run.history.shift();
+      if (run.history.length > run.historyLimit) run.history.shift();
     }
     updatePeaks(run, current.customerImpact, current.services);
     return current;
@@ -681,7 +701,7 @@
     }
     if (run.resolved) run.recoveryTime += seconds;
     if (run.resolved && run.recoveryTime >= 3.5 && sloHealthy(run)) finish(run, true);
-    else if (!run.resolved && run.stageTime >= run.maxTime) finish(run, false);
+    else if (run.stageTime >= run.maxTime) finish(run, Boolean(run.resolved && sloHealthy(run)));
     let current = recordSnapshot(run);
     if (run.complete) {
       run.finalStateHashes = run.history.map((entry) => entry.stateHash);
