@@ -966,7 +966,86 @@
 .cascade-empty-event { color: var(--cascade-muted) !important; }
 .cascade-empty-event::before { display: none; }
 
-/* Postmortem and architecture -------------------------------------------- */
+/* Budget, stability, and deadline messaging ----------------------------- */
+.cascade-budget-module { margin-left: auto; min-width: min(220px, 40%); }
+.cascade-budget-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; }
+.cascade-budget-heading span { color: var(--cascade-muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.56rem; letter-spacing: 0.08em; }
+.cascade-budget-heading b { color: var(--cascade-green); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.82rem; }
+.cascade-budget-track { height: 8px; overflow: hidden; border-radius: 99px; background: rgba(159, 205, 218, 0.1); }
+.cascade-budget-track > span { display: block; height: 100%; border-radius: inherit; background: var(--cascade-green); transition: width 200ms ease, background 300ms ease; }
+.cascade-budget-track > span.is-warning { background: var(--cascade-amber); }
+.cascade-budget-track > span.is-critical { background: var(--cascade-red); animation: cascadeBudgetDanger 1.1s ease-in-out infinite; }
+.cascade-budget-footer { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.35rem; color: var(--cascade-muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.54rem; letter-spacing: 0.05em; }
+.cascade-budget-footer b { color: var(--cascade-ink); font-size: 0.66rem; }
+@keyframes cascadeBudgetDanger { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+
+/* Consequence callout toast ---------------------------------------------- */
+.cascade-consequence-toast {
+  position: fixed;
+  z-index: 1100;
+  left: 1.25rem;
+  bottom: 5rem;
+  max-width: min(420px, calc(100vw - 2.5rem));
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--cascade-line);
+  border-radius: 0.45rem;
+  background: rgba(8, 24, 33, 0.94);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transform: translateY(0.8rem);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.cascade-consequence-toast:not([hidden]) { opacity: 1; transform: translateY(0); }
+.cascade-consequence-toast.is-helpful { border-color: rgba(114, 228, 161, 0.5); }
+.cascade-consequence-toast.is-harmful { border-color: rgba(255, 107, 107, 0.5); background: rgba(40, 14, 14, 0.95); }
+.cascade-consequence-toast.is-neutral { border-color: rgba(159, 205, 218, 0.35); }
+.cascade-consequence-toast.is-informative { border-color: rgba(102, 229, 226, 0.35); }
+.cascade-consequence-kicker { display: block; margin-bottom: 0.3rem; color: var(--cascade-cyan); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.54rem; font-weight: 800; letter-spacing: 0.1em; }
+.cascade-consequence-title { display: block; color: var(--cascade-ink); font-size: 0.82rem; font-weight: 600; }
+.cascade-consequence-detail { display: block; margin-top: 0.25rem; color: var(--cascade-muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.64rem; }
+
+/* Emergency runbook buttons ---------------------------------------------- */
+.cascade-emergency-card { margin-top: 0.9rem; padding: 0.85rem; border: 1px solid rgba(255, 107, 107, 0.2); border-radius: 0.4rem; background: rgba(255, 30, 30, 0.04); }
+.cascade-emergency-card .cascade-card-title { color: var(--cascade-red); }
+.cascade-emergency-card .cascade-card-title small { color: var(--cascade-muted); }
+.cascade-emergency-intro { margin: 0 0 0.7rem; color: var(--cascade-body); font-size: 0.66rem; line-height: 1.5; }
+.cascade-emergency-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+.cascade-emergency-button {
+  min-height: 68px;
+  padding: 0.5rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  border: 1px solid rgba(255, 107, 107, 0.22);
+  border-radius: 0.3rem;
+  background: rgba(255, 30, 30, 0.05);
+  color: var(--cascade-body);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+.cascade-emergency-button:not(:disabled):hover { transform: translateY(-2px); border-color: var(--cascade-red); background: rgba(255, 30, 30, 0.1); color: var(--cascade-ink); }
+.cascade-emergency-button > span { color: var(--cascade-red); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.5rem; letter-spacing: 0.1em; }
+.cascade-emergency-button > strong { color: var(--cascade-ink); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; }
+.cascade-emergency-button > small { color: var(--cascade-muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.55rem; }
+
+/* Decision log in postmortem --------------------------------------------- */
+.cascade-decision-log { margin-top: 1.5rem; padding: 1rem; border: 1px solid rgba(159, 205, 218, 0.14); border-radius: 0.4rem; background: rgba(8, 24, 33, 0.7); }
+.cascade-decision-log.hidden { display: none; }
+.cascade-decision-log .cascade-card-title { margin-bottom: 0.7rem; color: var(--cascade-cyan); }
+.cascade-decision-log .cascade-card-title small { color: var(--cascade-muted); }
+#cascadeDecisionItems { list-style: none; margin: 0; padding: 0; max-height: 180px; overflow-y: auto; }
+#cascadeDecisionItems li { padding: 0.35rem 0; border-bottom: 1px solid rgba(159, 205, 218, 0.07); color: var(--cascade-body); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.6rem; line-height: 1.4; }
+#cascadeDecisionItems li > strong { color: var(--cascade-cyan); margin-right: 0.5rem; }
+.cascade-decision-kind { display: inline-block; padding: 0.1rem 0.35rem; border-radius: 0.15rem; font-size: 0.5rem; font-weight: 800; letter-spacing: 0.06em; margin-right: 0.4rem; vertical-align: middle; }
+.cascade-decision-kind.is-helpful { color: var(--cascade-green); background: rgba(114, 228, 161, 0.12); }
+.cascade-decision-kind.is-harmful { color: var(--cascade-red); background: rgba(255, 107, 107, 0.12); }
+.cascade-decision-kind.is-neutral { color: var(--cascade-muted); background: rgba(159, 205, 218, 0.1); }
+.cascade-decision-kind.is-informative { color: var(--cascade-blue); background: rgba(129, 184, 255, 0.1); }
+
+.cascade-postmortem > .cascade-postmortem-grid > .cascade-postmortem-summary { padding-top: 0; }
 .cascade-postmortem { margin-top: 5rem; padding-top: 4rem; border-top: 1px solid var(--cascade-line); }
 .cascade-postmortem[hidden] { display: none; }
 .cascade-postmortem-head { align-items: flex-end; margin-bottom: 1.5rem; }

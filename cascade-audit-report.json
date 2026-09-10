@@ -1,7 +1,7 @@
 {
   "product": "CASCADE",
   "auditVersion": 1,
-  "generatedAt": "2026-09-10T21:59:03.726Z",
+  "generatedAt": "2026-09-10T23:14:57.450Z",
   "status": "PASS",
   "layers": {
     "deployment": {
@@ -134,5 +134,5 @@
       "productionSmoke": "external-smoke-required"
     }
   },
-  "durationMs": 14094
+  "durationMs": 15461
 }

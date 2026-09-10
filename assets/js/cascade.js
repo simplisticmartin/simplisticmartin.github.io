@@ -51,6 +51,9 @@
   let presentationMode = false;
   let animationFrame = null;
   let lastDrawAt = 0;
+  let consequenceTimer = null;
+  let catastrophicTimer = null;
+  let catastrophicWarningActive = false;
 
   const runbookCardIds = ['bulkhead', 'adaptive-scaling', 'trace-sampling', 'chaos-tested', 'conservative-deployments', 'aggressive-retry'];
   const runbookMetadata = {
@@ -98,6 +101,51 @@
     notice.classList.add('is-visible');
     window.clearTimeout(noticeTimer);
     noticeTimer = window.setTimeout(() => notice.classList.remove('is-visible'), 2800);
+  }
+
+  function showConsequence(snapshot) {
+    const toast = $('#cascadeConsequenceToast');
+    if (!toast || !snapshot || !snapshot.lastConsequence) return;
+    const c = snapshot.lastConsequence;
+    const kicker = $('#cascadeConsequenceKicker');
+    const title = $('#cascadeConsequenceTitle');
+    const detail = $('#cascadeConsequenceDetail');
+    const kindLabels = { helpful: 'HELPFUL', harmful: 'HARMFUL', neutral: 'NEUTRAL', informative: 'INFORMATIVE' };
+    kicker.textContent = `${kindLabels[c.kind] || 'CAUSE / EFFECT'} · ${c.action.toUpperCase()}`;
+    title.textContent = c.summary || 'Action registered';
+    let detailParts = [];
+    if (c.impactBefore != null && c.impactAfter != null) {
+      const delta = (c.impactAfter - c.impactBefore);
+      detailParts.push(`Customer impact ${c.impactBefore.toFixed(1)}% → ${c.impactAfter.toFixed(1)}%`);
+      if (Math.abs(delta) > 0.3) detailParts.push(delta > 0 ? `↑ +${delta.toFixed(1)}%` : `↓ ${delta.toFixed(1)}%`);
+    }
+    if (c.budgetCost != null && c.budgetCost > 0) detailParts.push(`Budget −${c.budgetCost.toFixed(1)}`);
+    if (c.targetBefore && c.targetAfter) {
+      const tb = c.targetBefore;
+      const ta = c.targetAfter;
+      if (tb.replicas !== ta.replicas) detailParts.push(`Replicas ${tb.replicas} → ${ta.replicas}`);
+      if (tb.connectionUtilization !== ta.connectionUtilization) detailParts.push(`${tb.connectionUtilization}% → ${ta.connectionUtilization}% connections`);
+      if (tb.circuitOpen !== ta.circuitOpen) detailParts.push(ta.circuitOpen ? 'Circuit now open' : 'Circuit now closed');
+      if (tb.failover !== ta.failover) detailParts.push(ta.failover ? 'Route now secondary' : 'Route now primary');
+    }
+    detail.textContent = detailParts.length ? detailParts.join(' · ') : 'Wait for the next telemetry window.';
+    toast.hidden = false;
+    toast.classList.remove('is-helpful', 'is-harmful', 'is-neutral', 'is-informative');
+    toast.classList.add(`is-${c.kind}`);
+    window.clearTimeout(consequenceTimer);
+    consequenceTimer = window.setTimeout(() => { toast.hidden = true; }, 2600);
+  }
+
+  function updateCatastrophicWarning(snapshot) {
+    const warning = snapshot && snapshot.catastrophicWarning;
+    if (warning && !catastrophicWarningActive) {
+      catastrophicWarningActive = true;
+      showNotice('⚠ SYSTEM COLLAPSE IMMINENT');
+      catastrophicTimer = window.setTimeout(() => { catastrophicWarningActive = false; }, 2200);
+    } else if (!warning) {
+      catastrophicWarningActive = false;
+      window.clearTimeout(catastrophicTimer);
+    }
   }
 
   function setPhase(phase, message) {
@@ -305,6 +353,98 @@
     $('#cascadeSelectedLabel').textContent = selectedService ? `${serviceById(selectedService)?.name || selectedService} selected` : 'No service selected';
     updateOnboarding(snapshot);
     renderBuild(snapshot);
+    updateBudget(snapshot);
+    updateStability(snapshot);
+    updateDeadline(snapshot);
+    updateEmergencyRunbooks(snapshot);
+    updateActionCooldown(snapshot);
+    updateCatastrophicWarning(snapshot);
+    showConsequence(snapshot);
+  }
+
+  function updateBudget(snapshot) {
+    if (!snapshot) return;
+    const budget = $('#cascadeBudget');
+    const bar = $('#cascadeBudgetBar');
+    const track = $('#cascadeBudgetTrack');
+    const value = Number(snapshot.reliabilityBudget ?? snapshot.budget ?? 100);
+    budget.textContent = `${Math.max(0, value).toFixed(0)}%`;
+    track.setAttribute('aria-valuenow', String(Math.round(value)));
+    if (bar) {
+      bar.style.width = `${Math.max(0, Math.min(100, value))}%`;
+      bar.classList.remove('is-critical', 'is-warning', 'is-healthy');
+      bar.classList.add(value <= 15 ? 'is-critical' : (value <= 40 ? 'is-warning' : 'is-healthy'));
+    }
+  }
+
+  function updateStability(snapshot) {
+    if (!snapshot || !snapshot.stability) return;
+    const label = $('#cascadeStabilityLabel');
+    const value = $('#cascadeStability');
+    const stable = snapshot.stability;
+    if (snapshot.resolved) {
+      label.textContent = 'SYSTEM STABILIZING';
+      if (value) value.textContent = '██████████ · STABILIZED';
+      return;
+    }
+    if (stable.lost) {
+      label.textContent = 'STABILIZATION LOST';
+    } else if (stable.safe) {
+      label.textContent = 'SAFE ENVELOPE';
+    } else {
+      label.textContent = 'OUTSIDE SAFE ENVELOPE';
+    }
+    if (value) value.textContent = `${stable.progress > 0 ? '█'.repeat(Math.ceil(stable.progress * 10)) : '░'} ${stable.stableTime.toFixed(1)} / ${stable.required}s`;
+  }
+
+  function updateDeadline(snapshot) {
+    if (!snapshot) return;
+    const value = $('#cascadeDeadline');
+    if (value) value.textContent = formatTime(snapshot.deadlineRemaining ?? snapshot.maxTime ?? 90);
+  }
+
+  function updateEmergencyRunbooks(snapshot) {
+    const grid = $('#cascadeEmergencyGrid');
+    if (!grid || !snapshot) return;
+    if (!snapshot.emergencyRunbooks || !snapshot.emergencyRunbooks.length) {
+      grid.innerHTML = '';
+      return;
+    }
+    grid.innerHTML = '';
+    snapshot.emergencyRunbooks.forEach((card) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'cascade-emergency-button';
+      button.dataset.emergency = card.id;
+      button.disabled = !snapshot.active || card.charges <= 0;
+      const label = document.createElement('span');
+      label.textContent = card.label;
+      const name = document.createElement('strong');
+      name.textContent = card.name;
+      const charges = document.createElement('small');
+      charges.textContent = card.charges > 0 ? '1 charge' : 'no charges';
+      const cooldown = document.createElement('small');
+      cooldown.textContent = card.cooldown > 0 ? `recharging · ${card.cooldown.toFixed(1)}s` : '';
+      const active = document.createElement('small');
+      active.textContent = card.activeUntil > 0 ? `active until ${card.activeUntil.toFixed(1)}s` : '';
+      button.append(label, name, charges, cooldown, active);
+      button.addEventListener('click', () => {
+        if (!worker || !active || !card.available) return;
+        worker.postMessage({ type: 'action', action: `emergency:${card.id}`, target: card.target, actionId: `em:${card.id}:${Math.round((currentSnapshot && currentSnapshot.time ? currentSnapshot.time : 0) * 10)}`, runToken: workerGeneration });
+      });
+      grid.appendChild(button);
+    });
+  }
+
+  function updateActionCooldown(snapshot) {
+    const hint = $('#cascadeActionHint');
+    if (!hint || !snapshot || !snapshot.active) return;
+    if (snapshot.actionCooldown > 0) {
+      hint.textContent = `Cooldown ${snapshot.actionCooldown.toFixed(1)}s`;
+    } else {
+      const service = selectedService ? serviceById(selectedService) : null;
+      hint.textContent = service ? 'Action changes the graph' : 'Select a service first';
+    }
   }
 
   function renderServiceList(snapshot) {
@@ -429,13 +569,16 @@
       ? (snapshot.runComplete
         ? `You contained the final incident in ${formatTime(snapshot.time)}. The city survived all ${snapshot.totalStages || 4} incidents with ${snapshot.build && snapshot.build.length ? snapshot.build.length : 'no'} runbook upgrades installed.`
         : `You contained ${snapshot.scenario.title.toLowerCase()} in ${formatTime(snapshot.time)}. Choose one runbook below before incident ${(snapshot.stage || 1) + 1}.`)
-      : `The shift ended with ${snapshot.blastRadius} services outside nominal health. The postmortem is still useful: every unnecessary change is a clue about where the graph hid the cause.`;
+      : `The shift ended after ${formatTime(snapshot.elapsed)}. The postmortem is still useful: every unnecessary change is a clue about where the graph hid the cause.`;
     $('#postmortemRootCause').textContent = snapshot.postmortem && snapshot.postmortem.rootCause ? snapshot.postmortem.rootCause : 'Derived from post-incident evidence';
-    $('#postmortemMttr').textContent = formatTime(snapshot.time);
-    $('#postmortemAvailability').textContent = `${Math.max(0, 100 - snapshot.impact).toFixed(2)}%`;
+    $('#postmortemMttr').textContent = formatTime(snapshot.elapsed);
+    $('#postmortemAvailability').textContent = `${(snapshot.scoreDetails ? snapshot.scoreDetails.availability : Math.max(0, 100 - snapshot.impact)).toFixed(2)}%`;
     $('#postmortemChanges').textContent = String(snapshot.totalUnnecessaryChanges ?? snapshot.unnecessaryChanges);
     renderBuild(snapshot);
     renderUpgradeOptions(snapshot);
+    renderScore(snapshot);
+    renderDecisionLog(snapshot);
+    updateBudget(snapshot);
     const slider = $('#cascadeReplaySlider');
     slider.max = String(Math.max(0, history.length - 1));
     slider.value = String(Math.max(0, history.length - 1));
@@ -444,6 +587,46 @@
     $('#cascadeReplayNow').disabled = history.length < 2;
     $('#cascadeReplayTime').textContent = `${formatTime(snapshot.time)} / FINAL`;
     postmortem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderScore(snapshot) {
+    const details = snapshot.scoreDetails || snapshot.score ? { score: snapshot.score, grade: snapshot.grade, availability: snapshot.scoreDetails?.availability ?? Math.max(0, 100 - snapshot.impact), mttr: snapshot.elapsed, harmfulChanges: snapshot.scoreDetails?.harmfulChanges ?? 0, peakImpact: snapshot.scoreDetails?.peakImpact ?? snapshot.impact, peakBlastRadius: snapshot.scoreDetails?.peakBlastRadius ?? snapshot.blastRadius, budgetLeft: snapshot.reliabilityBudget } : null;
+    if (!details && !snapshot.score) return;
+    $('#postmortemScore').textContent = details ? String(details.score) : (snapshot.score ?? '—');
+    $('#postmortemGrade').textContent = details ? details.grade : (snapshot.grade ?? '—');
+    $('#postmortemBudget').textContent = details ? `${details.budgetLeft.toFixed(0)}%` : `${Math.max(0, snapshot.reliabilityBudget ?? 0).toFixed(0)}%`;
+    $('#postmortemPeakImpact').textContent = details ? `${details.peakImpact.toFixed(1)}%` : `${Number(snapshot.impact ?? 0).toFixed(1)}%`;
+  }
+
+  function renderDecisionLog(snapshot) {
+    const log = $('#cascadeDecisionLog');
+    const items = $('#cascadeDecisionItems');
+    const count = $('#cascadeDecisionCount');
+    if (!log || !items || !snapshot || !snapshot.consequences || !snapshot.consequences.length) {
+      if (log) log.hidden = true;
+      return;
+    }
+    log.hidden = false;
+    const consequences = Array.isArray(snapshot.consequences) ? snapshot.consequences : [];
+    items.innerHTML = '';
+    count.textContent = `${consequences.length} changes`;
+    consequences.forEach((c) => {
+      const li = document.createElement('li');
+      const time = document.createElement('strong');
+      time.textContent = formatTime(c.time);
+      const kind = document.createElement('span');
+      const kindLabels = { helpful: 'HELPFUL', harmful: 'HARMFUL', neutral: 'NEUTRAL', informative: 'INFORMATIVE' };
+      kind.className = `cascade-decision-kind is-${c.kind}`;
+      kind.textContent = kindLabels[c.kind] || c.kind.toUpperCase();
+      const action = document.createElement('span');
+      action.textContent = c.action.startsWith('emergency:') ? c.action.slice(9).toUpperCase() : c.action.toUpperCase();
+      const target = document.createElement('small');
+      target.textContent = c.target ? ` · ${c.target}` : '';
+      const summary = document.createElement('span');
+      summary.textContent = ` — ${c.summary || 'Action registered'}`;
+      li.append(time, kind, action, target, summary);
+      items.appendChild(li);
+    });
   }
 
   function applyReplaySnapshot(snapshot, index, total) {
@@ -879,6 +1062,12 @@
     $('#cascadeOnboardingSkip').addEventListener('click', () => stopOnboarding('Guide skipped. The city is yours.'));
     $('#cascadePresentationToggle').addEventListener('click', togglePresentationMode);
     $('#cascadeAnother').addEventListener('click', () => { makeNewSeed(); start('freeplay', $('#cascadeSeed').value); });
+    $('#cascadeDaily').addEventListener('click', () => {
+      const daily = window.CascadeEngine && CascadeEngine.dailySeed ? CascadeEngine.dailySeed() : '20260910';
+      $('#cascadeSeed').value = daily;
+      showNotice(`Daily incident: ${daily}`);
+      start('freeplay', daily);
+    });
     $('#cascadeContinueShift').addEventListener('click', () => {
       if (!worker || !currentSnapshot || !currentSnapshot.awaitingUpgrade) return;
       const button = $('#cascadeContinueShift');

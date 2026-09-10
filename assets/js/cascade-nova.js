@@ -167,10 +167,14 @@
       leadCandidate = databaseCandidate;
     }
     const runnerUp = candidates.find((candidate) => candidate.id !== leadCandidate.id) || leadCandidate;
+    const thirdPlace = candidates.find((candidate) => candidate.id !== leadCandidate.id && candidate.id !== runnerUp.id) || runnerUp;
     const separation = Math.max(0, leadCandidate.score - runnerUp.score);
     const safeSeparation = Number.isFinite(separation) ? separation : 0;
     const safeScore = Number.isFinite(leadCandidate.score) ? leadCandidate.score : 0;
-    const confidence = Math.max(42, Math.min(93, Math.round(54 + (safeSeparation * 1.9) + (safeScore * 0.25))));
+    // Low time-in-incident should suppress unearned confidence.
+    const incidentAge = snapshot && Number.isFinite(Number(snapshot.time)) ? Number(snapshot.time) : 0;
+    const agePenalty = incidentAge < 3 ? 14 : (incidentAge < 7 ? 7 : 0);
+    const confidence = Math.max(32, Math.min(91, Math.round(54 + (safeSeparation * 1.9) + (safeScore * 0.22) - agePenalty)));
     const intent = questionIntent(requestedQuestion);
     let lead = leadCandidate.lead;
     let explanation = leadCandidate.explanation;
@@ -194,6 +198,9 @@
       `${Math.round(leadCandidate.service.queue)} queued / ${leadCandidate.service.replicas} replicas`
     ];
     if (reproducibleFalseLead) evidence.push(`Counter-signal: ${runnerUp.service.name} is ${Math.round(runnerUp.service.health)}% healthy`);
+    const confidenceLevel = confidence >= 78 ? 'HIGH CONFIDENCE' : (confidence >= 60 ? 'MEDIUM' : (confidence >= 42 ? 'LOW' : 'INSUFFICIENT EVIDENCE'));
+    const competingSignal = runnerUp.score > 0 ? `${runnerUp.service.name}: health ${Math.round(runnerUp.service.health)}%, latency ${formatLatency(runnerUp.service.latency)}, errors ${Number(runnerUp.service.errors).toFixed(1)}%.` : null;
+    const runnerUpSignal = thirdPlace.id !== runnerUp.id && thirdPlace.score > 0 ? `${thirdPlace.service.name}: health ${Math.round(thirdPlace.service.health)}%` : null;
     return {
       lead,
       confidence,
@@ -204,7 +211,15 @@
       evidence,
       suggestedAction: leadCandidate.action,
       serviceId: leadCandidate.service.id,
-      runnerUp: runnerUp.service.name
+      runnerUp: runnerUp.service.name,
+      confidenceLevel,
+      competingSignal,
+      thirdPlaceSignal: runnerUpSignal,
+      ranking: [
+        { name: leadCandidate.service.name, score: Math.round(leadCandidate.score) },
+        { name: runnerUp.service.name, score: Math.round(runnerUp.score) },
+        { name: thirdPlace.service.name, score: Math.round(thirdPlace.score) }
+      ]
     };
   }
 
@@ -233,7 +248,7 @@
       const label = document.createElement('span');
       label.textContent = result.misleading ? 'PLAUSIBLE FALSE LEAD' : 'NOVA HYPOTHESIS';
       const confidence = document.createElement('strong');
-      confidence.textContent = `${result.confidence}% confidence`;
+      confidence.textContent = `${result.confidence}% confidence · ${result.confidenceLevel}`;
       header.append(label, confidence);
       const lead = document.createElement('h4');
       lead.textContent = result.lead;
@@ -248,6 +263,24 @@
         listItem.textContent = item;
         evidenceList.appendChild(listItem);
       });
+      const rankingTitle = document.createElement('span');
+      rankingTitle.className = 'cascade-nova-evidence-label';
+      rankingTitle.textContent = 'HYPOTHESIS RANKING';
+      const rankingList = document.createElement('ul');
+      (result.ranking || []).forEach((item, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `#${index + 1} ${item.name} — ${item.score}%`;
+        if (index === 0) listItem.style.fontWeight = '600';
+        rankingList.appendChild(listItem);
+      });
+      if (result.competingSignal) {
+        const competing = document.createElement('p');
+        competing.className = 'cascade-nova-competing';
+        competing.textContent = `Strongest alternative: ${result.competingSignal}`;
+        response.append(header, lead, explanation, evidenceTitle, evidenceList, rankingTitle, rankingList, competing);
+      } else {
+        response.append(header, lead, explanation, evidenceTitle, evidenceList, rankingTitle, rankingList);
+      }
       const verify = document.createElement('div');
       verify.className = 'cascade-nova-verify';
       const verifyLabel = document.createElement('strong');
@@ -255,7 +288,7 @@
       const verifyText = document.createElement('span');
       verifyText.textContent = result.verify;
       verify.append(verifyLabel, verifyText);
-      response.append(header, lead, explanation, evidenceTitle, evidenceList, verify);
+      response.append(verify);
     }
 
     function setEnabled(enabled) {
